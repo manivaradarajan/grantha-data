@@ -25,7 +25,6 @@ google-auth-oauthlib==1.2.0
 google-genai==1.41.0
 google-generativeai==0.7.2
 googleapis-common-protos==1.70.0
--e git+ssh://git@github.com/manivaradarajan/grantha-data.git@98e28e4626ce9165ca9f97b10ce73afc75a5d184#egg=grantha_converter
 grpcio==1.75.1
 grpcio-status==1.62.3
 gunicorn==21.2.0
