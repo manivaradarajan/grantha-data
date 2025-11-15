@@ -1,0 +1,21 @@
+Extract metadata from this Sanskrit text excerpt.
+
+Required fields:
+1. canonical_title (Devanagari): Full Sanskrit name (e.g., "ईशावास्योपनिषत्")
+2. grantha_id (lowercase-hyphenated): Standardized ID (e.g., "isavasya-upanishad")
+3. commentary_id (lowercase-hyphenated or null): ID if commentary present
+4. commentator (Devanagari or null): Name if commentary present (e.g., "वेङ्कटनाथः")
+5. structure_type (string): Primary structure division (one of: "khanda", "valli", "anuvaka", "prapathaka", "adhyaya", "brahmana")
+
+Guidelines:
+- Title: Usually first bold heading (**text**)
+- Commentary markers: **प्रकाशिका**, **भाष्यम्**, **टीका**
+- Structure type: Look for patterns like **खण्डः**, **वल्ली**, **अनुवाकः**, **प्रपाठकः**, **अध्यायः**
+- Use null (not string "none") for missing values
+- Standard upanishad IDs: "kena-upanishad", "isavasya-upanishad", etc.
+
+Response format (JSON only, no markdown fences):
+{{"canonical_title": "...", "grantha_id": "...", "commentary_id": null, "commentator": null, "structure_type": "khanda"}}
+
+Excerpt:
+{excerpt}

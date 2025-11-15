@@ -22,11 +22,93 @@ To use the `grantha-converter` command-line tool, you need to install the packag
 pip install -e .
 ```
 
-This command will install the `grantha_converter` package and its dependencies, and create a `grantha-converter` executable script.
+This command will install the `grantha_converter` package and its dependencies, and create the `grantha-converter` and `vishvas-markup-to-structured-markdown` executable scripts.
 
 ## Usage
 
-### Command-Line Interface
+### Vishvas Markup to Structured Markdown Converter
+
+The `vishvas-markup-to-structured-markdown` tool converts Vishvas-style markup files (HTML `<details>`-based Markdown) to the standardized Grantha Markdown format.
+
+#### Features
+
+- Converts HTML `<details>` tags to Grantha Markdown format
+- Automatically detects prefatory material
+- Handles मूलम् (main text) and टीका (commentary) blocks
+- Extracts mantra numbers from Sanskrit text (॥ १ ॥, ॥१॥, etc.)
+- Validates output against Grantha Markdown specification
+- Preserves Devanagari content integrity
+
+#### Basic Usage
+
+```bash
+vishvas-markup-to-structured-markdown \
+  -i sources/upanishads/isavasya/isa-vedantadesika/isavasya-vedantadesika.md \
+  -o isavasya-converted.md \
+  --grantha-id isavasya-upanishad \
+  --canonical-title "ईशावास्योपनिषत्" \
+  --commentary-id isavasya-vedantadesika \
+  --commentator "वेङ्कटनाथः"
+```
+
+#### Advanced Options
+
+```bash
+# Custom structure (e.g., for Bhagavad Gita shlokas)
+vishvas-markup-to-structured-markdown \
+  -i input.md \
+  -o output.md \
+  --grantha-id bhagavad-gita \
+  --canonical-title "भगवद्गीता" \
+  --commentary-id ramanuja \
+  --structure-key Shloka \
+  --structure-name "श्लोकः"
+
+# Skip validation (not recommended)
+vishvas-markup-to-structured-markdown ... --no-validate
+
+# Verbose output
+vishvas-markup-to-structured-markdown ... -v
+```
+
+#### Source File Format
+
+The converter expects HTML `<details>`-based Markdown with the following structure:
+
+```markdown
++++
+title = "Commentator Name"
++++
+
+<details><summary>टीका</summary>
+Prefatory commentary/invocations
+</details>
+
+<details open><summary>मूलम्</summary>
+Sanskrit mantra text ॥ १ ॥
+</details>
+
+<details><summary>टीका</summary>
+Commentary on mantra 1
+</details>
+```
+
+#### Python API
+
+```python
+from grantha_converter.html_details_to_grantha_md import convert_file
+
+convert_file(
+    input_path='source.md',
+    output_path='output.md',
+    grantha_id='isavasya-upanishad',
+    canonical_title='ईशावास्योपनिषत्',
+    commentary_id='isavasya-vedantadesika',
+    commentator='वेङ्कटनाथः'
+)
+```
+
+### Command-Line Interface (JSON ↔ Markdown)
 
 #### Convert JSON to Markdown
 

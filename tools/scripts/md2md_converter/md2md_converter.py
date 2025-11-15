@@ -15,7 +15,8 @@ import re
 import difflib
 import argparse
 from typing import Tuple
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from grantha_converter.hasher import normalize_text
 
 # --- Configuration ---
@@ -38,8 +39,9 @@ def configure_api():
     if not api_key:
         print("ERROR: GOOGLE_API_KEY environment variable not set.", file=sys.stderr)
         sys.exit(1)
-    genai.configure(api_key=api_key)
+    client = genai.Client(api_key=api_key)
     print("Gemini API configured successfully.")
+    return client
 
 
 def read_file_content(filepath: str) -> str:
@@ -52,16 +54,18 @@ def read_file_content(filepath: str) -> str:
         sys.exit(1)
 
 
-def call_gemini_api(prompt: str, input_text: str) -> str:
+def call_gemini_api(client, prompt: str, input_text: str) -> str:
     """Sends the combined prompt and input text to the Gemini API."""
     print(f"Initializing Gemini model: {MODEL_NAME}...")
-    model = genai.GenerativeModel(MODEL_NAME)
     full_prompt = f"{prompt}\n\n--- START OF INPUT FILE ---\n\n{input_text}"
     print("Sending request to Gemini API. This may take a moment...")
     try:
-        response = model.generate_content(full_prompt)
+        response = client.models.generate_content(
+            model=MODEL_NAME,
+            contents=full_prompt
+        )
         print("Received response from API.")
-        if not response.parts:
+        if not response.text:
              print("Warning: Received an empty or blocked response from the API.")
              return ""
         return response.text
@@ -241,14 +245,14 @@ Examples:
     args = parser.parse_args()
 
     if args.command == "convert":
-        configure_api()
+        client = configure_api()
         prompt_content = read_file_content(args.prompt)
         for input_file in args.input_files:
             print(f"\n--- Processing file: {input_file} ---")
             base, _ = os.path.splitext(input_file)
             output_file = f"{base}.converted.md"
             input_content = read_file_content(input_file)
-            api_response = call_gemini_api(prompt_content, input_content)
+            api_response = call_gemini_api(client, prompt_content, input_content)
             if not api_response:
                 print(f"Process for {input_file} halted due to empty API response.")
                 continue

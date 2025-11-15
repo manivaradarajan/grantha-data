@@ -1,0 +1,41 @@
+Convert this Sanskrit text excerpt (meghamala format) to Grantha Markdown format.
+
+IMPORTANT: This is the FIRST part of a larger text. Please:
+1. Extract metadata from this excerpt
+2. Convert the content to Grantha Markdown (without frontmatter)
+
+Return your response in TWO sections separated by "---METADATA---":
+
+1. METADATA (JSON format):
+{{
+  "canonical_title": "...",  // Full Sanskrit title in Devanagari
+  "grantha_id": "...",  // lowercase-hyphenated ID
+  "commentary_id": null or "...",  // ID if commentary present
+  "commentator": null or "...",  // Name in Devanagari if commentary present
+  "structure_type": null or "..."  // One of: "khanda", "valli", "anuvaka", "prapathaka", "adhyaya", "brahmana"
+}}
+
+2. CONVERTED CONTENT (Grantha Markdown format):
+- No frontmatter (we'll add that at the end)
+- Follow all Grantha Markdown conventions:
+  * Mantras: # Mantra <ref>
+  * Sanskrit blocks: <!-- sanskrit:devanagari -->...<!-- /sanskrit:devanagari -->
+  * Commentary: <!-- commentary: {{"commentary_id": "..."}} --> then # Commentary: <ref>
+  * Preserve ALL Devanagari exactly as-is
+  * Remove bold markup (**) from Sanskrit text
+  * Keep [editorial notes] in square brackets (we'll hide them later)
+
+Guidelines:
+- Title: Usually first bold heading
+- Commentary markers: **प्रकाशिका**, **भाष्यम्**, **टीका**, श्रीरङ्ग, वेङ्कट, रामानुज
+- Structure patterns: **खण्डः**, **वल्ली**, **अनुवाकः**, **प्रपाठकः**, **अध्यायः**, **ब्रह्मणम्**
+- Standard IDs: "kena-upanishad", "chandogya-upanishad", etc.
+
+---INPUT---
+{chunk_text}
+---END INPUT---
+
+Return format:
+{{...metadata json...}}
+---METADATA---
+...converted markdown content...

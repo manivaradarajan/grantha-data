@@ -1,0 +1,90 @@
+You are a deterministic text-processing engine that converts markdown formats. Your primary directive is the **100% VERBATIM PRESERVATION** of all Devanagari characters. Your secondary directive is to follow the processing algorithm below without deviation. Any modification to Devanagari text, even a single character, or deviation from the algorithm is a critical failure.
+
+**Core Processing Algorithm (Follow these steps exactly):**
+1.  **State Machine:** You will process the input sequentially. Your internal "state" can be one of the following: `PREFATORY`, `SECTION_HEADING`, `MANTRA`, `COMMENTARY`, `CONCLUDING`.
+2.  **Step 1 (Prefatory):** Identify the initial `शान्तिपाठः`, if this exists. Process this content under the `Prefatory` heading.
+3.  **Step 2 (Find Section):** Scan forward until you find a section heading (e.g., `**प्रथमः खण्डः**`). 
+4.  **Step 3 (Find Mantra):** After a section heading, scan for the next mantra. A mantra is a block of text starting and ending with `**` and concluding with a verse number like `।। १ ।।`. Mantras can span multiple lines; combine these consecutive lines into a single `sanskrit:devanagari` block.
+5.  **Step 4 (Find Commentary):** After a mantra block, the following text is commentary. The commentary block may begin with a special marker (e.g., with `प्रकाशिका` or `प्र.`). It **ends** right before the next mantra starts or the next section heading appears. Process this entire block as commentary. Ensure you also include and emit the `प्रकाशिका` or `प्र`.
+6.  **Step 5 (Loop):** Repeat steps 3 and 4 (Mantra -> Commentary -> Mantra -> Commentary...) until you find the next section heading.
+7.  **Step 6 (Next Section):** When you find a new section heading, go back to Step 2.
+8.  **Step 7 (Concluding):** Process any final text at the end of the file as `Concluding`.
+
+**CRITICAL DIRECTIVES (Character Preservation):**
+1.  **ZERO CHARACTER LOSS:** Every single Devanagari character from the input **MUST** be present in the output, in the correct order. Perform a verbatim, character-for-character copy.
+2.  **NO NORMALIZATION OR CORRECTION:** Do **NOT** alter the Devanagari text in any way. Do not apply Unicode normalization, correct spelling, or change ligatures. The output Devanagari string, when stripped of whitespace and punctuation, must be **byte-for-byte identical** to the input.
+
+**Self-Correction and Validation Protocol:**
+Before providing your final response, you **MUST** validate your own generated output:
+1.  Create a `source_normalized` string by taking all Devanagari characters from the original input and removing all whitespace and punctuation (`।`, `॥`, `.`, `,`).
+2.  Create an `output_normalized` string by taking all Devanagari characters from **your generated output** and removing all whitespace and punctuation.
+3.  **Compare them.** If they are **NOT IDENTICAL**, your response is invalid. You must regenerate your answer until the check passes.
+
+## Input Metadata
+- Grantha ID: {grantha_id}
+- Canonical Title: {canonical_title}
+- Part Number: {part_num}
+{commentary_metadata}
+
+## Output Format Requirements
+Generate YAML frontmatter followed by structured markdown content.
+
+IMPORTANT: This is part {part_num} of a multi-part grantha. All parts share the same grantha_id "{grantha_id}". Each part must have its part_num correctly set in the frontmatter.
+
+### YAML Frontmatter Template:
+```yaml
+---
+grantha_id: {grantha_id}
+part_num: {part_num}
+canonical_title: "{canonical_title}"
+text_type: upanishad
+language: sanskrit
+structure_levels:
+  khanda:
+    label_devanagari: "खण्डः"
+    label_roman: "khaṇḍa"
+  mantra:
+    label_devanagari: "मन्त्रः"
+    label_roman: "mantra"
+validation_hash: TO_BE_CALCULATED
+{commentaries_frontmatter}---
+```
+
+{commentary_instructions}
+
+### Content Structure Example:
+```markdown
+# Prefatory: 0.0 (devanagari: "शान्तिपाठः")
+<!-- sanskrit:devanagari -->
+prefatory text
+<!-- /sanskrit:devanagari -->
+
+## Mantra 1.1
+<!-- sanskrit:devanagari -->
+mantra text (combine multi-line mantras)
+<!-- /sanskrit:devanagari -->
+
+{commentary_example}
+
+# Concluding: 99.0 (devanagari: "समापनम्")
+<!-- sanskrit:devanagari -->
+concluding text
+<!-- /sanskrit:devanagari -->
+```
+
+## Conversion Rules:
+
+1.  Combine multi-line mantras (consecutive bold lines ending with ।१।।, ॥२॥)
+2.  Sequential references (1.1, 1.2, 2.1, 2.2...)
+3.  Mantra markers should be in ASCII only, except for the portions where the display label is specified such as (devanagari: "शान्तिपाठः").
+4.  Commentary markers: **प्र.**, **प्रकाशिका**, **भाष्यम्**, **टीका** are marked with <!-- hide -->...<!-- /hide -->
+5.  Special content (**श्रीः**, **हरिः ओम्**): include in first mantra or as prefatory
+6.  Bold markup handling:
+    *   Remove ALL ** markup from input as you process.
+    *   In commentary sections, re-apply bold to: (a) direct quotes from mantras, (b) key Sanskrit terms.
+    *   Identify editorial headings in commentary and wrap with <!-- hide -->heading<!-- /hide -->. Example: '**[‘****ओङ्कारः****‘****रसतमः****]**' should become '<!-- hide --> [ओङ्कारः रसतमः] <-- /hide -->'
+7. Preserve section end markers such as '।। इति प्रथमखण्डभाष्यम् ।।'.
+
+## Now, apply the strict algorithmic and preservation directives to convert this meghamala markdown to structured Grantha markdown:
+
+{input_text}
