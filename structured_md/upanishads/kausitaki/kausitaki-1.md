@@ -18,8 +18,8 @@ structure_levels:
       roman: mantra
 validation_hash: 33eac7b9bc3e2fa65f5d4acd5fa027a0332d16572004e8e55349826499d87d04
 commentaries_metadata:
-  - commentary_id: rangaramanuja-muni-prakashika
-    commentator: श्रीरङ्गरामानुजमुनि
+  - commentary_id: kausitaki-upanishad-prakashika
+    commentator: रङ्गरामानुजमुनिः
     language: sanskrit
 ---
 
