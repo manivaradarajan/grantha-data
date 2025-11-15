@@ -1,6 +1,6 @@
 ---
 grantha_id: kausitaki-upanishad
-part_num: 1
+part_num: 3
 canonical_title: कौषीतकिब्राह्मणोपनिषत्
 text_type: upanishad
 language: sanskrit
@@ -18,8 +18,8 @@ structure_levels:
       roman: mantra
 validation_hash: 897fdaf1e93f7789d97ef6ca4e24f2475678a8d8bb4cd74c30b09c481013f185
 commentaries_metadata:
-  - commentary_id: rangaramanuja-muni-prakashika
-    commentator: श्रीरङ्गरामानुजमुनीन्द्र
+  - commentary_id: kausitaki-upanishad-prakashika
+    commentator: रङ्गरामानुजमुनिः
     language: sanskrit
 ---
 
