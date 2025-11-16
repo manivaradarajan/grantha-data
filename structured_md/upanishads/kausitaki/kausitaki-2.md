@@ -5,7 +5,7 @@ canonical_title: कौषीतकिब्राह्मणोपनिषत
 text_type: upanishad
 language: sanskrit
 scripts:
-  - devanagari
+- devanagari
 structure_levels:
   key: Adhyaya
   scriptNames:
@@ -16,11 +16,12 @@ structure_levels:
     scriptNames:
       devanagari: मन्त्रः
       roman: mantra
-validation_hash: 02222f3096e8c13468b9510850679936d5b1db54dc71e79a3de248b5760de877
+validation_hash: 344cc3a8b209e05b6920e7e20c28587cdca0aa93723eb0b27900115586f5f8b3
 commentaries_metadata:
-  - commentary_id: kausitaki-upanishad-prakashika
-    commentator: रङ्गरामानुजमुनिः
-    language: sanskrit
+- commentary_id: kausitaki-upanishad-prakashika
+  commentator: रङ्गरामानुजमुनिः
+  language: sanskrit
+hash_version: 1
 ---
 
 <!-- hide type:document-title --> **कौषीतकिब्राह्मणोपनिषत्** <!-- /hide -->
