@@ -27,5 +27,4 @@ where = ["tools/lib"]
 [project.scripts]
 grantha-converter = "grantha_converter.cli:main"
 vishvas-markup-to-structured-markdown = "grantha_converter.html_details_cli:main"
-meghamala-md-to-structured-md = "grantha_converter.meghamala_cli:main"
 grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
