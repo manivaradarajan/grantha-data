@@ -28,7 +28,7 @@ google-auth-oauthlib==1.2.0
 google-genai==1.41.0
 google-generativeai==0.7.2
 googleapis-common-protos==1.70.0
--e git+https://github.com/manivaradarajan/grantha-data.git@43986ea46ac8b39fed3da8383bd7ec29102c4dcb#egg=grantha_converter
+-e git+https://github.com/manivaradarajan/grantha-data.git@7512a4adb8c96f060fc50681734fc8a44a3753f2#egg=grantha_converter
 grpcio==1.75.1
 grpcio-status==1.62.3
 gunicorn==21.2.0
@@ -87,6 +87,7 @@ requests==2.31.0
 requests-oauthlib==2.0.0
 rpds-py==0.28.0
 rsa==4.9.1
+ruff==0.14.5
 six==1.17.0
 sniffio==1.3.1
 soupsieve==2.8
