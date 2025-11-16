@@ -1,0 +1,36 @@
+# Common Bazel configuration for grantha-data
+
+# Enable Bzlmod (modern dependency management)
+common --enable_bzlmod=true
+
+# Enable color output
+common --color=yes
+
+# Show test output on failure
+test --test_output=errors
+
+# Cache test results
+build --experimental_repository_cache_hardlinks
+
+# Enable build without bytes
+build --incompatible_default_to_explicit_init_py
+
+# Remote cache configuration (optional, uncomment to use)
+# build --remote_cache=...
+
+# Performance improvements
+build --jobs=auto
+
+# Python-specific settings
+build --python_path=/usr/bin/python3
+
+# Test configuration
+test --test_verbose_timeout_warnings
+test --test_summary=detailed
+
+# Coverage support
+coverage --combined_report=lcov
+coverage --experimental_generate_llvm_lcov
+
+# Build event protocol (for build analysis)
+# build --build_event_json_file=build_events.json

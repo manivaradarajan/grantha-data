@@ -1,0 +1,76 @@
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load("@grantha_pip//:requirements.bzl", "requirement")
+
+package(default_visibility = ["//visibility:public"])
+
+py_library(
+    name = "gemini_processor",
+    srcs = [
+        "__init__.py",
+        "cache_manager.py",
+        "file_manager.py",
+        "prompt_manager.py",
+        "response_parser.py",
+        "sampler.py",
+    ],
+    deps = [
+        requirement("google-genai"),
+        requirement("pyyaml"),
+    ],
+)
+
+# Tests
+py_test(
+    name = "test_cache_manager",
+    size = "small",
+    srcs = ["test_cache_manager.py"],
+    main = "test_cache_manager.py",
+    deps = [
+        ":gemini_processor",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_file_manager",
+    size = "small",
+    srcs = ["test_file_manager.py"],
+    main = "test_file_manager.py",
+    deps = [
+        ":gemini_processor",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_prompt_manager",
+    size = "small",
+    srcs = ["test_prompt_manager.py"],
+    main = "test_prompt_manager.py",
+    deps = [
+        ":gemini_processor",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_response_parser",
+    size = "small",
+    srcs = ["test_response_parser.py"],
+    main = "test_response_parser.py",
+    deps = [
+        ":gemini_processor",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_sampler",
+    size = "small",
+    srcs = ["test_sampler.py"],
+    main = "test_sampler.py",
+    deps = [
+        ":gemini_processor",
+        requirement("pytest"),
+    ],
+)

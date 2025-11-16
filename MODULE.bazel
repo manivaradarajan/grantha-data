@@ -1,0 +1,23 @@
+"""Grantha Data - Sanskrit text processing and conversion system"""
+
+module(
+    name = "grantha_data",
+    version = "0.0.1",
+)
+
+# Python rules
+bazel_dep(name = "rules_python", version = "0.39.0")
+
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.11",
+)
+
+# Use pip extension for dependencies
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "grantha_pip",
+    python_version = "3.11",
+    requirements_lock = "//:requirements.txt",
+)
+use_repo(pip, "grantha_pip")

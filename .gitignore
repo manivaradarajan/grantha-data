@@ -210,3 +210,13 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Bazel
+bazel-*
+.bazel/
+.bazelrc.user
+bazel-bin/
+bazel-out/
+bazel-testlogs/
+bazel-grantha-data/
+build_events.json

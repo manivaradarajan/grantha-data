@@ -1,0 +1,151 @@
+load("@rules_python//python:defs.bzl", "py_library", "py_binary", "py_test")
+load("@grantha_pip//:requirements.bzl", "requirement")
+
+package(default_visibility = ["//visibility:public"])
+
+py_library(
+    name = "grantha_converter",
+    srcs = [
+        "__init__.py",
+        "devanagari_extractor.py",
+        "devanagari_repair.py",
+        "devanagari_validator.py",
+        "diff_utils.py",
+        "grantha_markdown_validator.py",
+        "hasher.py",
+        "hide_editor_comments.py",
+        "html_details_to_grantha_md.py",
+        "json_to_md.py",
+        "md_to_json.py",
+        "meghamala_chunker.py",
+        "meghamala_stitcher.py",
+    ],
+    deps = [
+        requirement("pyyaml"),
+        requirement("aksharamukha"),
+        requirement("colorama"),
+        requirement("beautifulsoup4"),
+        requirement("lxml"),
+    ],
+)
+
+# CLI binaries
+py_binary(
+    name = "grantha-converter",
+    srcs = ["cli.py"],
+    main = "cli.py",
+    deps = [
+        ":grantha_converter",
+    ],
+)
+
+py_binary(
+    name = "vishvas-markup-to-structured-markdown",
+    srcs = ["html_details_cli.py"],
+    main = "html_details_cli.py",
+    deps = [
+        ":grantha_converter",
+    ],
+)
+
+py_binary(
+    name = "grantha-repair-devanagari",
+    srcs = ["devanagari_repair_cli.py"],
+    main = "devanagari_repair_cli.py",
+    deps = [
+        ":grantha_converter",
+    ],
+)
+
+# Tests
+py_test(
+    name = "test_hasher",
+    size = "small",
+    srcs = [
+        "grantha_converter_test/__init__.py",
+        "grantha_converter_test/test_hasher.py",
+    ],
+    args = ["-v", "$(location grantha_converter_test/test_hasher.py)"],
+    main = "grantha_converter_test/test_hasher.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+    legacy_create_init = False,
+)
+
+py_test(
+    name = "test_json_to_md",
+    size = "small",
+    srcs = [
+        "grantha_converter_test/__init__.py",
+        "grantha_converter_test/test_json_to_md.py",
+    ],
+    main = "grantha_converter_test/test_json_to_md.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_md_to_json",
+    size = "small",
+    srcs = [
+        "grantha_converter_test/__init__.py",
+        "grantha_converter_test/test_md_to_json.py",
+    ],
+    main = "grantha_converter_test/test_md_to_json.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_integration",
+    size = "medium",
+    srcs = [
+        "grantha_converter_test/__init__.py",
+        "grantha_converter_test/test_integration.py",
+    ],
+    main = "grantha_converter_test/test_integration.py",
+    data = glob(["grantha_converter_test/test_data/**/*"], allow_empty = True),
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_devanagari_extractor",
+    size = "small",
+    srcs = ["test_devanagari_extractor.py"],
+    main = "test_devanagari_extractor.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_grantha_markdown_validator",
+    size = "small",
+    srcs = ["test_grantha_markdown_validator.py"],
+    main = "test_grantha_markdown_validator.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "commentary_parser_test",
+    size = "small",
+    srcs = ["commentary_parser_test.py"],
+    main = "commentary_parser_test.py",
+    deps = [
+        ":grantha_converter",
+        requirement("pytest"),
+    ],
+)
