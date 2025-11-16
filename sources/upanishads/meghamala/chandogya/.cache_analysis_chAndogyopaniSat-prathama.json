@@ -1,0 +1,75 @@
+{
+  "file_hash": "1bfd509296bdbe47c1144e9d70e96f5d20b47177d98e5b3cc9d6934e6bfbfaae",
+  "timestamp": "2025-11-15T10:06:12.860802",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "छान्दोग्योपनिषत्",
+      "grantha_id": "chhandogya-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "prapāṭhaka_khaṇḍa"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prapathaka",
+        "scriptNames": {
+          "devanagari": "प्रपाठकः",
+          "roman": "prapāṭhaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Prapathaka Chunk",
+        "description": "The entire first Prapathaka is consolidated into a single chunk as its total character count is well below the safety limit. Chunking boundaries strictly follow Prapathaka start/end.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Chāndogyopaniṣat, Prapathaka 1, covering all 13 Khandas and prefatory material.",
+          "start_marker": "शान्तिपाठः",
+          "end_marker": "।। इति प्रथमप्रपाठकप्रकाशिका ।।",
+          "estimated_character_count": 110655
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Khanda",
+      "justification": "The Prapathaka is structurally divided into Khandas, which serve as the primary semantic and manageable processing units.",
+      "start_pattern": {
+        "description": "A new Khanda starts with a bolded heading indicating its number, often followed by the topic in brackets.",
+        "examples": [
+          "**प्रथमः खण्डः**",
+          "**द्वितीयः खण्डः**",
+          "**द्वादशः खण्डः**"
+        ],
+        "regex": "\\*\\*([\\u0900-\\u097F]+) खण्डः\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The end of a Khanda is marked by a concluding line for the commentary, sometimes followed by the closing marker for the Khanda itself (e.g., **।। इति सप्तमः खण्डः ।।**). The commentary closure is the most reliable delimiter.",
+        "examples": [
+          "।। इति प्रथमखण्डभाष्यम् ।।",
+          "।। इति एकादशखण्डभाष्यम् ।।"
+        ],
+        "regex": "।। इति .*?खण्डभाष्यम्( |) *?।।|।। इति [\\u0900-\\u097F]+ खण्डः( |) *?।।"
+      },
+      "pre_content_handling": "Handle the initial 'शान्तिपाठः' and the 'प्रकाशिका' introduction/Mangalacarana as a single 'Prefatory' section before parsing the first numbered Khanda."
+    }
+  },
+  "version": "1.0"
+}

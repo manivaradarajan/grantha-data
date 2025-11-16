@@ -1,0 +1,74 @@
+{
+  "file_hash": "9387fb21d06eae3b65985d591304f45b57258e96a240b0e3c5e19ec88a8da487",
+  "timestamp": "2025-11-15T10:22:25.685170",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "छान्दोग्योपनिषत्",
+      "grantha_id": "chhandogya-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "prapāṭhaka_khanda"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prapathaka",
+        "scriptNames": {
+          "devanagari": "प्रपाठकः",
+          "roman": "prapāṭhaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Prapāṭhaka Chunk",
+        "description": "The entire Third Prapāṭhaka is processed in one chunk as the estimated length is safely below the hard character limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Complete Third Prapāṭhaka (Khandas 1 through 19), including all Mūla text and commentary.",
+          "start_marker": "**तृतीयः** **प्रपाठकः**",
+          "end_marker": "।। इति तृतीयप्रपाठकभाष्यम् ।।",
+          "estimated_character_count": 90000
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Khanda",
+      "justification": "The Khanda (section) serves as the fundamental logical unit, grouping the Mūla verses and their associated commentary (Bhāṣya/Prakāśikā).",
+      "start_pattern": {
+        "description": "Starts with a bolded heading naming the Khaṇḍa (e.g., प्रथमः).",
+        "examples": [
+          "**प्रथमः** **खण्डः**",
+          "**द्वितीयः** **खण्डः**"
+        ],
+        "regex": "\\*\\*([\\u0900-\\u097F]+)\\*\\* \\*\\*खण्डः\\*\\*"
+      },
+      "end_pattern": {
+        "description": "Ends with the definitive conclusion of the commentary for that specific Khaṇḍa.",
+        "examples": [
+          "।। इति प्रथमखण्डभाष्यम् ।।",
+          "।। इति सप्तदशखण्डभाष्यम् ।।"
+        ],
+        "regex": "।। इति .*?खण्डभाष्यम् ।।"
+      },
+      "pre_content_handling": "Treat the initial 'छान्दोग्योपनिषत्' and 'तृतीयः प्रपाठकः' headings as document context before the first parsable unit (Khaṇḍa 1)."
+    }
+  },
+  "version": "1.0"
+}

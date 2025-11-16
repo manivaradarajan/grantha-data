@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Grantha Envelope Schema",
+  "description": "Schema for the envelope/metadata file of a multi-part grantha. This file contains all top-level metadata but no content.",
+  "type": "object",
+  "properties": {
+    "grantha_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "canonical_title": { "type": "string" },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "alias": { "type": "string" },
+          "scope": { "type": "string", "enum": ["full_text", "abbreviation"] }
+        },
+        "required": ["alias", "scope"]
+      }
+    },
+    "text_type": { "type": "string", "enum": ["upanishad", "commentary"] },
+    "language": { "type": "string", "enum": ["sanskrit", "english"] },
+    "metadata": { "$ref": "grantha.schema.json#/definitions/metadata" },
+    "structure_levels": {
+      "type": "array",
+      "items": { "$ref": "grantha.schema.json#/definitions/structure_level" }
+    },
+    "variants_available": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "parts": {
+      "description": "An ordered list of filenames for the content parts of this grantha.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^part[0-9]+\\.json$"
+      }
+    }
+  },
+  "required": [
+    "grantha_id",
+    "canonical_title",
+    "text_type",
+    "language",
+    "metadata",
+    "structure_levels",
+    "parts"
+  ],
+  "unevaluatedProperties": false
+}

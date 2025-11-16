@@ -1,0 +1,67 @@
+{
+  "file_hash": "41fb0bfbdcf06264ae18d0c7f7c064ce3559cb70c0ad4de46d5ae536419f56b8",
+  "timestamp": "2025-11-15T10:45:35.242380",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "प्रश्नोपनिषत्",
+      "grantha_id": "prashna-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "prashna"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prashna",
+        "scriptNames": {
+          "devanagari": "प्रश्नः",
+          "roman": "prashna"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Prashna Chunk",
+        "description": "The document contains only the first Prashna of the Prashnopanishat. Since the entire text is short and adheres to the character limit, it is processed as a single chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Complete First Prashna (Mantra 1 through 16) and associated commentary.",
+          "start_marker": "**प्रश्नोपनिषत्**",
+          "end_marker": "।। इति प्रथमप्रश्नप्रकाशिका ।।",
+          "estimated_character_count": 8000
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra Section",
+      "justification": "The document structure centers around the numerically defined Mantras (1-16). Each segment of the primary text is clearly delimited by its sequential number, followed immediately by the commentary (Prakashika).",
+      "start_pattern": {
+        "description": "The beginning of a new thematic section, often preceding the Mantra text itself, marked by double asterisks and bracketed Devanagari headings.",
+        "examples": [
+          "**[सृष्टिमूलप्रश्नः]**",
+          "**[आचार्येण शिष्येभ्यः ब्रह्मचर्यादिविधानम्]**"
+        ],
+        "regex": "\\*\\*\\[[\\u0900-\\u097F\\s]+\\]\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The end of the primary Mantra text, marked by a double danda enclosing the sequential number.",
+        "examples": [
+          "पिप्पलादमुपसन्नाः ।।१ ।।",
+          "वक्ष्याम इति ।।२।।"
+        ],
+        "regex": "।।[\\s]*([०-९\\d]+)[\\s]*।।"
+      },
+      "pre_content_handling": "The initial section defining the Prashna, the main commentary heading ('प्रकाशिका'), and the 'मङ्गलाचरणम्' should be treated as prefatory material before the content of the first numbered Mantra begins."
+    }
+  },
+  "version": "1.0"
+}

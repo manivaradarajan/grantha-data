@@ -1,0 +1,67 @@
+{
+  "file_hash": "edd3025419c6932266cb13c09cdf86aebcc5ad1a2af1574c8ed34b5ab3309bb1",
+  "timestamp": "2025-11-15T10:21:32.925844",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kausitaki-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीमद्रङ्गरामानुजमुनीन्द्र",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Single Chunk Processing",
+        "description": "The entire document is processed as a single chunk because the total character count is significantly below the safety limit, maximizing efficiency.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The complete Fourth Adhyaya (Ch. 4) of the Kauṣītakibrāhmaṇopaniṣat along with the commentary (Prakashika) and concluding analysis.",
+          "start_marker": "कौषीतकिब्राह्मणोपनिषत्",
+          "end_marker": "॥ इति श्रीरङ्गरामानुजमुनीन्द्रविरचिता कौषीतक्युपनिषत्प्रकाशिका समाप्ता॥",
+          "estimated_character_count": 24500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The document structure is defined by 45 consecutive numbered verses (Mantras), each followed by its commentary.",
+      "start_pattern": {
+        "description": "A Mantra unit begins with the Sanskrit text of the verse followed by its Devanagari numeral and double danda markers. This pattern is often the end of the line containing the verse text.",
+        "examples": [
+          "गार्ग्यो हवै बालाकिरनूचान: संस्पष्ट आस ॥ १ ॥",
+          "स होवाच बालाकिः, य एवैष आदित्ये पुरुषः, तमेवाहमुपासे इति’ ॥ ५ ॥"
+        ],
+        "regex": "(.*?[\\u0900-\\u097F]+\\s*॥\\s*[\\u0967-\\u097F]+\\s*॥)"
+      },
+      "end_pattern": {
+        "description": "The unit ends just before the start of the next Mantra (using lookahead) or at the explicit conclusion marker of the chapter/grantha (excluding the final Adhikaraṇa discussion, which is a separate unit).",
+        "examples": [
+          "Lookahead for next Mantra start: सोऽवसदुशीनरेषु सत्त्वमत्स्येषु...",
+          "Lookahead for final section start: [जगद्वाचित्वाधिकरणविचारः]"
+        ],
+        "regex": "(?=\\s*.*?[\\u0900-\\u097F]+\\s*॥\\s*[\\u0967-\\u097F]+\\s*॥)|(?=\\[जगद्वाचित्वाधिकरणविचारः\\])"
+      },
+      "pre_content_handling": "The initial text (Title, Commentator, Chapter title 'चतुर्थोऽध्यायः') should be treated as 'Header/Prefatory' material before Mantra 1. The structural heading '[जगद्वाचित्वाधिकरणविचारः]' is a distinct, non-Mantra concluding commentary unit and should be parsed separately after Mantra 45."
+    }
+  },
+  "version": "1.0"
+}

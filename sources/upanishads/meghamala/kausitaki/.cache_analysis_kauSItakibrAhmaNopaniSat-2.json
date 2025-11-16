@@ -1,0 +1,69 @@
+{
+  "file_hash": "458700e3550659718a108b65a271238f35a425e1365eaef50c8ac1f0fc05dd58",
+  "timestamp": "2025-11-15T10:24:31.129366",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kaushitaki-brahmana-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीमद्रङ्गरामानुजमुनीन्द्र",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Group by Character Count",
+        "description": "The entire provided Adhyaya (including Prakāśikā) is small enough to fit into a single chunk, well below the safety character limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Third Adhyaya (Pratardana Vidyā) including the commentary (Prakāśikā) and final summary.",
+          "start_marker": "कौषीतकिब्राह्मणोपनिषत्",
+          "end_marker": "।। इति तृतीयाध्यायप्रकाशिका ।।",
+          "estimated_character_count": 27100
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyaya is fundamentally divided into numbered Mantras (verses), each followed by its respective commentary, making the Mantra (with commentary) the smallest logical unit for parsing.",
+      "start_pattern": {
+        "description": "A new Mantra unit starts with the completion of the verse text, marked by the double danda surrounding the verse number.",
+        "examples": [
+          "॥ १॥",
+          "॥ २ ॥",
+          "॥ ६७ ॥"
+        ],
+        "regex": "॥\\s*(\\d+)\\s*॥"
+      },
+      "end_pattern": {
+        "description": "The unit ends immediately before the start of the next Mantra's numbering pattern, or at the explicit Adhyaya colophon/conclusion.",
+        "examples": [
+          "(Implicitly ends before the next verse number)",
+          "।। इति तृतीयोऽध्यायः॥",
+          "।। इति तृतीयाध्यायप्रकाशिका ।।"
+        ],
+        "regex": "(?=॥\\s*(\\d+)\\s*॥)|(।।\\s*इति\\s*तृतीयोऽध्यायः\\s*।।)|(।।\\s*इति\\s*तृतीयाध्यायप्रकाशिका\\s*।।)"
+      },
+      "pre_content_handling": "Treat all text before the first instance of '॥ १॥' (including the Canonical Title, Commentary details, Adhyaya title, and bracketed thematic summary) as prefatory material for the Third Adhyaya."
+    }
+  },
+  "version": "1.0"
+}

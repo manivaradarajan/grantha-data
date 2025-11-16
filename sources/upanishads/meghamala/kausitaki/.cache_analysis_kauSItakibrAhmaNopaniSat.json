@@ -1,0 +1,67 @@
+{
+  "file_hash": "2f2c6fea23882ce6bbd7efe30b8b151468118078e3d27e6cbf68773510a7c02b",
+  "timestamp": "2025-11-15T10:28:44.350511",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kausitaki-upanishad",
+      "commentary_id": null,
+      "commentator": null,
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Adhyaya Chunk",
+        "description": "Since the provided text (Adhyaya 2) is very short, it is processed as a single, validated chunk to minimize API calls.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Second Adhyaya, Mantras 1 through 15.",
+          "start_marker": "श्री:",
+          "end_marker": "॥ इति द्वितीयोऽध्यायः॥",
+          "estimated_character_count": 8868
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyaya is divided into sequentially numbered units (1-15) which serve as the primary semantic and structural divisions, conventionally referred to as Mantras in Upanishads.",
+      "start_pattern": {
+        "description": "A Mantra technically starts immediately following the end marker of the previous Mantra. Often preceded by a bold topic heading in brackets.",
+        "examples": [
+          "**[प्राणस्य श्रेष्ठता]**",
+          "**[अग्निहोत्रसंपत्तिः]**"
+        ],
+        "regex": "\\*\\*\\s*\\[[\\u0900-\\u097F\\s]+\\s*\\]\\s*|\\*\\*\\s*\\[[a-zA-Z\\s]+\\s*\\]\\s*"
+      },
+      "end_pattern": {
+        "description": "The end of a Mantra is marked by double vertical bars enclosing the section number.",
+        "examples": [
+          "॥ १ ॥",
+          "॥ १५ ॥"
+        ],
+        "regex": "॥\\s*([०-९]+|\\d+)\\s*॥"
+      },
+      "pre_content_handling": "Handle the initial lines (श्री:, Title, and Chapter heading) as 'Prefatory' content for the entire Adhyaya 2 before parsing Mantra 1."
+    }
+  },
+  "version": "1.0"
+}

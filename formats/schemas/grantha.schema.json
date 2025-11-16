@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Grantha Data Schema (Complete Single File)",
+  "description": "Defines a complete grantha contained within a single file. Also serves as the source of truth for common definitions.",
+  "type": "object",
+  "properties": {
+    "grantha_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "canonical_title": { "type": "string" },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "alias": { "type": "string" },
+          "scope": { "type": "string", "enum": ["full_text", "abbreviation"] }
+        },
+        "required": ["alias", "scope"]
+      }
+    },
+    "text_type": { "type": "string", "enum": ["upanishad", "commentary"] },
+    "language": { "type": "string", "enum": ["sanskrit", "english"] },
+    "metadata": { "$ref": "#/definitions/metadata" },
+    "structure_levels": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/structure_level" }
+    },
+    "variants_available": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "prefatory_material": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/passage" }
+    },
+    "passages": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/passage" }
+    },
+    "concluding_material": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/passage" }
+    },
+    "commentaries": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/commentary" }
+    }
+  },
+  "required": [
+    "grantha_id",
+    "canonical_title",
+    "text_type",
+    "language",
+    "metadata",
+    "structure_levels",
+    "passages"
+  ],
+
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source_url": { "type": ["string", "null"], "format": "uri" },
+        "source_commit": { "type": ["string", "null"] },
+        "source_file": { "type": "string" },
+        "processing_pipeline": {
+          "type": "object",
+          "properties": {
+            "llm_model": { "type": "string" },
+            "llm_prompt_version": { "type": "string" },
+            "llm_date": { "type": "string", "format": "date" },
+            "processor": { "type": "string" }
+          },
+          "required": [
+            "llm_model",
+            "llm_prompt_version",
+            "llm_date",
+            "processor"
+          ]
+        },
+        "quality_notes": { "type": "string" },
+        "last_updated": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "source_file",
+        "processing_pipeline",
+        "quality_notes",
+        "last_updated"
+      ]
+    },
+    "structure_level": {
+      "type": "object",
+      "properties": {
+        "key": { "type": "string" },
+        "scriptNames": {
+          "type": "object",
+          "properties": { "devanagari": { "type": "string" } },
+          "required": ["devanagari"]
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/structure_level" }
+        }
+      },
+      "required": ["key", "scriptNames"]
+    },
+    "passage": {
+      "type": "object",
+      "properties": {
+        "ref": { "type": "string" },
+        "passage_type": {
+          "type": "string",
+          "enum": ["prefatory", "main", "concluding"]
+        },
+        "label": {
+          "type": "object",
+          "properties": { "devanagari": { "type": "string" } }
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "sanskrit": {
+              "type": "object",
+              "properties": {
+                "devanagari": { "type": "string" },
+                "roman": { "type": ["string", "null"] },
+                "kannada": { "type": ["string", "null"] }
+              },
+              "required": ["devanagari"]
+            },
+            "english_translation": { "type": ["string", "null"] }
+          }
+        }
+      },
+      "required": ["ref", "passage_type", "content"],
+      "if": {
+        "properties": {
+          "passage_type": { "enum": ["prefatory", "concluding"] }
+        }
+      },
+      "then": { "required": ["label"] }
+    },
+    "commentary": {
+      "type": "object",
+      "properties": {
+        "commentary_id": { "type": "string" },
+        "commentary_title": { "type": "string" },
+        "commentator": {
+          "type": "object",
+          "properties": {
+            "devanagari": { "type": "string" },
+            "latin": { "type": "string" }
+          },
+          "required": ["devanagari"]
+        },
+        "metadata": {
+          "type": "object",
+          "properties": { "source_file": { "type": "string" } }
+        },
+        "passages": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/commentary_passage" }
+        }
+      },
+      "required": [
+        "commentary_id",
+        "commentary_title",
+        "commentator",
+        "passages"
+      ]
+    },
+    "commentary_passage": {
+      "type": "object",
+      "properties": {
+        "ref": { "type": "string" },
+        "prefatory_material": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "label": { "type": "string" },
+              "content": {
+                "type": "object",
+                "properties": {
+                  "sanskrit": {
+                    "type": "object",
+                    "properties": {
+                      "devanagari": { "type": "string" },
+                      "roman": { "type": ["string", "null"] },
+                      "kannada": { "type": ["string", "null"] }
+                    }
+                  },
+                  "english": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "sanskrit": {
+              "type": "object",
+              "properties": {
+                "devanagari": { "type": ["string", "null"] },
+                "roman": { "type": ["string", "null"] },
+                "kannada": { "type": ["string", "null"] }
+              }
+            },
+            "english": { "type": "string" }
+          }
+        }
+      },
+      "required": ["ref", "content"]
+    }
+  }
+}

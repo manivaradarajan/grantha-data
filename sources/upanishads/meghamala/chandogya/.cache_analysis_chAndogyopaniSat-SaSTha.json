@@ -1,0 +1,74 @@
+{
+  "file_hash": "fd1e9b81be52a1f7e194c3298bda9d515439302bf7abd2db99b43f43fc67fe26",
+  "timestamp": "2025-11-15T10:52:36.191822",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "छान्दोग्योपनिषत्",
+      "grantha_id": "chhandogya-upanishad",
+      "commentary_id": "grantha-bhāṣya-analysis",
+      "commentator": "Vedānta commentator (Unspecified)",
+      "structure_type": "prapathaka-khanda"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prapathaka",
+        "scriptNames": {
+          "devanagari": "प्रपाठकः",
+          "roman": "prapāṭhaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Chunk Optimization",
+        "description": "The entire document is consolidated into a single chunk as the total character count is well below the safety limit, maximizing efficiency.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Entire Prapathaka Six, Khandas 1 through 16, including the full commentary.",
+          "start_marker": "**षष्ठः प्रपाठकः**",
+          "end_marker": "।। इति षष्ठप्रपाठकभाष्यम् समाप्तम् ।।",
+          "estimated_character_count": 73500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Khanda",
+      "justification": "The Khanda is the primary numbered section containing internal Mantras and detailed commentary, suitable for detailed parsing.",
+      "start_pattern": {
+        "description": "A new Khanda begins with a bolded heading, typically specifying its ordinal number.",
+        "examples": [
+          "**प्रथमः खण्डः**",
+          "**द्वितीयः खण्डः**"
+        ],
+        "regex": "\\*\\*([\\u0900-\\u097F]+) खण्डः\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The end of a Khanda is explicitly marked, either by the end of the Khanda itself or the end of its Bhāṣya (commentary).",
+        "examples": [
+          "।। इति प्रथमः खण्डः ।।",
+          "।। इति पञ्चदशखण्डभाष्यम् ।।"
+        ],
+        "regex": "।। इति .*?(खण्डः|खण्डभाष्यम्) ?(समाप्तम्)? ?(।।)?"
+      },
+      "pre_content_handling": "The initial text starting with the Prapathaka heading should be handled as the introductory section of the sixth Prapathaka, preceding the first Khanda."
+    }
+  },
+  "version": "1.0"
+}

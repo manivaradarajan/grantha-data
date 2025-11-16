@@ -1,0 +1,56 @@
+{
+  "file_hash": "5b6cba285f5f1975f612debde6b3760177c35715f12e74aec82896294b415f3d",
+  "timestamp": "2025-11-15T01:55:45.046834",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "छान्दोग्योपनिषत्",
+      "grantha_id": "chandogya-upanishad",
+      "commentary_id": "rangaramanuja-bhashya",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "khanda"
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Split by Major Section Boundary",
+        "description": "The document is split into two chunks at a Khaṇḍa boundary (after Khaṇḍa 8) to adhere to the 20,000 character limit while preserving complete logical sections.",
+        "safety_character_limit": 20000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Prapathaka 8, Khaṇḍa 1 through Khaṇḍa 8.",
+          "start_marker": "अथ यदिदमस्मिन् ब्रह्मपुरे दहरं पुण्डरीकं...",
+          "end_marker": "।। इति अष्टमखण्डभाष्यम् ।।"
+        },
+        {
+          "chunk_id": 2,
+          "description": "Prapathaka 8, Khaṇḍa 9 through Khaṇḍa 15, including final closing remarks.",
+          "start_marker": "नवमः खण्डः",
+          "end_marker": "॥ इति छान्दोग्योपनिषद्भाष्यं संपूर्णम् ॥"
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra-Bhashya Unit",
+      "justification": "The document structure pairs original verses (Mantra) with extensive commentary (Bhashya, marked by प्र.) which must be kept together as the primary semantic unit for analysis.",
+      "start_pattern": {
+        "description": "The unit begins with the original Sanskrit verse text, which terminates with a verse number marker (double danda surrounding digits).",
+        "examples": [
+          "अथ यदिदमस्मिन् ब्रह्मपुरे...विजिज्ञासितव्यमिति ।। १ ।।",
+          "स यदि पितृलोककामो भवति...सम्पन्नो महीयते ।। १ ।।"
+        ],
+        "regex": "।{2}\\s*\\d+\\s*।{2}"
+      },
+      "end_pattern": {
+        "description": "The unit terminates immediately before the start of the next numbered verse, or a formal section closing marker (e.g., end of Khaṇḍa or Bhāṣya).",
+        "examples": [
+          "।। २ ।।",
+          "।। इति प्रथमखण्डभाष्यम् ।।"
+        ],
+        "regex": "(।{2}\\s*\\d+\\s*।{2}|।।\\s*इति\\s+.*।।)"
+      },
+      "pre_content_handling": "Treat all text preceding the first numbered verse (।। १ ।।) as prefatory and descriptive metadata (e.g., Prapathaka heading, Vidyā name)."
+    }
+  },
+  "version": "1.0"
+}

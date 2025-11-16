@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Grantha Part Schema",
+  "description": "Schema for a single content part of a multi-part grantha. Contains content arrays and identifiers.",
+  "type": "object",
+  "properties": {
+    "grantha_id": {
+      "description": "The ID of the parent grantha this part belongs to.",
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "part_num": {
+      "description": "The sequential number of this part within the grantha.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "prefatory_material": {
+      "type": "array",
+      "items": { "$ref": "grantha.schema.json#/definitions/passage" }
+    },
+    "passages": {
+      "type": "array",
+      "items": { "$ref": "grantha.schema.json#/definitions/passage" }
+    },
+    "concluding_material": {
+      "type": "array",
+      "items": { "$ref": "grantha.schema.json#/definitions/passage" }
+    },
+    "commentaries": {
+      "type": "array",
+      "items": { "$ref": "grantha.schema.json#/definitions/commentary" }
+    }
+  },
+  "required": ["grantha_id", "part_num"],
+  "unevaluatedProperties": false
+}

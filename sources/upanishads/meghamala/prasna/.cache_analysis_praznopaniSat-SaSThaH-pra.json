@@ -1,0 +1,67 @@
+{
+  "file_hash": "394a06e4f6ed7da428f7b6102b8353a5d581218b7097e5e19a283a570881f28c",
+  "timestamp": "2025-11-15T10:54:40.722168",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "प्रश्नोपनिषत्",
+      "grantha_id": "prashna-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "prashna"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prashna",
+        "scriptNames": {
+          "devanagari": "प्रश्नः",
+          "roman": "prashna"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Section Chunking",
+        "description": "The provided text constitutes a single structural unit (the Sixth Prashna) which is significantly below the safety character limit, allowing it to be processed in a single chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Sixth Prashna (Mantra 1 through 8) and its accompanying Prakashika commentary, including the concluding summary and doxology.",
+          "start_marker": "प्रश्नोपनिषत्",
+          "end_marker": "।। इति श्रीरङ्गरामानुजमुनिविरचितप्रश्नोपनिषत्प्रकाशिका समाप्ता ।।",
+          "estimated_character_count": 14350
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The document structures content around individual Mantras, which are followed immediately by their respective commentary (Prakashika). The Mantra serves as the optimal atomic unit containing both source text and exegesis.",
+      "start_pattern": {
+        "description": "A new Mantra unit (source text followed by commentary) begins immediately after the numerical end marker (।। [num] ।।) of the previous Mantra's text, or after a structural boundary (like a Prashna heading).",
+        "examples": [
+          "**अथ हैनं सुकेशा भारद्वाजः पप्रच्छ** (Start of Mantra 1)",
+          "तस्मै स होवाच । (Start of Mantra 2)"
+        ],
+        "regex": null
+      },
+      "end_pattern": {
+        "description": "The end of the root Mantra text is consistently marked by a Devanagari numeral enclosed in double danda, which acts as the delimiter separating the source text from the commentary.",
+        "examples": [
+          "।। १ ।।",
+          "।।२।।"
+        ],
+        "regex": "।।\\s*[०-९]+\\s*।।"
+      },
+      "pre_content_handling": "The initial lines providing the Grantha title, Prashna number, and subject heading (e.g., **प्रश्नोपनिषत्**, **षष्ठः प्रश्नः**) should be treated as structural headers before Mantra 1 begins. The final metrical verse (`क्षेमाय य: करुणया...`) and the final colophons are concluding material."
+    }
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,67 @@
+{
+  "file_hash": "edd3025419c6932266cb13c09cdf86aebcc5ad1a2af1574c8ed34b5ab3309bb1",
+  "timestamp": "2025-11-15T10:53:25.840700",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kausitaki-brahmana-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनीन्द्र",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Adhyaya Chunk",
+        "description": "The entire provided document constitutes the Fourth Adhyaya (Chapter) and its commentary. Since the total character count is well below the safety limit, the entire chapter is processed as a single chunk to minimize API calls.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Fourth Adhyaya of the Kausitaki Brahmana Upanishad, including Sri Rangarammanuja Muni's Prakashika commentary (Mantras 1-45).",
+          "start_marker": "कौषीतकिब्राह्मणोपनिषत्",
+          "end_marker": "॥ इति श्रीरङ्गरामानुजमुनीन्द्रविरचिता कौषीतक्युपनिषत्प्रकाशिका समाप्ता॥",
+          "estimated_character_count": 15670
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyaya is fundamentally divided into individual Mantras (verses), which are the smallest discrete units of source text followed by their respective commentary (Prakashika).",
+      "start_pattern": {
+        "description": "A new Mantra block begins with the Sanskrit verse text, which is reliably identified as ending with a serial number enclosed in double vertical bars.",
+        "examples": [
+          "गार्ग्यो हवै बालाकिरनूचान: संस्पष्ट आस ॥ १ ॥",
+          "स होवाच बालाकिः, ‘य एवैष आदित्ये पुरुषः, तमेवाहमुपासे इति’ ॥ ५ ॥"
+        ],
+        "regex": "^(.*?)\\s*॥\\s*([\\u0966-\\u097F]+)\\s*॥[\\s\\n]"
+      },
+      "end_pattern": {
+        "description": "The end of the parsing segment is implicitly the start of the next Mantra. For the final unit, look for the concluding markers of the chapter or the commentary.",
+        "examples": [
+          "।। इति चतुर्थोऽध्यायः ।।",
+          "॥ कौषीतकिब्राह्मणोपनिषत् समाप्ता ॥"
+        ],
+        "regex": "।। इति .*? अध्यायः ।।|॥ कौषीतकिब्राह्मणोपनिषत् समाप्ता ॥"
+      },
+      "pre_content_handling": "Treat all text occurring before the first numbered Mantra (Mantra 1) as prefatory or chapter metadata (e.g., titles, commentator names, and the Adhyaya heading)."
+    }
+  },
+  "version": "1.0"
+}

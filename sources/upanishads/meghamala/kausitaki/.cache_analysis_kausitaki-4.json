@@ -1,0 +1,67 @@
+{
+  "file_hash": "2f2c6fea23882ce6bbd7efe30b8b151468118078e3d27e6cbf68773510a7c02b",
+  "timestamp": "2025-11-15T10:57:16.285919",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kaushitaki-brahmana-upanishad",
+      "commentary_id": null,
+      "commentator": null,
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Adhyaya Chunk",
+        "description": "Since the provided text (Adhyaya 2) is short, the entire Adhyaya is processed as a single, compliant chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Complete Second Adhyaya (Mantras 1-15) of the Kaushitaki Brahmana Upanishad.",
+          "start_marker": "**[द्वितीयोऽध्यायः]**",
+          "end_marker": "॥ इति द्वितीयोऽध्यायः॥",
+          "estimated_character_count": 6864
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyaya is divided into 15 sequential numerical units (Mantras, 1-15), which serve as the basic structural and semantic sections.",
+      "start_pattern": {
+        "description": "The start of the Mantra's main text is marked by bolded text following any bracketed sectional titles.",
+        "examples": [
+          "**प्राणो ब्रह्मेति ह स्माह कौषीतकिः",
+          "**प्राणो ब्रह्मेति ह स्माह पैङ्ग्यः"
+        ],
+        "regex": "\\*\\*([^\\*]+?)"
+      },
+      "end_pattern": {
+        "description": "The end of a Mantra is marked by the numerical sequence enclosed by double danda symbols.",
+        "examples": [
+          "ददाम त इति ॥ १ ॥",
+          "परिम्रियन्ते ।। १३ ॥"
+        ],
+        "regex": "\\|\\|\\s*[०-९]+\\s*\\|\\|"
+      },
+      "pre_content_handling": "Initial titles and organizational markers (like [द्वितीयोऽध्यायः] or [प्राणस्य प्राशस्त्यम् ]) preceding the first Mantra should be treated as contextual headings or metadata."
+    }
+  },
+  "version": "1.0"
+}

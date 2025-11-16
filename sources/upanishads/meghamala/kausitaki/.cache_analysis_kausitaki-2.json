@@ -1,0 +1,67 @@
+{
+  "file_hash": "458700e3550659718a108b65a271238f35a425e1365eaef50c8ac1f0fc05dd58",
+  "timestamp": "2025-11-15T10:49:00.599343",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kaushitaki-brahmana-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीमद्रङ्गरामानुजमुनीन्द्र",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Adhyaya Chunk",
+        "description": "The provided text is a single Adhyaya (Chapter 3) and its commentary. It is small enough to be contained within a single chunk, maximizing efficiency while respecting the safety limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Complete Adhyaya 3 (Pratardana Vidya) and associated Rangaramanuja Prakashika, including the final Adhikarana summary.",
+          "start_marker": "**तृतीयोऽध्यायः**",
+          "end_marker": "।। इति तृतीयाध्यायप्रकाशिका ।।",
+          "estimated_character_count": 13875
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "Mantra verses (Śruti text) followed immediately by the Prakashika (commentary) form the fundamental semantic units of the document. The regex must capture the mantra text and the subsequent commentary until the next mantra number.",
+      "start_pattern": {
+        "description": "The start of the Mantra text is identifiable by the verse number enclosed in double vertical bars, possibly surrounded by spaces. The full mantra text and its associated commentary will be parsed together.",
+        "examples": [
+          "प्रतर्दनो ह वै दैवोदासिरिन्द्रस्य प्रियं धामोपजगाम युद्धेन च पौरुषेण च ॥ १॥",
+          "स होवाच मामेव विजानीहि । एतदेवाहं मनुष्याय हिततमं मन्ये, यन्मां विजानीयात् ॥ ८॥"
+        ],
+        "regex": "([\\u0900-\\u097F\\s\\,\\;\\.\\:\\*]+)\\s*॥\\s*([०-९]+)\\s*॥"
+      },
+      "end_pattern": {
+        "description": "The unit ends immediately before the start of the next Mantra pattern, or at the final Adhyaya conclusion marker.",
+        "examples": [
+          "(text ending just before next) ॥ ४ ॥",
+          "।। इति तृतीयाध्यायप्रकाशिका ।।"
+        ],
+        "regex": "(?=॥\\s*[०-९]+\\s*॥)|(।। इति तृतीयाध्यायप्रकाशिका ।।)"
+      },
+      "pre_content_handling": "The initial text sections ('तृतीयोऽध्यायः' and the theme title) should be treated as high-level context. The concluding section, '[इन्द्रप्राणाधिकरणविचारः]', should be treated as an appendix or a critical study associated with the Adhyaya and included in the last Mantra unit's content scope, unless explicitly split."
+    }
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,67 @@
+{
+  "file_hash": "96c098bf60085acaa6c6856446425b94b926ad59c31790a368e837a3b465d193",
+  "timestamp": "2025-11-15T10:43:49.604800",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kausitaki-brahmana-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Group by Character Count (Chapter 1 Only)",
+        "description": "The entire provided text (Chapter 1) is processed as a single chunk, as its length is significantly below the safety limit of 125,000 characters.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Prefatory material (Shanti Patha) and Adhyaya 1 (Mantras 1-67) along with Prakashika commentary.",
+          "start_marker": "श्री:\n\nकौषीतकिब्राह्मणोपनिषत्",
+          "end_marker": "॥ इति प्रथमाध्याय प्रकाशिका ।।",
+          "estimated_character_count": 43800
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyaya is the largest division, but the Mantra (with its subsequent commentary) serves as the core semantic and parseable unit for detailed analysis.",
+      "start_pattern": {
+        "description": "A new Mantra (or verse) begins with the verse number enclosed in double vertical bars.",
+        "examples": [
+          "॥ १ ॥",
+          "॥ ३७ ॥"
+        ],
+        "regex": "॥\\s*([०-९]+)\\s*॥"
+      },
+      "end_pattern": {
+        "description": "The content of a Mantra unit (including the original verse and its commentary) ends just before the start of the next Mantra, or the concluding chapter marker.",
+        "examples": [
+          "......इत्यर्थः ।।",
+          "॥ ६७ ॥\n\n।। इति प्रथमोऽध्यायः ॥"
+        ],
+        "regex": "(?=॥\\s*([०-९]+)\\s*॥)|(?=।। इति प्रथमोऽध्यायः ॥)"
+      },
+      "pre_content_handling": "The initial 'शान्तिपाठः' and its detailed explanation ('मे – मम वाग्...') should be grouped together and treated as a single, 'Prefatory' or 'Shanti' section before the first numbered Mantra (`हरिः ओम् । चित्रो ह वै...॥ १ ॥`). Also, handle the short sections like [मङ्गलाचरणम्] and [आचार्यवन्दनम्] immediately preceding Mantra 1's commentary as part of the overall preface to the Adhyaya."
+    }
+  },
+  "version": "1.0"
+}

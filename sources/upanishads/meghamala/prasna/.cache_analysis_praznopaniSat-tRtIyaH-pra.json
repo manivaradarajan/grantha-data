@@ -1,0 +1,67 @@
+{
+  "file_hash": "fd62ad25a5fcb883b00ff2221e4d376dd05cc9a57828b25b248555a9128fa811",
+  "timestamp": "2025-11-15T10:51:34.384153",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "प्रश्नोपनिषत्",
+      "grantha_id": "prashnopanishad",
+      "commentary_id": "prakashika",
+      "commentator": null,
+      "structure_type": "praśna"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Praśna",
+        "scriptNames": {
+          "devanagari": "प्रश्नः",
+          "roman": "praśna"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Unit Processing",
+        "description": "Since the provided text represents a complete, small, single logical unit (a Praśna), it will be processed entirely as one chunk, well within the safety limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Third Praśna, including the primary text (Mantras 1-12) and the Prakāśikā commentary.",
+          "start_marker": "**तृतीयः प्रश्नः**",
+          "end_marker": "॥ इति तृतीयप्रश्नप्रकाशिका ॥",
+          "estimated_character_count": 4772
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The text is structured as numbered Mantras, each followed by its respective 'Prakāśikā' commentary, forming the primary atomic unit of analysis.",
+      "start_pattern": {
+        "description": "The starting marker is the Devanagari verse number enclosed in double delimiters, found immediately following the primary verse text.",
+        "examples": [
+          "।।१।।",
+          "।।१०।।"
+        ],
+        "regex": "।।([०-९]+)={2}"
+      },
+      "end_pattern": {
+        "description": "The unit ends just before the start pattern of the subsequent Mantra, or at the concluding marker of the Praśna.",
+        "examples": [
+          "(Implicit end before next verse)",
+          "॥ इति तृतीयप्रश्नप्रकाशिका ॥"
+        ],
+        "regex": "(?=।।([०-९]+)={2})|॥ इति तृतीयप्रश्नप्रकाशिका ॥"
+      },
+      "pre_content_handling": "The initial lines containing the Grantha title (प्रश्नोपनिषत्), the Praśna title (तृतीयः प्रश्नः), and the topical heading (प्राणकार्यभेदाः) should be retained as document context before parsing the first Mantra (Mantra 1)."
+    }
+  },
+  "version": "1.0"
+}

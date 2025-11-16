@@ -1,0 +1,66 @@
+{
+  "file_hash": "96c098bf60085acaa6c6856446425b94b926ad59c31790a368e837a3b465d193",
+  "timestamp": "2025-11-15T10:15:57.110525",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कौषीतकिब्राह्मणोपनिषत्",
+      "grantha_id": "kaushitaki-brahmana-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "adhyaya"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Group by Character Count",
+        "description": "The entire document (Śāntipāṭha and Adhyāya 1 with commentary) is combined into a single chunk, as the total character count is well below the safety limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Prefatory material (Śāntipāṭha, Maṅgalācaraṇam) and the entire First Chapter (Prathamo 'dhyāya) with the Prakāśikā commentary.",
+          "start_marker": "**शान्तिपाठः**",
+          "end_marker": "।। इति प्रथमाध्याय प्रकाशिका ।।",
+          "estimated_character_count": 38000
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Adhyāya is divided into smaller, numbered units (Mantra/Verse), which serve as the primary semantic unit for parsing and indexing the text and its associated commentary.",
+      "start_pattern": {
+        "description": "A new Mantra (verse) starts with its text, immediately followed by the verse number enclosed in double vertical bars.",
+        "examples": [
+          "वव्रे ॥ १ ॥",
+          "याजयेति ॥ २ ॥"
+        ],
+        "regex": "॥\\s*([०-९]+)\\s*॥"
+      },
+      "end_pattern": {
+        "description": "The unit ends just before the start of the next Mantra's number marker, or at the explicit chapter conclusion marker.",
+        "examples": [
+          "।। इति प्रथमाध्याय प्रकाशिका ।।"
+        ],
+        "regex": "।। इति .*? प्रकाशिका ।।"
+      },
+      "pre_content_handling": "The initial material including 'शान्तिपाठः', 'मङ्गलाचरणम्', and 'आचार्यवन्दनम्' should be treated as a single 'Prefatory' section before the content of the first numbered Mantra (॥ १ ॥)."
+    }
+  },
+  "version": "1.0"
+}

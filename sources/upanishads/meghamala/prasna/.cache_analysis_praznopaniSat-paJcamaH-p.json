@@ -1,0 +1,66 @@
+{
+  "file_hash": "7b495e8be5d4d101a9a85915b15f7c30dbf7af97f326818df9bfbd060ceede77",
+  "timestamp": "2025-11-15T10:54:21.773933",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "प्रश्नोपनिषत्",
+      "grantha_id": "prashna-upanishad",
+      "commentary_id": "ranga-ramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "prashna"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Prashna",
+        "scriptNames": {
+          "devanagari": "प्रश्नः",
+          "roman": "prashna"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Unit Chunking",
+        "description": "The entire provided document segment (Panchama Prashna with commentary) is small enough to be processed as a single chunk, maximizing efficiency while respecting the safety character limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Fifth Prashna (Mantra 1 through 7) and its Prakashika commentary.",
+          "start_marker": "******पञ्चमः प्रश्नः",
+          "end_marker": "।। इति पञ्चमप्रश्नप्रकाशिका ॥",
+          "estimated_character_count": 4250
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Prashna is structurally divided into seven sequentially numbered Mantras/verses, each followed immediately by its commentary (Prakashika). Parsing by Mantra isolates the core semantic units.",
+      "start_pattern": {
+        "description": "The start of a new Mūla Mantra, identified by the bold text immediately followed by the closing Devanagari numeral enclosed in double bars.",
+        "examples": [
+          "**अथ हैनं शैब्यः सत्यकामः...जयतीति ।।१।।**",
+          "**ऋग्भिरेतं यजुर्भिरन्तरिक्षं सामभिर्यत्तत् कवयो वेदयन्ते । तमोंकारेणैवायतनेनान्वेति विद्वान् यत्तच्छान्तमजरममृतमभयं परं चेति ।। ७ ।।**"
+        ],
+        "regex": "\\*\\*(.*?।।[०-९]+\\s*।।)\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The parsing unit ends implicitly right before the start pattern of the next Mantra, or explicitly at the Prashna conclusion marker.",
+        "examples": [
+          "।। इति पञ्चमप्रश्नप्रकाशिका ॥"
+        ],
+        "regex": "।। इति.*?प्रश्नप्रकाशिका\\s*॥"
+      },
+      "pre_content_handling": "The initial lines identifying the Upanishad, the Prashna number, and the sub-heading (e.g., [प्रणवोपासना]) should be treated as metadata for the entire chunk."
+    }
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,66 @@
+{
+  "file_hash": "1b4fb2e7c1a65675dab4833a88cfe25cd3483ac6eaf2e1816522f6e578c8594e",
+  "timestamp": "2025-11-15T10:48:58.164002",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "प्रश्नोपनिषत्",
+      "grantha_id": "prasna-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "structure_type": "praśna"
+    },
+    "structural_analysis": {
+      "structure_levels": {
+        "key": "Praśna",
+        "scriptNames": {
+          "devanagari": "प्रश्नः",
+          "roman": "praśna"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Praśna Chunk",
+        "description": "The entire provided content is the Second Praśna, which is small enough to constitute a single, complete chunk, respecting the character limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the Second Praśna, including all Mantras (1 through 13) and the associated Prakashika commentary.",
+          "start_marker": "**द्वितीयः प्रश्नः**",
+          "end_marker": "।। इति द्वितीयप्रश्नप्रकाशिका ।।",
+          "estimated_character_count": 5500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The primary structural unit within the Praśna is the Mantra, which is clearly numbered and forms the unit immediately followed by its commentary.",
+      "start_pattern": {
+        "description": "A new Mantra (verse) begins with the verse number enclosed in double danda marks, following the core text.",
+        "examples": [
+          "वरिष्ठः इति ।। १ ।।",
+          "विधारयामः ।। २ ।।"
+        ],
+        "regex": "।।\\s*(\\d+)\\s*।।"
+      },
+      "end_pattern": {
+        "description": "The end of a Mantra unit (including its commentary) is marked by the start of the subsequent Mantra's core text, or by the chapter conclusion marker.",
+        "examples": [
+          "**तस्मै स होवाच आकाशो ह वा एष देवो..."
+        ],
+        "regex": "\\*\\*[\\u0900-\\u097F\\s]*?\\*\\*\\s*\\*\\*[\\u0900-\\u097F\\s]*?\\*\\*"
+      },
+      "pre_content_handling": "Treat the initial text (Grantha title, Praśna number, and section title [प्राणप्रशंसा]) as prefatory metadata before the first Mantra (।। १ ।।)."
+    }
+  },
+  "version": "1.0"
+}
