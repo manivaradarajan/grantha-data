@@ -13,6 +13,23 @@ from typing import Any, Optional
 from google import genai
 
 
+def get_file_hash(file_path: str) -> str:
+    """Calculate SHA256 hash of a file.
+
+    Args:
+        file_path: Path to the file.
+
+    Returns:
+        SHA256 hex digest of the file contents.
+    """
+    sha256_hash = hashlib.sha256()
+    with open(file_path, "rb") as f:
+        # Read in chunks to handle large files
+        for byte_block in iter(lambda: f.read(4096), b""):
+            sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+
+
 class FileUploadCache:
     """Manages caching of uploaded files to Gemini API.
 
@@ -61,25 +78,7 @@ class FileUploadCache:
         except Exception as e:
             print(f"⚠️  Warning: Could not save upload cache: {e}")
 
-    def _get_file_hash(self, file_path: str) -> str:
-        """Calculate SHA256 hash of a file.
-
-        Args:
-            file_path: Path to the file.
-
-        Returns:
-            SHA256 hex digest of the file contents.
-        """
-        sha256_hash = hashlib.sha256()
-        with open(file_path, "rb") as f:
-            # Read in chunks to handle large files
-            for byte_block in iter(lambda: f.read(4096), b""):
-                sha256_hash.update(byte_block)
-        return sha256_hash.hexdigest()
-
-    def get_cached_upload(
-        self, client: genai.Client, file_path: str
-    ) -> Optional[Any]:
+    def get_cached_upload(self, client: genai.Client, file_path: str) -> Optional[Any]:
         """Check if we have a valid cached upload for this file.
 
         Args:
@@ -90,7 +89,7 @@ class FileUploadCache:
             Gemini File object if valid cache found, None otherwise.
         """
         try:
-            file_hash = self._get_file_hash(file_path)
+            file_hash = get_file_hash(file_path)
         except FileNotFoundError:
             return None
 
@@ -126,7 +125,7 @@ class FileUploadCache:
             verbose: Print detailed messages.
         """
         try:
-            file_hash = self._get_file_hash(file_path)
+            file_hash = get_file_hash(file_path)
         except FileNotFoundError:
             return
 

@@ -32,27 +32,12 @@ import yaml
 from google import genai
 from google.genai import types
 
-try:
-    from colorama import Back, Fore, Style
-    from colorama import init as colorama_init
-
-    colorama_init(autoreset=True)
-    COLORAMA_AVAILABLE = True
-except ImportError:
-    # Fallback if colorama not installed
-    COLORAMA_AVAILABLE = False
-
-    class Fore:
-        RED = GREEN = YELLOW = BLUE = CYAN = MAGENTA = WHITE = RESET = ""
-
-    class Back:
-        RED = GREEN = YELLOW = BLUE = CYAN = MAGENTA = WHITE = RESET = ""
-
-    class Style:
-        BRIGHT = DIM = NORMAL = RESET_ALL = ""
+from colorama import Back, Fore, Style
+from colorama import init as colorama_init
 
 # Local imports
 from gemini_processor.cache_manager import AnalysisCache
+from gemini_processor.file_manager import get_file_hash
 from gemini_processor.prompt_manager import PromptManager
 from gemini_processor.sampler import create_smart_sample
 from grantha_converter.devanagari_repair import extract_devanagari, repair_file
@@ -236,8 +221,6 @@ def cache_upload(file_path: str, file_hash: str, uploaded_file) -> None:
     print(f"  💾 Cached upload info")
 
 
-
-
 def repair_json_escapes(text: str) -> str:
     """Attempt to repair common JSON escape sequence issues.
 
@@ -268,8 +251,6 @@ def repair_json_escapes(text: str) -> str:
 
     repaired = re.sub(regex_pattern, fix_regex, text)
     return repaired
-
-
 
 
 def analyze_file_structure(
@@ -1546,7 +1527,9 @@ def create_chunk_conversion_prompt(chunk_text: str) -> str:
     """
     try:
         # Load the chunk continuation template
-        continuation_template = prompt_manager.load_template("chunk_continuation_prompt.txt")
+        continuation_template = prompt_manager.load_template(
+            "chunk_continuation_prompt.txt"
+        )
         print(f"  📄 Using prompt: chunk_continuation_prompt.txt")
 
         # Format with the chunk text
@@ -2692,6 +2675,8 @@ def convert_single_file(
 
 
 def main():
+    colorama_init(autoreset=True)
+
     parser = argparse.ArgumentParser(
         description="Convert meghamala markdown to Grantha structured markdown using Gemini API",
         epilog="""
@@ -2807,6 +2792,7 @@ Examples:
     metadata_model = args.metadata_model or args.model
 
     # Single file mode
+    # Single file mode
     if args.input:
         input_path = Path(args.input)
         output_path = Path(args.output)
@@ -2820,6 +2806,9 @@ Examples:
         else:
             # Ensure parent directory exists
             output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Set file-specific log subdirectory
+        create_log_directory(file_subdir=input_path.stem)
 
         print(f"\n{'='*60}")
         print("📋 PHASE 1: ANALYZING FILE STRUCTURE")
@@ -2973,7 +2962,7 @@ Examples:
         failed = []
         for file_path, part_num in parts:
             # Set file-specific log subdirectory for this part
-            create_log_directory(file_subdir=f"part-{part_num:02d}")
+            create_log_directory(file_subdir=file_path.stem)
 
             # Preserve original filename
             output_file = output_dir / file_path.name
