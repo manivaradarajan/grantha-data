@@ -1,13 +1,13 @@
 {
   "file_hash": "d9f70e348bce5b7ac031197d0f57477bc6ae10b30cafb9f5d5d74285c905d781",
-  "timestamp": "2025-11-15T10:16:49.208630",
+  "timestamp": "2025-11-15T17:33:07.835441",
   "analysis": {
     "metadata": {
       "canonical_title": "छान्दोग्योपनिषत्",
       "grantha_id": "chhandogya-upanishad",
       "commentary_id": "rangaramanuja-muni-prakashika",
       "commentator": "श्रीरङ्गरामानुजमुनि",
-      "structure_type": "khanda"
+      "structure_type": "prapāṭhaka"
     },
     "structural_analysis": {
       "structure_levels": {
@@ -34,25 +34,25 @@
     },
     "chunking_strategy": {
       "proposed_strategy": {
-        "name": "Single Comprehensive Chunk",
-        "description": "The entire Prapathaka is small enough to be contained within a single chunk, maximizing efficiency while adhering to structural boundaries.",
+        "name": "Single Chunk Prapāṭhaka Processing",
+        "description": "The entire Prapāṭhaka is processed as a single chunk because the total character count is significantly below the safety limit. Chunk boundaries are based on the main structural unit (Prapāṭhaka).",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "The entire Second Prapathaka (Khandas 1 through 24) with commentary.",
+          "description": "Complete Second Prapāṭhaka (Khaṇḍas 1-24) including introductory and concluding material.",
           "start_marker": "**द्वितीयः प्रपाठकः**",
           "end_marker": "।। इति द्वितीयप्रपाठकप्रकाशिका समाप्ता ।।",
-          "estimated_character_count": 25000
+          "estimated_character_count": 33656
         }
       ]
     },
     "parsing_instructions": {
       "recommended_unit": "Khanda",
-      "justification": "The Prapathaka is divided into Khandas, which serve as the primary structural units for semantic parsing.",
+      "justification": "The primary semantic divisions within the Prapāṭhaka are the Khandas, which are clearly demarcated by headings and explicit commentary colophons.",
       "start_pattern": {
-        "description": "A new Khanda begins with a bolded heading indicating its number.",
+        "description": "A new Khanda begins with a bolded Devanagari ordinal number followed by 'खण्डः'.",
         "examples": [
           "**प्रथमः खण्डः**",
           "**द्वादशः खण्डः**"
@@ -60,14 +60,14 @@
         "regex": "\\*\\*([\\u0900-\\u097F]+) खण्डः\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of a Khanda unit is consistently marked by the commentary concluding the section (Bhāṣyam or Prakāśikā closure for that Khanda).",
+        "description": "The end of a Khanda's commentary is marked by a specific concluding line using Devanagari ordinals, often surrounded by double dots.",
         "examples": [
           "।। इति प्रथमखण्डभाष्यम् ।।",
-          "।। इति सप्तदशखण्डभाष्यम् ।।"
+          "।। इति एकादशखण्डभाष्यम् ।।"
         ],
-        "regex": "।। इति [^\\u0964]+खण्डभाष्यम् ।\\u0964"
+        "regex": "।।इति\\s*[\\u0900-\\u097F]+\\s*खण्डभाष्यम्\\s*।।|\\|\\|इति\\s*[\\u0900-\\u097F]+खण्डभाष्यम्\\s*\\|\\|"
       },
-      "pre_content_handling": "The initial heading 'द्वितीयः प्रपाठकः' should be treated as the top-level structural marker but not part of the first Khanda's content."
+      "pre_content_handling": "The Prapāṭhaka title should be considered the global heading. Content starts immediately with the first Khanda heading."
     }
   },
   "version": "1.0"
