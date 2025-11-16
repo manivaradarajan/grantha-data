@@ -1,10 +1,12 @@
-import pytest
+import json
 import os
 import sys
-import json
+
+import pytest
 
 # Add project root to sys.path to allow imports
 from grantha_converter.md_to_json import convert_to_json
+
 
 def test_full_conversion_with_prefatory_material():
     """
@@ -13,10 +15,10 @@ def test_full_conversion_with_prefatory_material():
     as well as commentaries on them.
     """
     test_file_path = os.path.join(os.path.dirname(__file__), "test_data", "test_prefatory_material.md")
-    
+
     with open(test_file_path, 'r', encoding='utf-8') as f:
         markdown_content = f.read()
-        
+
     data = convert_to_json(markdown_content)
 
     # 1. Validate Prefatory Material
@@ -46,14 +48,14 @@ def test_full_conversion_with_prefatory_material():
     assert len(data['commentaries']) == 1
     commentary = data['commentaries'][0]
     assert commentary['commentary_id'] == 'test-commentator'
-    
+
     assert len(commentary['passages']) == 2
-    
+
     # Commentary on Prefatory
     commentary_pref = commentary['passages'][0]
     assert commentary_pref['ref'] == '0.1'
     assert commentary_pref['content']['sanskrit']['devanagari'] == 'Commentary on prefatory.'
-    
+
     # Commentary on Main Passage
     commentary_main = commentary['passages'][1]
     assert commentary_main['ref'] == '1.1'

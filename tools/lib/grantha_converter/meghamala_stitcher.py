@@ -5,7 +5,8 @@ into a single cohesive Grantha Markdown file.
 """
 
 import re
-from typing import List, Tuple, Dict, Optional
+from typing import Dict, List, Optional, Tuple
+
 import yaml
 
 

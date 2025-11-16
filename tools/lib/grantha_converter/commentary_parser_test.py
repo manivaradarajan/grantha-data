@@ -1,8 +1,9 @@
-import unittest
-import sys
 import os
+import sys
+import unittest
 
 from grantha_converter.md_to_json import convert_to_json
+
 
 class TestCommentaryMetadata(unittest.TestCase):
 
@@ -27,12 +28,12 @@ Mantra text.
 Some commentary text.
 <!-- /sanskrit:devanagari -->
 """
-        
+
         json_data = convert_to_json(markdown_content)
-        
+
         self.assertEqual(len(json_data['commentaries']), 1)
         commentary = json_data['commentaries'][0]
-        
+
         self.assertEqual(commentary['commentary_title'], "Test Title")
         self.assertEqual(commentary['commentator']['devanagari'], "Test Commentator")
         self.assertEqual(commentary['passages'][0]['ref'], "1.1")

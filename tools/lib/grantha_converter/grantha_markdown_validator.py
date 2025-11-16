@@ -9,7 +9,8 @@ import argparse
 import os
 import re
 import sys
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
+
 import yaml
 
 # Regex patterns for different heading types

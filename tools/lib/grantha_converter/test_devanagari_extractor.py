@@ -5,6 +5,7 @@ correctly and consistently across all use cases.
 """
 
 import pytest
+
 from grantha_converter.devanagari_extractor import (
     extract_devanagari,
     extract_devanagari_words,

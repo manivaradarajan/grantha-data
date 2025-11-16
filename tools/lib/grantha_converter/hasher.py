@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional
 
 from grantha_converter.devanagari_extractor import extract_devanagari
 
+
 def hash_text(text: str) -> str:
     """Generates a SHA256 hash of Devanagari-only text.
 

@@ -4,8 +4,8 @@ import argparse
 import sys
 from pathlib import Path
 
-from .html_details_to_grantha_md import convert_file
 from .grantha_markdown_validator import validate_markdown_file
+from .html_details_to_grantha_md import convert_file
 
 
 def main():

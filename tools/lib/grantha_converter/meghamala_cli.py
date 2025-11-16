@@ -12,12 +12,16 @@ Usage:
 import argparse
 import sys
 from pathlib import Path
-from grantha_converter.meghamala_converter import (
-    convert_meghamala_to_grantha,
-    MeghamalaParser,
-    MalformedMantraError
+
+from grantha_converter.devanagari_validator import (
+    get_devanagari_stats,
+    validate_devanagari_preservation,
 )
-from grantha_converter.devanagari_validator import validate_devanagari_preservation, get_devanagari_stats
+from grantha_converter.meghamala_converter import (
+    MalformedMantraError,
+    MeghamalaParser,
+    convert_meghamala_to_grantha,
+)
 
 
 def main():

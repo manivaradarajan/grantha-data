@@ -3,17 +3,17 @@ Tests for meghamala markdown to Grantha structured markdown converter.
 """
 
 import pytest
-from grantha_converter.meghamala_converter import (
-    MeghamalaParser,
-    GranthaMarkdownGenerator,
-    convert_meghamala_to_grantha,
-    MalformedMantraError
-)
+
 from grantha_converter.devanagari_validator import (
     extract_devanagari,
-    validate_devanagari_preservation
+    validate_devanagari_preservation,
 )
-
+from grantha_converter.meghamala_converter import (
+    GranthaMarkdownGenerator,
+    MalformedMantraError,
+    MeghamalaParser,
+    convert_meghamala_to_grantha,
+)
 
 # Test data
 SAMPLE_MANTRA = """**केनेषितं पतति प्रेषितं मनः केन प्राणः प्रथमः प्रैति युक्तः ।**

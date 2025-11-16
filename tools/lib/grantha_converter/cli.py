@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
+from .devanagari_extractor import HASH_VERSION, extract_devanagari
+from .hasher import hash_grantha, hash_text
 from .json_to_md import json_file_to_markdown_file
 from .md_to_json import markdown_file_to_json_file
-from .hasher import hash_grantha, hash_text
-from .devanagari_extractor import extract_devanagari, HASH_VERSION
 
 
 def parse_scripts(scripts_str: Optional[str]) -> List[str]:
@@ -37,8 +37,9 @@ def parse_commentaries(commentaries_str: Optional[str]) -> Optional[List[str]]:
 def verify_files(json_path: str, md_path: str) -> bool:
     """Verifies that a JSON file and a Markdown file have matching content."""
     import json
-    import yaml
     import re
+
+    import yaml
 
     with open(json_path, 'r', encoding='utf-8') as f:
         json_data = json.load(f)
@@ -158,8 +159,9 @@ def cmd_verify(args: argparse.Namespace):
 
 def cmd_update_hash(args: argparse.Namespace):
     """Handles the 'update-hash' command."""
-    import yaml
     import re
+
+    import yaml
 
     input_path = Path(args.input)
 
@@ -224,8 +226,9 @@ def cmd_update_hash(args: argparse.Namespace):
 
 def cmd_verify_hash(args: argparse.Namespace):
     """Handles the 'verify-hash' command."""
-    import yaml
     import re
+
+    import yaml
 
     input_path = Path(args.input)
 

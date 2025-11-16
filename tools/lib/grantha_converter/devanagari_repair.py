@@ -6,9 +6,9 @@ word-by-word comparison and correction while preserving all other content.
 """
 
 import shutil
-from pathlib import Path
 from difflib import SequenceMatcher
-from typing import Tuple, List, Optional
+from pathlib import Path
+from typing import List, Optional, Tuple
 
 from grantha_converter.devanagari_extractor import (
     extract_devanagari,

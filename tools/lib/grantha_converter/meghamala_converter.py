@@ -7,9 +7,11 @@ structure, and commentary metadata.
 """
 
 import re
-import yaml
-from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Tuple
+
+import yaml
+
 from grantha_converter.hasher import hash_text
 
 

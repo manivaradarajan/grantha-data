@@ -5,10 +5,10 @@ comments (that are not Markdown links) within `<!-- hide -->...<!-- /hide -->` t
 It is designed to be idempotent, meaning it will not re-wrap already hidden comments.
 """
 
+import argparse
 import os
 import re
 import shutil
-import argparse
 import sys
 from typing import List, Tuple
 

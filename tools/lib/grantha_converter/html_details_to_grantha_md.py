@@ -5,8 +5,9 @@ tags for organizing Sanskrit texts into the standardized Grantha Markdown format
 """
 
 import re
-from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
+from typing import Dict, List, Optional, Tuple
+
 import yaml
 
 

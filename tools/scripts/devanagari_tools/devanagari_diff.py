@@ -21,7 +21,6 @@ import sys
 from pathlib import Path
 
 import yaml
-
 from grantha_converter.devanagari_extractor import extract_devanagari
 from grantha_converter.diff_utils import show_inline_char_diff
 

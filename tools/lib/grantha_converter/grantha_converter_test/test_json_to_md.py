@@ -2,12 +2,13 @@
 
 import pytest
 import yaml
+
 from grantha_converter.json_to_md import (
     build_hierarchy_tree,
-    get_header_level_name,
-    format_content,
-    write_tree_to_markdown,
     convert_to_markdown,
+    format_content,
+    get_header_level_name,
+    write_tree_to_markdown,
 )
 
 
@@ -328,8 +329,9 @@ class TestWriteTreeToMarkdown:
         assert '# Verse 1.1.1.1' in result
 
 
-import unittest
 import copy
+import unittest
+
 
 @pytest.fixture
 def base_data():

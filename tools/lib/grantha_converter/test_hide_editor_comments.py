@@ -2,15 +2,16 @@ import os
 import shutil
 import sys
 import unittest
-from unittest.mock import patch
 from typing import List, Tuple
+from unittest.mock import patch
 
 from grantha_converter.hide_editor_comments import (
     find_converted_md_files,
     hide_editor_comments,
     validate_devanagari,
-    main as hide_comments_main
 )
+from grantha_converter.hide_editor_comments import main as hide_comments_main
+
 
 class TestHideEditorComments(unittest.TestCase):
 

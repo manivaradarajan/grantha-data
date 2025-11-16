@@ -6,33 +6,32 @@ This test suite uses unittest.mock to mock all Gemini API calls,
 allowing us to test the conversion logic without making actual API requests.
 """
 
-import unittest
-from unittest.mock import Mock, MagicMock, patch, mock_open
-from pathlib import Path
-import tempfile
+import json
 import os
 import sys
-import json
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import MagicMock, Mock, mock_open, patch
 
 # Import the module under test
 from convert_meghamala import (
+    call_gemini_api,
+    create_chunk_conversion_prompt,
     create_conversion_prompt,
     create_first_chunk_prompt,
-    create_chunk_conversion_prompt,
-    infer_metadata_with_gemini,
-    call_gemini_api,
-    parse_first_chunk_response,
-    strip_code_fences,
-    hide_editor_comments_in_content,
-    validate_devanagari_unchanged,
     extract_part_number_from_filename,
     get_directory_parts,
+    hide_editor_comments_in_content,
+    infer_metadata_with_gemini,
+    parse_first_chunk_response,
+    strip_code_fences,
+    validate_devanagari_unchanged,
 )
 
 # Import library functions that were moved
 from gemini_processor.prompt_manager import PromptManager
 from gemini_processor.sampler import create_smart_sample
-
 
 # TestPromptLoading removed - PromptManager is tested in gemini_processor library
 

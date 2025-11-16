@@ -9,12 +9,13 @@ It leverages the `grantha_converter.hasher` module for text normalization and in
 verification.
 """
 
-import os
-import sys
-import re
-import difflib
 import argparse
+import difflib
+import os
+import re
+import sys
 from typing import Tuple
+
 from google import genai
 from google.genai import types
 from grantha_converter.hasher import normalize_text
@@ -124,7 +125,7 @@ def generate_diff_report(norm_original: str, norm_generated: str, original_text:
             continue
         has_changes = True
         original_chunk, generated_chunk = norm_original[i1:i2], norm_generated[j1:j2]
-        
+
         # Context Highlighting
         original_start_index = original_mapper.get_original_index(i1)
         if original_start_index != -1:

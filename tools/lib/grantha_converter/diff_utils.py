@@ -1,11 +1,12 @@
 import difflib
-import sys
 import os
-from pathlib import Path
+import sys
 import traceback
+from pathlib import Path
 
 from aksharamukha import transliterate
-from colorama import Fore, Back, Style, init as colorama_init
+from colorama import Back, Fore, Style
+from colorama import init as colorama_init
 
 colorama_init(autoreset=True)
 

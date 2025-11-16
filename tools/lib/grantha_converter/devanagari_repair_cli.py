@@ -9,7 +9,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from grantha_converter.devanagari_repair import repair_file, extract_devanagari
+from grantha_converter.devanagari_repair import extract_devanagari, repair_file
 from grantha_converter.hasher import hash_text
 
 

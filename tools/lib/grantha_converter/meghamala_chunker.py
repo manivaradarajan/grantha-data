@@ -5,9 +5,9 @@ at natural boundaries (khanda, valli, anuvaka) for parallel processing.
 """
 
 import re
-from typing import List, Tuple, Optional, Dict
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Dict, List, Optional, Tuple
 
 
 @dataclass

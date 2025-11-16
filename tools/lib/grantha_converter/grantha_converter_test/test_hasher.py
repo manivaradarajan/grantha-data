@@ -6,11 +6,12 @@ ignoring all other scripts, translations, markdown, and whitespace.
 """
 
 import pytest
+
 from grantha_converter.hasher import (
-    hash_text,
     extract_content_text,
-    hash_passage,
     hash_grantha,
+    hash_passage,
+    hash_text,
 )
 
 

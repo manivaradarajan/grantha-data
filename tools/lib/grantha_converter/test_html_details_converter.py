@@ -1,18 +1,19 @@
 """Tests for HTML details to Grantha Markdown converter."""
 
 import pytest
+
 from .html_details_to_grantha_md import (
-    parse_toml_frontmatter,
-    parse_details_blocks,
-    extract_mantra_number,
+    DetailsBlock,
+    PassageData,
+    build_grantha_frontmatter,
     clean_sanskrit_content,
     detect_prefatory_material,
-    pair_mantras_with_commentaries,
-    build_grantha_frontmatter,
-    format_passage,
+    extract_mantra_number,
     format_commentary,
-    PassageData,
-    DetailsBlock
+    format_passage,
+    pair_mantras_with_commentaries,
+    parse_details_blocks,
+    parse_toml_frontmatter,
 )
 
 

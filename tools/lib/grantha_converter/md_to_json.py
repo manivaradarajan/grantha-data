@@ -6,8 +6,9 @@ from the Markdown headings and content blocks, and verifies content integrity
 using the `validation_hash` from the frontmatter.
 """
 import re
-import yaml
 from typing import Any, Dict, List, Tuple
+
+import yaml
 
 from .devanagari_extractor import HASH_VERSION
 
@@ -201,8 +202,10 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
 
     data['commentaries'] = [c for c in data['commentaries'].values() if c['passages']]
     return data
-from .hasher import hash_grantha
 import json
+
+from .hasher import hash_grantha
+
 
 def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
     """Reads a Markdown file, converts it to JSON, and writes to a file.
