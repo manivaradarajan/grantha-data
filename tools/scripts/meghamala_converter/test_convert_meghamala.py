@@ -16,7 +16,6 @@ import json
 
 # Import the module under test
 from convert_meghamala import (
-    load_prompt_template,
     create_conversion_prompt,
     create_first_chunk_prompt,
     create_chunk_conversion_prompt,
@@ -30,33 +29,12 @@ from convert_meghamala import (
     get_directory_parts,
 )
 
+# Import library functions that were moved
+from gemini_processor.prompt_manager import PromptManager
+from gemini_processor.sampler import create_smart_sample
 
-class TestPromptLoading(unittest.TestCase):
-    """Test prompt template loading functionality."""
 
-    def test_load_prompt_template_success(self):
-        """Test successfully loading a prompt template."""
-        mock_content = "This is a test prompt with {placeholder}"
-
-        with patch("builtins.open", mock_open(read_data=mock_content)):
-            result = load_prompt_template("test_prompt.txt")
-            self.assertEqual(result, mock_content)
-
-    def test_load_prompt_template_file_not_found(self):
-        """Test that FileNotFoundError is raised when template doesn't exist."""
-        with patch("builtins.open", side_effect=FileNotFoundError()):
-            with self.assertRaises(FileNotFoundError) as cm:
-                load_prompt_template("nonexistent.txt")
-
-            self.assertIn("Prompt template not found", str(cm.exception))
-
-    def test_load_prompt_template_io_error(self):
-        """Test that IOError is raised on read errors."""
-        with patch("builtins.open", side_effect=IOError("Read error")):
-            with self.assertRaises(IOError) as cm:
-                load_prompt_template("test_prompt.txt")
-
-            self.assertIn("Error reading prompt template", str(cm.exception))
+# TestPromptLoading removed - PromptManager is tested in gemini_processor library
 
 
 class TestPromptCreation(unittest.TestCase):
@@ -70,7 +48,7 @@ class TestPromptCreation(unittest.TestCase):
         self.commentary_id = "test-commentary"
         self.commentator = "परीक्षाचार्यः"
 
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_create_conversion_prompt_without_commentary(self, mock_load):
         """Test creating conversion prompt without commentary."""
         mock_template = "Prompt for {grantha_id}: {input_text}"
@@ -99,7 +77,7 @@ class TestPromptCreation(unittest.TestCase):
         self.assertIn(self.grantha_id, result)
         self.assertIn(self.test_input, result)
 
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_create_conversion_prompt_with_commentary(self, mock_load):
         """Test creating conversion prompt with commentary metadata."""
         mock_template = """
@@ -127,7 +105,7 @@ class TestPromptCreation(unittest.TestCase):
         self.assertIn(self.commentary_id, result)
         self.assertIn(self.commentator, result)
 
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_create_first_chunk_prompt(self, mock_load):
         """Test creating first chunk prompt."""
         mock_template = "Extract metadata from: {chunk_text}"
@@ -138,7 +116,7 @@ class TestPromptCreation(unittest.TestCase):
         self.assertIn(self.test_input, result)
         mock_load.assert_called_once_with("first_chunk_prompt.txt")
 
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_create_chunk_conversion_prompt(self, mock_load):
         """Test creating chunk continuation prompt."""
         mock_template = "Continue converting: {chunk_text}"
@@ -170,7 +148,7 @@ class TestGeminiAPIWithMocks(unittest.TestCase):
         shutil.rmtree(self.temp_dir)
 
     @patch("convert_meghamala.genai.Client")
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_infer_metadata_success(self, mock_load_template, mock_client_class):
         """Test successful metadata inference with mocked Gemini API."""
         # Set up environment
@@ -216,7 +194,7 @@ class TestGeminiAPIWithMocks(unittest.TestCase):
             self.assertEqual(result, {})
 
     @patch("convert_meghamala.genai.Client")
-    @patch("convert_meghamala.load_prompt_template")
+    @patch("convert_meghamala.prompt_manager.load_template")
     def test_infer_metadata_api_error(self, mock_load_template, mock_client_class):
         """Test metadata inference handles API errors gracefully."""
         with patch.dict(os.environ, {"GEMINI_API_KEY": "test_key"}):
