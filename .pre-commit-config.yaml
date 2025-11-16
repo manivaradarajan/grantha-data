@@ -1,0 +1,20 @@
+# .pre-commit-config.yaml
+repos:
+  # 1. Standard Hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # 2. Local Hook for Your Custom Validation
+  - repo: local
+    hooks:
+      - id: structured-md-hash-validator
+        name: Validate Structured MD Hash
+        entry: ./tools/scripts/pre-commit-validate_structured_md.sh
+        language: script
+        # The pre-commit framework will only pass staged files that match this regex
+        files: '^structured_md/.*\.md$'
+        # The exclude pattern ensures README.md is never passed to the script
+        exclude: 'README\.md$'
