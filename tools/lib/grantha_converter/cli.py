@@ -117,11 +117,25 @@ def cmd_md2json(args: argparse.Namespace):
         print(f"Error: Input file not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
+    # Validate format argument
+    format_type = args.format
+    if format_type not in ['single', 'multipart']:
+        print(f"Error: Invalid format '{format_type}'. Must be 'single' or 'multipart'.", file=sys.stderr)
+        sys.exit(1)
+
     try:
         print(f"Converting {input_path} to {output_path}...")
-        markdown_file_to_json_file(str(input_path), str(output_path))
+        markdown_file_to_json_file(
+            str(input_path),
+            str(output_path),
+            format=format_type,
+            validate_schema=not args.no_schema_validation
+        )
         print(f"✓ Successfully converted to {output_path}")
         print("✓ Validation hash verified - no data loss detected.")
+        if not args.no_schema_validation:
+            schema_name = 'grantha-part.schema.json' if format_type == 'multipart' else 'grantha.schema.json'
+            print(f"✓ JSON schema validation passed ({schema_name})")
     except ValueError as e:
         if "Validation hash mismatch" in str(e):
             print(f"✗ Validation failed: {e}", file=sys.stderr)
@@ -130,6 +144,93 @@ def cmd_md2json(args: argparse.Namespace):
             raise
     except Exception as e:
         print(f"Error during conversion: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_md2json_envelope(args: argparse.Namespace):
+    """Handles the 'md2json-envelope' command."""
+    from .envelope_generator import create_envelope_from_markdown_files, write_envelope
+    from .schema_validator import validate_grantha_envelope
+
+    input_dir = Path(args.input)
+    output_dir = Path(args.output)
+
+    if not input_dir.exists():
+        print(f"Error: Input directory not found: {input_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    if not input_dir.is_dir():
+        print(f"Error: Input path is not a directory: {input_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    # Create output directory if it doesn't exist
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Find all .md files in the directory
+    md_files = sorted(input_dir.glob('*.md'))
+    if not md_files:
+        print(f"Error: No .md files found in {input_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Found {len(md_files)} markdown file(s) in {input_dir}")
+
+    # Determine grantha_id from first file
+    from .md_to_json import parse_frontmatter
+    with open(md_files[0], 'r', encoding='utf-8') as f:
+        content = f.read()
+    frontmatter, _ = parse_frontmatter(content)
+    grantha_id = frontmatter.get('grantha_id')
+
+    if not grantha_id:
+        print(f"Error: No grantha_id found in {md_files[0]}", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Processing grantha: {grantha_id}")
+
+    try:
+        # Convert each markdown file to a part JSON
+        part_files = []
+        for i, md_file in enumerate(md_files, start=1):
+            part_num = i
+            output_file = output_dir / f"part{part_num}.json"
+
+            print(f"  Converting {md_file.name} → {output_file.name}...")
+            markdown_file_to_json_file(
+                str(md_file),
+                str(output_file),
+                format='multipart',
+                validate_schema=not args.no_schema_validation
+            )
+            part_files.append(output_file)
+
+        # Create envelope.json
+        print(f"\nGenerating envelope.json...")
+        envelope = create_envelope_from_markdown_files(
+            grantha_id,
+            md_files,
+            output_dir
+        )
+
+        envelope_path = output_dir / 'envelope.json'
+        write_envelope(envelope, envelope_path)
+        print(f"✓ Created {envelope_path}")
+
+        # Validate envelope against schema
+        if not args.no_schema_validation:
+            print(f"  Validating envelope against schema...")
+            is_valid, errors = validate_grantha_envelope(envelope)
+            if not is_valid:
+                error_msg = "Envelope schema validation failed:\n"
+                error_msg += "\n".join(f"  - {err}" for err in errors)
+                raise ValueError(error_msg)
+            print(f"  ✓ Envelope schema validation passed")
+
+        print(f"\n✓ Successfully created multi-part grantha in {output_dir}")
+        print(f"  - {len(part_files)} part file(s)")
+        print(f"  - 1 envelope.json")
+
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -154,6 +255,175 @@ def cmd_verify(args: argparse.Namespace):
             sys.exit(1)
     except Exception as e:
         print(f"Error during verification: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_validate_header(args: argparse.Namespace):
+    """Handles the 'validate-header' command."""
+    import re
+    import json as json_module
+
+    input_path = Path(args.input)
+
+    if not input_path.exists():
+        print(f"Error: Input file not found: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    from .md_to_json import parse_frontmatter
+
+    try:
+        # Read the file
+        with open(input_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # Parse frontmatter
+        frontmatter, body = parse_frontmatter(content)
+
+        errors = []
+        warnings = []
+
+        # Check required top-level fields
+        required_fields = ['grantha_id', 'canonical_title', 'text_type', 'language', 'structure_levels']
+        for field in required_fields:
+            if field not in frontmatter:
+                errors.append(f"Missing required field: {field}")
+
+        # Check grantha_id format
+        if 'grantha_id' in frontmatter:
+            grantha_id = frontmatter['grantha_id']
+            if not re.match(r'^[a-z0-9-]+$', grantha_id):
+                errors.append(f"Invalid grantha_id format: '{grantha_id}' (must be lowercase alphanumeric with hyphens)")
+
+        # Check text_type
+        if 'text_type' in frontmatter:
+            if frontmatter['text_type'] not in ['upanishad', 'commentary']:
+                errors.append(f"Invalid text_type: '{frontmatter['text_type']}' (must be 'upanishad' or 'commentary')")
+
+        # Check language
+        if 'language' in frontmatter:
+            if frontmatter['language'] not in ['sanskrit', 'english']:
+                errors.append(f"Invalid language: '{frontmatter['language']}' (must be 'sanskrit' or 'english')")
+
+        # Check structure_levels format
+        if 'structure_levels' in frontmatter:
+            structure_levels = frontmatter['structure_levels']
+            if not isinstance(structure_levels, list):
+                errors.append("structure_levels must be an array/list")
+            elif len(structure_levels) == 0:
+                errors.append("structure_levels cannot be empty")
+            else:
+                # Validate structure_levels format
+                for i, level in enumerate(structure_levels):
+                    if not isinstance(level, dict):
+                        errors.append(f"structure_levels[{i}] must be an object/dict")
+                        continue
+                    if 'key' not in level:
+                        errors.append(f"structure_levels[{i}] missing required field: key")
+                    if 'scriptNames' not in level:
+                        errors.append(f"structure_levels[{i}] missing required field: scriptNames")
+                    elif 'devanagari' not in level.get('scriptNames', {}):
+                        errors.append(f"structure_levels[{i}].scriptNames missing required field: devanagari")
+
+        # Check commentaries_metadata format
+        if 'commentaries_metadata' in frontmatter:
+            commentaries_metadata = frontmatter['commentaries_metadata']
+
+            # Get all commentary IDs from metadata
+            metadata_ids = set()
+
+            if isinstance(commentaries_metadata, list):
+                for i, item in enumerate(commentaries_metadata):
+                    if not isinstance(item, dict):
+                        errors.append(f"commentaries_metadata[{i}] must be an object/dict")
+                        continue
+
+                    if 'commentary_id' not in item:
+                        errors.append(f"commentaries_metadata[{i}] missing required field: commentary_id")
+                    else:
+                        metadata_ids.add(item['commentary_id'])
+
+                    if 'commentary_title' not in item:
+                        errors.append(f"commentaries_metadata[{i}] missing required field: commentary_title")
+
+                    if 'commentator' not in item:
+                        errors.append(f"commentaries_metadata[{i}] missing required field: commentator")
+                    elif isinstance(item['commentator'], str):
+                        errors.append(f"commentaries_metadata[{i}].commentator must be an object with 'devanagari' field, not a string")
+                    elif not isinstance(item['commentator'], dict):
+                        errors.append(f"commentaries_metadata[{i}].commentator must be an object/dict")
+                    elif 'devanagari' not in item['commentator']:
+                        errors.append(f"commentaries_metadata[{i}].commentator missing required field: devanagari")
+
+            elif isinstance(commentaries_metadata, dict):
+                # Dict format (legacy)
+                warnings.append("commentaries_metadata is in dict format; list format is preferred")
+                metadata_ids = set(commentaries_metadata.keys())
+
+            # Check commentary ID references in the body
+            COMMENTARY_METADATA = re.compile(r'<!--\s*commentary:\s*({.*?})\s*-->')
+            referenced_ids = set()
+
+            for match in COMMENTARY_METADATA.finditer(body):
+                try:
+                    meta = json_module.loads(match.group(1))
+                    if 'commentary_id' in meta:
+                        referenced_ids.add(meta['commentary_id'])
+                except json_module.JSONDecodeError:
+                    warnings.append(f"Invalid JSON in commentary metadata comment: {match.group(1)[:50]}...")
+
+            # Check for mismatches
+            if metadata_ids and referenced_ids:
+                # IDs in body but not in metadata
+                missing_in_metadata = referenced_ids - metadata_ids
+                if missing_in_metadata:
+                    for cid in missing_in_metadata:
+                        errors.append(f"Commentary ID '{cid}' referenced in body but not declared in commentaries_metadata")
+
+                # IDs in metadata but not used in body
+                unused_ids = metadata_ids - referenced_ids
+                if unused_ids:
+                    for cid in unused_ids:
+                        warnings.append(f"Commentary ID '{cid}' declared in commentaries_metadata but not used in body")
+
+        # Check hash_version
+        if 'hash_version' not in frontmatter:
+            warnings.append("Missing hash_version field")
+
+        # Check validation_hash
+        if 'validation_hash' not in frontmatter:
+            warnings.append("Missing validation_hash field")
+
+        # Print results
+        print(f"Validating header of {input_path}...")
+        print()
+
+        if errors:
+            print(f"✗ Found {len(errors)} error(s):")
+            for error in errors:
+                print(f"  - {error}")
+            print()
+
+        if warnings:
+            print(f"⚠ Found {len(warnings)} warning(s):")
+            for warning in warnings:
+                print(f"  - {warning}")
+            print()
+
+        if not errors and not warnings:
+            print("✓ Header validation passed - no issues found")
+            sys.exit(0)
+        elif not errors:
+            print("✓ Header validation passed with warnings")
+            sys.exit(0)
+        else:
+            print(f"✗ Header validation failed with {len(errors)} error(s)")
+            sys.exit(1)
+
+    except Exception as e:
+        print(f"Error during validation: {e}", file=sys.stderr)
+        import traceback
+        if args.verbose:
+            traceback.print_exc()
         sys.exit(1)
 
 
@@ -360,7 +630,20 @@ Examples:
     )
     md2json_parser.add_argument('-i', '--input', required=True, help='Path to the input Markdown file.')
     md2json_parser.add_argument('-o', '--output', required=True, help='Path for the output JSON file.')
+    md2json_parser.add_argument('--format', default='single', choices=['single', 'multipart'], help='Output format: "single" for complete grantha (default), "multipart" for grantha parts.')
+    md2json_parser.add_argument('--no-schema-validation', action='store_true', help='Skip JSON schema validation.')
     md2json_parser.set_defaults(func=cmd_md2json)
+
+    # md2json-envelope command
+    envelope_parser = subparsers.add_parser(
+        'md2json-envelope',
+        help='Convert a directory of Markdown files to multi-part JSON with envelope.',
+        description='Scans a directory for .md files, converts each to a part JSON file (part1.json, part2.json, etc.), and generates an envelope.json file with metadata. All files are validated against their respective schemas.'
+    )
+    envelope_parser.add_argument('-i', '--input', required=True, help='Path to the input directory containing .md files.')
+    envelope_parser.add_argument('-o', '--output', required=True, help='Path to the output directory for JSON files.')
+    envelope_parser.add_argument('--no-schema-validation', action='store_true', help='Skip JSON schema validation.')
+    envelope_parser.set_defaults(func=cmd_md2json_envelope)
 
     # verify command
     verify_parser = subparsers.add_parser(
@@ -389,6 +672,16 @@ Examples:
     )
     verify_hash_parser.add_argument('-i', '--input', required=True, help='Path to the structured Markdown file to verify.')
     verify_hash_parser.set_defaults(func=cmd_verify_hash)
+
+    # validate-header command
+    validate_header_parser = subparsers.add_parser(
+        'validate-header',
+        help='Validate the frontmatter structure of a markdown file.',
+        description='Validates the YAML frontmatter structure and checks that commentary IDs in metadata match those referenced in the body. Exits with code 0 if valid, 1 if errors found.'
+    )
+    validate_header_parser.add_argument('-i', '--input', required=True, help='Path to the markdown file to validate.')
+    validate_header_parser.add_argument('--verbose', action='store_true', help='Show detailed error traces.')
+    validate_header_parser.set_defaults(func=cmd_validate_header)
 
     args = parser.parse_args()
     args.func(args)

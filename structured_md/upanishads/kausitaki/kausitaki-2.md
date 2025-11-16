@@ -7,19 +7,21 @@ language: sanskrit
 scripts:
 - devanagari
 structure_levels:
-  key: Adhyaya
-  scriptNames:
-    devanagari: अध्यायः
-    roman: adhyāya
-  children:
-    key: Mantra
+  - key: Adhyaya
     scriptNames:
-      devanagari: मन्त्रः
-      roman: mantra
+      devanagari: अध्यायः
+      roman: adhyāya
+    children:
+      - key: Mantra
+        scriptNames:
+          devanagari: मन्त्रः
+          roman: mantra
 validation_hash: 344cc3a8b209e05b6920e7e20c28587cdca0aa93723eb0b27900115586f5f8b3
 commentaries_metadata:
-- commentary_id: kausitaki-upanishad-prakashika
-  commentator: रङ्गरामानुजमुनिः
+- commentary_id: prakasika
+  commentary_title: प्रकाशिका
+  commentator:
+    devanagari: रङ्गरामानुजमुनिः
   language: sanskrit
 hash_version: 1
 ---

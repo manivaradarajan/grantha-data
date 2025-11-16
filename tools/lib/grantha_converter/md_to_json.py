@@ -37,23 +37,36 @@ def parse_sanskrit_content(content: str) -> Dict[str, Any]:
     # Find all metadata comments and their positions
     matches = list(re.finditer(r'<!--\s*(.+?)\s*-->', content))
 
-    for i, match in enumerate(matches):
-        label = match.group(1).strip()
-        start_pos = match.end()
-        end_pos = matches[i+1].start() if i + 1 < len(matches) else len(content)
+    known_labels = {
+        'sanskrit:devanagari', 'sanskrit:roman', 'sanskrit:kannada',
+        'english_translation', 'english'
+    }
+    has_known_labels = any(m.group(1).strip() in known_labels for m in matches)
 
-        text = content[start_pos:end_pos].strip()
+    if has_known_labels:
+        for i, match in enumerate(matches):
+            label = match.group(1).strip()
+            start_pos = match.end()
+            end_pos = matches[i+1].start() if i + 1 < len(matches) else len(content)
 
-        if label == 'sanskrit:devanagari':
-            sanskrit_data['devanagari'] = text
-        elif label == 'sanskrit:roman':
-            sanskrit_data['roman'] = text
-        elif label == 'sanskrit:kannada':
-            sanskrit_data['kannada'] = text
-        elif label == 'english_translation':
-            data['english_translation'] = text
-        elif label == 'english':
-            data['english'] = text
+            text = content[start_pos:end_pos].strip()
+
+            if label == 'sanskrit:devanagari':
+                sanskrit_data['devanagari'] = text
+            elif label == 'sanskrit:roman':
+                sanskrit_data['roman'] = text
+            elif label == 'sanskrit:kannada':
+                sanskrit_data['kannada'] = text
+            elif label == 'english_translation':
+                data['english_translation'] = text
+            elif label == 'english':
+                data['english'] = text
+    else:
+        # If no known labels are found, assume the entire block is Devanagari
+        # and clean out any other comments.
+        cleaned_content = re.sub(r'<!--.*?-->', '', content, flags=re.DOTALL).strip()
+        if cleaned_content:
+            sanskrit_data['devanagari'] = cleaned_content
 
     if sanskrit_data:
         data['sanskrit'] = sanskrit_data
@@ -61,23 +74,50 @@ def parse_sanskrit_content(content: str) -> Dict[str, Any]:
     return data
 
 def get_lowest_level_key(structure_levels: List[Dict[str, Any]]) -> str:
-    """Recursively get the lowest 'key' value from structure_levels."""
+    """Recursively get the lowest 'key' value from structure_levels.
+
+    Handles both list and dict formats:
+    - List: [{key: "Adhyaya", children: [{key: "Mantra"}]}]
+    - Dict: {key: "Adhyaya", children: {key: "Mantra"}}
+    """
     if not structure_levels:
         return 'Mantra' # Default if none
 
+    # Handle dict format - convert to list
+    if isinstance(structure_levels, dict):
+        structure_levels = [structure_levels]
+
     last_level = structure_levels[-1]
     if 'children' in last_level and last_level['children']:
-        return get_lowest_level_key(last_level['children'])
+        children = last_level['children']
+        # Handle dict format for children
+        if isinstance(children, dict):
+            children = [children]
+        return get_lowest_level_key(children)
     else:
         return last_level['key']
 
 def get_all_structure_keys(structure_levels: List[Dict[str, Any]]) -> List[str]:
-    """Recursively get all 'key' values from structure_levels."""
+    """Recursively get all 'key' values from structure_levels.
+
+    Handles both list and dict formats:
+    - List: [{key: "Adhyaya", children: [{key: "Mantra"}]}]
+    - Dict: {key: "Adhyaya", children: {key: "Mantra"}}
+    """
     keys = []
+
+    # Handle dict format - convert to list
+    if isinstance(structure_levels, dict):
+        structure_levels = [structure_levels]
+
     for level in structure_levels:
         keys.append(level['key'])
         if 'children' in level and level['children']:
-            keys.extend(get_all_structure_keys(level['children']))
+            children = level['children']
+            # Handle dict format for children
+            if isinstance(children, dict):
+                children = [children]
+            keys.extend(get_all_structure_keys(children))
     return keys
 
 def convert_to_json(markdown: str) -> Dict[str, Any]:
@@ -93,6 +133,19 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
     heading_structure_pattern = r'^#\s+(' + '|'.join(re.escape(key) for key in structure_keys) + r')\s+([\d\.]+)$'
     HEADING_STRUCTURE = re.compile(heading_structure_pattern, re.MULTILINE | re.IGNORECASE)
 
+    # Handle both dict and list formats for commentaries_metadata
+    # Dict format: {commentary_id: {metadata...}}
+    # List format: [{commentary_id: "id", metadata...}, ...]
+    commentaries_dict = {}
+    if isinstance(commentaries_metadata, dict):
+        commentaries_dict = {cid: {"commentary_id": cid, **meta, "passages": []} for cid, meta in commentaries_metadata.items()}
+    elif isinstance(commentaries_metadata, list):
+        for item in commentaries_metadata:
+            if isinstance(item, dict) and 'commentary_id' in item:
+                cid = item['commentary_id']
+                meta = {k: v for k, v in item.items() if k != 'commentary_id'}
+                commentaries_dict[cid] = {"commentary_id": cid, **meta, "passages": []}
+
     data = {
         'grantha_id': frontmatter.get('grantha_id'),
         'part_num': frontmatter.get('part_num'),
@@ -103,8 +156,12 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
         'passages': [],
         'prefatory_material': [],
         'concluding_material': [],
-        'commentaries': {cid: {"commentary_id": cid, **meta, "passages": []} for cid, meta in commentaries_metadata.items()}
+        'commentaries': commentaries_dict
     }
+
+    # Only include metadata if present in frontmatter
+    if 'metadata' in frontmatter:
+        data['metadata'] = frontmatter['metadata']
 
     all_headings = sorted(
         list(HEADING_STRUCTURE.finditer(content)) +
@@ -207,7 +264,9 @@ import json
 from .hasher import hash_grantha
 
 
-def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
+def markdown_file_to_json_file(input_path: str, output_path: str,
+                               format: str = 'single',
+                               validate_schema: bool = True) -> None:
     """Reads a Markdown file, converts it to JSON, and writes to a file.
 
     This function also performs a validation check. It recalculates the hash of
@@ -217,14 +276,16 @@ def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
     Args:
         input_path: The path to the input Markdown file.
         output_path: The path to the output JSON file.
+        format: 'single' for complete grantha or 'multipart' for grantha parts.
+        validate_schema: Whether to validate against JSON schema (default: True).
 
     Raises:
-        ValueError: If the validation hash check fails.
+        ValueError: If the validation hash check fails or schema validation fails.
     """
     with open(input_path, 'r', encoding='utf-8') as f:
         markdown_content = f.read()
 
-    frontmatter, _ = parse_frontmatter(markdown_content)
+    frontmatter, body = parse_frontmatter(markdown_content)
     json_data = convert_to_json(markdown_content)
 
     # Verify hash version
@@ -245,12 +306,14 @@ def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
             f"Please run: grantha-converter update-hash -i \"{input_path}\""
         )
 
-    # Verify integrity
-    scripts = frontmatter.get('scripts', ['devanagari'])
-    commentaries = frontmatter.get('commentaries')
-    expected_hash = frontmatter.get('validation_hash', '').replace('sha256:', '')
+    # Verify integrity using the same method as verify-hash and update-hash
+    # Extract Devanagari from the markdown body (not from JSON) for consistency
+    from .devanagari_extractor import extract_devanagari
+    from .hasher import hash_text
 
-    recalculated_hash = hash_grantha(json_data, scripts=scripts, commentaries=commentaries)
+    expected_hash = frontmatter.get('validation_hash', '').replace('sha256:', '')
+    devanagari_text = extract_devanagari(body)
+    recalculated_hash = hash_text(devanagari_text)
 
     if expected_hash and recalculated_hash != expected_hash:
         raise ValueError(
@@ -258,6 +321,22 @@ def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
             f"Expected: {expected_hash}\n"
             f"Got:      {recalculated_hash}"
         )
+
+    # Validate against JSON schema if requested
+    if validate_schema:
+        from .schema_validator import validate_grantha_single, validate_grantha_part
+
+        if format == 'multipart':
+            is_valid, errors = validate_grantha_part(json_data)
+            schema_name = 'grantha-part.schema.json'
+        else:  # format == 'single'
+            is_valid, errors = validate_grantha_single(json_data)
+            schema_name = 'grantha.schema.json'
+
+        if not is_valid:
+            error_msg = f"JSON schema validation failed against {schema_name}:\n"
+            error_msg += "\n".join(f"  - {err}" for err in errors)
+            raise ValueError(error_msg)
 
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(json_data, f, ensure_ascii=False, indent=2)

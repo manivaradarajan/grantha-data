@@ -10,8 +10,8 @@ repos:
   # 2. Local Hook for Your Custom Validation
   - repo: local
     hooks:
-      - id: structured-md-hash-validator
-        name: Validate Structured MD Hash
+      - id: structured-md-validator
+        name: Validate Structured MD (Header + Hash)
         entry: ./tools/scripts/pre-commit-validate_structured_md.sh
         language: script
         # The pre-commit framework will only pass staged files that match this regex
