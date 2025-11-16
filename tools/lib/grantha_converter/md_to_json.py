@@ -9,6 +9,8 @@ import re
 import yaml
 from typing import Any, Dict, List, Tuple
 
+from .devanagari_extractor import HASH_VERSION
+
 # Regex patterns from the specification
 HEADING_MANTRA = re.compile(r'^#\s+(?:Mantra|Valli|Khanda|Anuvaka)\s+([\d\.]+)$')
 HEADING_PREFATORY = re.compile(r'^#\s+Prefatory:\s+([\d\.]+)\s+\((\w+):\s*\"(.*?)\"\)$', re.IGNORECASE | re.MULTILINE)
@@ -30,15 +32,15 @@ def parse_sanskrit_content(content: str) -> Dict[str, Any]:
     """Parse a content block into a dictionary."""
     data = {}
     sanskrit_data = {}
-    
+
     # Find all metadata comments and their positions
     matches = list(re.finditer(r'<!--\s*(.+?)\s*-->', content))
-    
+
     for i, match in enumerate(matches):
         label = match.group(1).strip()
         start_pos = match.end()
         end_pos = matches[i+1].start() if i + 1 < len(matches) else len(content)
-        
+
         text = content[start_pos:end_pos].strip()
 
         if label == 'sanskrit:devanagari':
@@ -51,17 +53,17 @@ def parse_sanskrit_content(content: str) -> Dict[str, Any]:
             data['english_translation'] = text
         elif label == 'english':
             data['english'] = text
-    
+
     if sanskrit_data:
         data['sanskrit'] = sanskrit_data
-            
+
     return data
 
 def get_lowest_level_key(structure_levels: List[Dict[str, Any]]) -> str:
     """Recursively get the lowest 'key' value from structure_levels."""
     if not structure_levels:
         return 'Mantra' # Default if none
-    
+
     last_level = structure_levels[-1]
     if 'children' in last_level and last_level['children']:
         return get_lowest_level_key(last_level['children'])
@@ -86,7 +88,7 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
     structure_levels = frontmatter.get('structure_levels', [])
     structure_keys = get_all_structure_keys(structure_levels)
     lowest_level_key = get_lowest_level_key(structure_levels)
-    
+
     heading_structure_pattern = r'^#\s+(' + '|'.join(re.escape(key) for key in structure_keys) + r')\s+([\d\.]+)$'
     HEADING_STRUCTURE = re.compile(heading_structure_pattern, re.MULTILINE | re.IGNORECASE)
 
@@ -116,7 +118,7 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
     for i, match in enumerate(all_headings):
         start_pos = match.end()
         end_pos = all_headings[i+1].start() if i + 1 < len(all_headings) else len(content)
-        
+
         heading_line = match.group(0).strip()
         raw_body_content = content[start_pos:end_pos].strip()
 
@@ -137,13 +139,13 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
                         'content': parse_sanskrit_content(raw_body_content)
                     }
                     data['commentaries'][commentary_id]['passages'].append(commentary_passage)
-                
+
                 pending_commentary_meta = None # Consume it
             continue
 
         # This is a content-bearing heading, not a commentary heading.
         body_content = raw_body_content
-        
+
         # Reset any stale metadata from a previous loop
         pending_commentary_meta = None
 
@@ -221,6 +223,24 @@ def markdown_file_to_json_file(input_path: str, output_path: str) -> None:
 
     frontmatter, _ = parse_frontmatter(markdown_content)
     json_data = convert_to_json(markdown_content)
+
+    # Verify hash version
+    file_version = frontmatter.get('hash_version', None)
+    if file_version is None:
+        raise ValueError(
+            f"Hash version missing. File has no hash_version field.\n"
+            f"This is a legacy/unversioned file. Current version: {HASH_VERSION}\n"
+            f"Please run: grantha-converter update-hash -i \"{input_path}\""
+        )
+
+    if file_version != HASH_VERSION:
+        raise ValueError(
+            f"Hash version mismatch.\n"
+            f"File version: {file_version}\n"
+            f"Current version: {HASH_VERSION}\n"
+            f"The hashing algorithm has changed since this file was generated.\n"
+            f"Please run: grantha-converter update-hash -i \"{input_path}\""
+        )
 
     # Verify integrity
     scripts = frontmatter.get('scripts', ['devanagari'])

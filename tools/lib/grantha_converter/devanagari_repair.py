@@ -5,56 +5,16 @@ Devanagari text between source files and converted output files. It performs
 word-by-word comparison and correction while preserving all other content.
 """
 
-import re
 import shutil
-import tempfile
 from pathlib import Path
 from difflib import SequenceMatcher
 from typing import Tuple, List, Optional
 
-
-def extract_devanagari(text: str) -> str:
-    """Extracts all Devanagari characters from a string.
-
-    Args:
-        text: The input string.
-
-    Returns:
-        A string containing only the Devanagari characters from the input,
-        with all formatting and whitespace removed.
-    """
-    # Extract individual Devanagari characters (not words) to ignore markdown formatting
-    return "".join(re.findall(r'[\u0900-\u097F]', text))
-
-
-def extract_devanagari_words(text: str) -> List[str]:
-    """Extracts Devanagari words from text.
-
-    Args:
-        text: Input text
-
-    Returns:
-        List of Devanagari words (sequences of Devanagari characters)
-    """
-    # Find all sequences of Devanagari characters (including combining marks)
-    pattern = r"[\u0900-\u097F]+"
-    return re.findall(pattern, text)
-
-
-def extract_devanagari_words_with_positions(text: str) -> List[Tuple[str, int, int]]:
-    """Extracts Devanagari words with their positions in the text.
-
-    Args:
-        text: Input text
-
-    Returns:
-        List of tuples (word, start_pos, end_pos) where positions are character indices
-    """
-    pattern = r"[\u0900-\u097F]+"
-    matches = []
-    for match in re.finditer(pattern, text):
-        matches.append((match.group(), match.start(), match.end()))
-    return matches
+from grantha_converter.devanagari_extractor import (
+    extract_devanagari,
+    extract_devanagari_words,
+    extract_devanagari_words_with_positions,
+)
 
 
 def repair_devanagari_simple(

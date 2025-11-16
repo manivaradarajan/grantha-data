@@ -11,7 +11,8 @@ from typing import List, Optional
 
 from .json_to_md import json_file_to_markdown_file
 from .md_to_json import markdown_file_to_json_file
-from .hasher import hash_grantha
+from .hasher import hash_grantha, hash_text
+from .devanagari_extractor import extract_devanagari, HASH_VERSION
 
 
 def parse_scripts(scripts_str: Optional[str]) -> List[str]:
@@ -155,6 +156,149 @@ def cmd_verify(args: argparse.Namespace):
         sys.exit(1)
 
 
+def cmd_update_hash(args: argparse.Namespace):
+    """Handles the 'update-hash' command."""
+    import yaml
+    import re
+
+    input_path = Path(args.input)
+
+    # Validate that file is in structured_md/ directory
+    if 'structured_md' not in input_path.parts:
+        print(f"Error: File must be in structured_md/ directory: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    if not input_path.exists():
+        print(f"Error: File not found: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        # Read the file
+        with open(input_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # Extract YAML frontmatter
+        match = re.match(r'^---\n(.*?)\n---\n(.*)$', content, re.DOTALL)
+        if not match:
+            print(f"Error: No YAML frontmatter found in {input_path}", file=sys.stderr)
+            sys.exit(1)
+
+        frontmatter_str = match.group(1)
+        body = match.group(2)
+        frontmatter = yaml.safe_load(frontmatter_str)
+
+        # Extract Devanagari from body only (not from YAML header)
+        devanagari_text = extract_devanagari(body)
+
+        # Compute hash
+        new_hash = hash_text(devanagari_text)
+
+        # Update frontmatter
+        old_hash = frontmatter.get('validation_hash', '')
+        old_version = frontmatter.get('hash_version', None)
+        frontmatter['hash_version'] = HASH_VERSION
+        frontmatter['validation_hash'] = new_hash
+
+        # Write back to file
+        new_frontmatter_str = yaml.dump(frontmatter, allow_unicode=True, sort_keys=False)
+        new_content = f"---\n{new_frontmatter_str}---\n{body}"
+
+        with open(input_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+
+        print(f"✓ Updated validation_hash in {input_path}")
+        if old_version is not None and old_version != HASH_VERSION:
+            print(f"  Version updated: {old_version} → {HASH_VERSION}")
+        elif old_version is None:
+            print(f"  Version set: {HASH_VERSION} (was unversioned)")
+        if old_hash and old_hash != new_hash:
+            print(f"  Old hash: {old_hash}")
+            print(f"  New hash: {new_hash}")
+        else:
+            print(f"  Hash: {new_hash}")
+
+    except Exception as e:
+        print(f"Error updating hash: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_verify_hash(args: argparse.Namespace):
+    """Handles the 'verify-hash' command."""
+    import yaml
+    import re
+
+    input_path = Path(args.input)
+
+    # Validate that file is in structured_md/ directory
+    if 'structured_md' not in input_path.parts:
+        print(f"Error: File must be in structured_md/ directory: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    if not input_path.exists():
+        print(f"Error: File not found: {input_path}", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        # Read the file
+        with open(input_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        # Extract YAML frontmatter
+        match = re.match(r'^---\n(.*?)\n---\n(.*)$', content, re.DOTALL)
+        if not match:
+            print(f"Error: No YAML frontmatter found in {input_path}", file=sys.stderr)
+            sys.exit(1)
+
+        frontmatter_str = match.group(1)
+        body = match.group(2)
+        frontmatter = yaml.safe_load(frontmatter_str)
+
+        # Check hash version
+        file_version = frontmatter.get('hash_version', None)
+        if file_version is None:
+            print(f"✗ Hash version MISSING in {input_path}", file=sys.stderr)
+            print(f"  File has no hash_version field (legacy/unversioned file)", file=sys.stderr)
+            print(f"  Current version: {HASH_VERSION}", file=sys.stderr)
+            print(f"  Please run: grantha-converter update-hash -i \"{input_path}\"", file=sys.stderr)
+            sys.exit(1)
+
+        if file_version != HASH_VERSION:
+            print(f"✗ Hash version MISMATCH in {input_path}", file=sys.stderr)
+            print(f"  File version: {file_version}", file=sys.stderr)
+            print(f"  Current version: {HASH_VERSION}", file=sys.stderr)
+            print(f"  The hashing algorithm has changed since this hash was generated.", file=sys.stderr)
+            print(f"  Please run: grantha-converter update-hash -i \"{input_path}\"", file=sys.stderr)
+            sys.exit(1)
+
+        # Get expected hash from frontmatter
+        expected_hash = frontmatter.get('validation_hash', '')
+        if not expected_hash:
+            print(f"Error: No validation_hash field in {input_path}", file=sys.stderr)
+            sys.exit(1)
+
+        # Extract Devanagari from body only (not from YAML header)
+        devanagari_text = extract_devanagari(body)
+
+        # Compute actual hash
+        actual_hash = hash_text(devanagari_text)
+
+        # Compare
+        if actual_hash == expected_hash:
+            print(f"✓ Hash valid for {input_path}")
+            print(f"  Version: {HASH_VERSION}")
+            print(f"  Hash: {actual_hash}")
+            sys.exit(0)
+        else:
+            print(f"✗ Hash INVALID for {input_path}", file=sys.stderr)
+            print(f"  Expected: {expected_hash}", file=sys.stderr)
+            print(f"  Actual:   {actual_hash}", file=sys.stderr)
+            sys.exit(1)
+
+    except Exception as e:
+        print(f"Error verifying hash: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
 def main():
     """The main command-line interface entry point."""
     parser = argparse.ArgumentParser(
@@ -179,6 +323,12 @@ Examples:
 
   # Verify that a JSON file and a Markdown file are in sync
   grantha-converter verify -j data.json -m data.md
+
+  # Update validation_hash in a structured Markdown file
+  grantha-converter update-hash -i structured_md/upanishads/isavasya/isavasya-1.md
+
+  # Verify validation_hash in a structured Markdown file
+  grantha-converter verify-hash -i structured_md/upanishads/isavasya/isavasya-1.md
         """
     )
 
@@ -213,11 +363,29 @@ Examples:
     verify_parser = subparsers.add_parser(
         'verify',
         help='Verify that a JSON file and a Markdown file are in sync.',
-        description='Checks if a Markdown file is a faithful representation of a JSON file by recalculating the JSON hash based on the Markdown’s frontmatter and comparing it to the stored validation hash.'
+        description="Checks if a Markdown file is a faithful representation of a JSON file by recalculating the JSON hash based on the Markdown's frontmatter and comparing it to the stored validation hash."
     )
     verify_parser.add_argument('-j', '--json', required=True, help='Path to the JSON file.')
     verify_parser.add_argument('-m', '--markdown', required=True, help='Path to the Markdown file.')
     verify_parser.set_defaults(func=cmd_verify)
+
+    # update-hash command
+    update_hash_parser = subparsers.add_parser(
+        'update-hash',
+        help='Update the validation_hash in a structured Markdown file.',
+        description='Extracts Devanagari text from a structured Markdown file, computes the validation hash, and updates the YAML frontmatter. Only works on files in structured_md/ directory.'
+    )
+    update_hash_parser.add_argument('-i', '--input', required=True, help='Path to the structured Markdown file to update.')
+    update_hash_parser.set_defaults(func=cmd_update_hash)
+
+    # verify-hash command
+    verify_hash_parser = subparsers.add_parser(
+        'verify-hash',
+        help='Verify the validation_hash in a structured Markdown file.',
+        description='Extracts Devanagari text from a structured Markdown file, computes the hash, and compares it to the validation_hash in the YAML frontmatter. Only works on files in structured_md/ directory. Exits with code 0 if valid, 1 if invalid.'
+    )
+    verify_hash_parser.add_argument('-i', '--input', required=True, help='Path to the structured Markdown file to verify.')
+    verify_hash_parser.set_defaults(func=cmd_verify_hash)
 
     args = parser.parse_args()
     args.func(args)

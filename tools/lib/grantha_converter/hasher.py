@@ -1,80 +1,38 @@
 """Content hashing for validation of lossless conversion.
 
-This module provides utilities to hash grantha content by normalizing text
-and excluding non-significant characters (whitespace, zero-width marks, punctuation)
-to verify that the semantic content remains unchanged after conversion.
+This module provides utilities to hash grantha content based on Devanagari text only.
+The validation hash extracts and hashes ONLY Devanagari characters (U+0900-U+097F),
+ignoring all other scripts, translations, markdown formatting, and whitespace.
+
+This ensures consistency with devanagari_diff.py and provides a canonical,
+testable approach to content validation.
 """
 
 import hashlib
-import re
-import unicodedata
 from typing import Any, Dict, List, Optional
 
-# Unicode characters to exclude from hash
-ZERO_WIDTH_CHARS = [
-    '\u200b',  # Zero-width space
-    '\u200c',  # Zero-width non-joiner
-    '\u200d',  # Zero-width joiner
-    '\ufeff',  # Zero-width no-break space (BOM)
-]
-
-# Devanagari and common punctuation marks to exclude
-PUNCTUATION_CHARS = [
-    '\u0964',  # Devanagari danda
-    '\u0965',  # Devanagari double danda
-    '।',       # Devanagari danda (alternative)
-    '॥',       # Devanagari double danda (alternative)
-    ',', '.', ';', ':', '!', '?', '-', '—', '–',
-    '(', ')', '[', ']', '{', '}', '"', "'", '`',
-]
-
-
-def normalize_text(text: str) -> str:
-    """Normalizes text for hashing by removing non-significant characters.
-
-    The normalization process includes:
-    - Removing all whitespace (spaces, newlines, tabs, etc.).
-    - Removing zero-width Unicode characters (e.g., ZWNJ, ZWJ).
-    - Removing punctuation marks (dandas, commas, periods, etc.).
-    - Applying NFC Unicode normalization.
-
-    Args:
-        text: The input string to normalize.
-
-    Returns:
-        A normalized string containing only significant characters.
-    """
-    if not text:
-        return ""
-
-    # Remove zero-width characters
-    for char in ZERO_WIDTH_CHARS:
-        text = text.replace(char, '')
-
-    # Remove punctuation
-    for char in PUNCTUATION_CHARS:
-        text = text.replace(char, '')
-
-    # Remove all whitespace characters
-    text = re.sub(r'\s+', '', text)
-
-    # Normalize Unicode (NFC form)
-    text = unicodedata.normalize('NFC', text)
-
-    return text
-
+from grantha_converter.devanagari_extractor import extract_devanagari
 
 def hash_text(text: str) -> str:
-    """Generates a SHA256 hash of normalized text.
+    """Generates a SHA256 hash of Devanagari-only text.
+
+    This function extracts ONLY Devanagari characters (U+0900-U+097F) from the
+    input text, ignoring all other scripts, translations, formatting, and whitespace.
+    This is the canonical hashing function used for validation_hash fields.
 
     Args:
-        text: The text to hash.
+        text: The text to hash (may contain multiple scripts, markdown, etc.)
 
     Returns:
-        The hex digest of the SHA256 hash.
+        The hex digest of the SHA256 hash of the extracted Devanagari text.
+
+    Example:
+        >>> hash_text("अग्नि agni")  # Only "अग्नि" is hashed
+        >>> hash_text("# Title\\n\\nअग्नि")  # Only "अग्नि" is hashed
     """
-    normalized = normalize_text(text)
-    return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
+    # Extract only Devanagari characters (consistent with devanagari_diff.py)
+    devanagari_only = extract_devanagari(text)
+    return hashlib.sha256(devanagari_only.encode('utf-8')).hexdigest()
 
 
 def extract_content_text(content: Dict[str, Any], scripts: Optional[List[str]] = None) -> str:
@@ -147,7 +105,7 @@ def hash_grantha(data: Dict[str, Any],
         The SHA256 hash of all specified content in the document.
     """
     all_texts = []
-    
+
     content_sections = ['prefatory_material', 'passages', 'concluding_material']
     for section in content_sections:
         if section in data:

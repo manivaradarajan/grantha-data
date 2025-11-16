@@ -15,6 +15,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import yaml
 
 from .hasher import hash_grantha, extract_content_text
+from .devanagari_extractor import HASH_VERSION
 
 
 def get_lowest_level_key(structure_levels: List[Dict[str, Any]]) -> str:
@@ -301,6 +302,7 @@ def convert_to_markdown(data: Dict[str, Any],
 
     # Generate validation hash
     validation_hash = hash_grantha(data, scripts=scripts, commentaries=commentaries)
+    frontmatter['hash_version'] = HASH_VERSION
     frontmatter['validation_hash'] = f"sha256:{validation_hash}"
 
     # --- Build Markdown Content ---
@@ -395,4 +397,3 @@ def json_file_to_markdown_file(input_path: str,
 
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(markdown)
-

@@ -1,8 +1,12 @@
-"""Tests for hasher module."""
+"""Tests for hasher module.
+
+The hasher module now implements Devanagari-only hashing, where validation_hash
+is computed from ONLY the Devanagari characters (U+0900-U+097F) in the text,
+ignoring all other scripts, translations, markdown, and whitespace.
+"""
 
 import pytest
 from grantha_converter.hasher import (
-    normalize_text,
     hash_text,
     extract_content_text,
     hash_passage,
@@ -10,103 +14,80 @@ from grantha_converter.hasher import (
 )
 
 
-class TestNormalizeText:
-    """Tests for normalize_text function."""
-
-    def test_removes_whitespace(self):
-        """Test that all whitespace is removed."""
-        text = "Hello   World\n\tTest"
-        result = normalize_text(text)
-        assert result == "HelloWorldTest"
-
-    def test_removes_devanagari_dandas(self):
-        """Test that devanagari dandas are removed."""
-        text = "ॐ। शान्तिः॥"
-        result = normalize_text(text)
-        assert '।' not in result
-        assert '॥' not in result
-
-    def test_removes_zero_width_characters(self):
-        """Test that zero-width characters are removed."""
-        text = "test\u200bword\u200c\u200d"
-        result = normalize_text(text)
-        assert '\u200b' not in result
-        assert '\u200c' not in result
-        assert '\u200d' not in result
-
-    def test_removes_punctuation(self):
-        """Test that punctuation is removed."""
-        text = "Hello, World! How are you?"
-        result = normalize_text(text)
-        assert ',' not in result
-        assert '!' not in result
-        assert '?' not in result
-
-    def test_preserves_devanagari_text(self):
-        """Test that actual Devanagari characters are preserved."""
-        text = "ॐ शान्तिः"
-        result = normalize_text(text)
-        # Should contain devanagari characters (without spaces)
-        assert 'ॐ' in result
-        assert 'श' in result
-        assert ' ' not in result
-
-    def test_empty_string(self):
-        """Test handling of empty string."""
-        assert normalize_text("") == ""
-
-    def test_none_input(self):
-        """Test handling of None input."""
-        assert normalize_text(None) == ""
-
-    def test_unicode_normalization(self):
-        """Test that Unicode is normalized to NFC form."""
-        # Using combining characters vs precomposed
-        text1 = "café"  # with combining acute
-        text2 = "café"  # with precomposed é
-        # Both should normalize to same form
-        assert normalize_text(text1) == normalize_text(text2)
-
-
 class TestHashText:
-    """Tests for hash_text function."""
+    """Tests for hash_text function - Devanagari-only hashing."""
 
-    def test_same_text_same_hash(self):
-        """Test that identical text produces identical hash."""
+    def test_same_devanagari_text_same_hash(self):
+        """Test that identical Devanagari text produces identical hash."""
         text = "ॐ शान्तिः शान्तिः शान्तिः"
         hash1 = hash_text(text)
         hash2 = hash_text(text)
         assert hash1 == hash2
 
-    def test_whitespace_differences_ignored(self):
-        """Test that whitespace differences don't affect hash."""
-        text1 = "Hello World"
-        text2 = "Hello   World"
-        text3 = "Hello\n\tWorld"
+    def test_devanagari_whitespace_differences_ignored(self):
+        """Test that whitespace differences in Devanagari don't affect hash."""
+        text1 = "ॐ शान्तिः"
+        text2 = "ॐ   शान्तिः"
+        text3 = "ॐ\n\tशान्तिः"
+        # All should produce same hash (whitespace is not in Devanagari block)
         assert hash_text(text1) == hash_text(text2) == hash_text(text3)
 
-    def test_punctuation_differences_ignored(self):
-        """Test that punctuation differences don't affect hash."""
-        text1 = "Hello World"
-        text2 = "Hello, World!"
-        text3 = "Hello। World॥"
+    def test_non_devanagari_text_ignored(self):
+        """Test that non-Devanagari text is completely ignored."""
+        text1 = "ॐ शान्तिः"
+        text2 = "ॐ शान्तिः with English"
+        text3 = "ॐ शान्तिः agnimīḷe purahitam"
+        text4 = "agnimīḷe ॐ शान्तिः purahitam"
+        # All should produce same hash (only Devanagari is hashed)
+        assert hash_text(text1) == hash_text(text2) == hash_text(text3) == hash_text(text4)
+
+    def test_markdown_ignored(self):
+        """Test that markdown formatting is ignored."""
+        text1 = "ॐ शान्तिः"
+        text2 = "# Mantra\n\n**ॐ शान्तिः**"
+        text3 = "<!-- sanskrit:devanagari -->\nॐ शान्तिः\n<!-- /sanskrit:devanagari -->"
+        # All should produce same hash (markdown is ignored)
         assert hash_text(text1) == hash_text(text2) == hash_text(text3)
 
-    def test_different_content_different_hash(self):
-        """Test that different content produces different hash."""
+    def test_different_devanagari_different_hash(self):
+        """Test that different Devanagari content produces different hash."""
         text1 = "ॐ शान्तिः"
         text2 = "ॐ भद्रम्"
         assert hash_text(text1) != hash_text(text2)
 
+    def test_english_only_produces_empty_hash(self):
+        """Test that English-only text produces hash of empty string."""
+        text = "This is only English text, no Devanagari"
+        result = hash_text(text)
+        # Should be same as hash of empty string
+        empty_hash = hash_text("")
+        assert result == empty_hash
+
     def test_returns_hex_string(self):
         """Test that hash is returned as hex string."""
-        text = "test"
+        text = "ॐ शान्तिः"
         result = hash_text(text)
         assert isinstance(result, str)
         # SHA256 produces 64 hex characters
         assert len(result) == 64
         # Should only contain hex characters
         assert all(c in '0123456789abcdef' for c in result)
+
+    def test_devanagari_numerals_included(self):
+        """Test that Devanagari numerals are included in hash."""
+        text1 = "मन्त्र १"
+        text2 = "मन्त्र २"
+        # Different numerals should produce different hashes
+        assert hash_text(text1) != hash_text(text2)
+
+    def test_dandas_included(self):
+        """Test that Devanagari dandas are included (they're in Devanagari block)."""
+        text1 = "ॐ शान्तिः"
+        text2 = "ॐ शान्तिः।"
+        text3 = "ॐ शान्तिः॥"
+        # Dandas are part of Devanagari block, so they affect the hash
+        assert hash_text(text1) != hash_text(text2)
+        assert hash_text(text2) != hash_text(text3)
 
 
 class TestExtractContentText:
@@ -187,7 +168,7 @@ class TestExtractContentText:
 
 
 class TestHashPassage:
-    """Tests for hash_passage function."""
+    """Tests for hash_passage function - Devanagari-only hashing."""
 
     def test_hashes_passage_content(self):
         """Test hashing a single passage."""
@@ -202,8 +183,57 @@ class TestHashPassage:
         assert isinstance(result, str)
         assert len(result) == 64
 
-    def test_respects_script_selection(self):
-        """Test that script selection affects hash."""
+    def test_english_translation_ignored(self):
+        """Test that English translation doesn't affect hash."""
+        passage1 = {
+            'ref': '1',
+            'content': {
+                'sanskrit': {'devanagari': 'ॐ शान्तिः'},
+                'english_translation': 'Om peace'
+            }
+        }
+        passage2 = {
+            'ref': '1',
+            'content': {
+                'sanskrit': {'devanagari': 'ॐ शान्तिः'},
+                'english_translation': 'Om, peace and tranquility'
+            }
+        }
+        passage3 = {
+            'ref': '1',
+            'content': {
+                'sanskrit': {'devanagari': 'ॐ शान्तिः'},
+                # No English translation
+            }
+        }
+        # All should produce same hash (only Devanagari matters)
+        assert hash_passage(passage1) == hash_passage(passage2) == hash_passage(passage3)
+
+    def test_roman_script_ignored(self):
+        """Test that Roman transliteration doesn't affect hash."""
+        passage1 = {
+            'ref': '1',
+            'content': {
+                'sanskrit': {
+                    'devanagari': 'ॐ शान्तिः',
+                    'roman': 'oṃ śāntiḥ'
+                }
+            }
+        }
+        passage2 = {
+            'ref': '1',
+            'content': {
+                'sanskrit': {
+                    'devanagari': 'ॐ शान्तिः',
+                    # No Roman transliteration
+                }
+            }
+        }
+        # Should produce same hash (Roman is ignored)
+        assert hash_passage(passage1) == hash_passage(passage2)
+
+    def test_script_parameter_ignored(self):
+        """Test that script parameter no longer affects hash (always Devanagari-only)."""
         passage = {
             'ref': '1',
             'content': {
@@ -215,8 +245,8 @@ class TestHashPassage:
         }
         hash_dev_only = hash_passage(passage, scripts=['devanagari'])
         hash_both = hash_passage(passage, scripts=['devanagari', 'roman'])
-        # Different content selected should produce different hash
-        assert hash_dev_only != hash_both
+        # Both should produce SAME hash now (only Devanagari is ever hashed)
+        assert hash_dev_only == hash_both
 
 
 class TestHashGrantha:
@@ -351,8 +381,8 @@ class TestHashGrantha:
         assert hash_commentary1 != hash_both
         assert hash_commentary2 != hash_both
 
-    def test_respects_script_parameter(self):
-        """Test that script parameter affects hash."""
+    def test_script_parameter_ignored(self):
+        """Test that script parameter no longer affects hash (always Devanagari-only)."""
         data = {
             'passages': [
                 {
@@ -368,4 +398,35 @@ class TestHashGrantha:
         }
         hash_dev = hash_grantha(data, scripts=['devanagari'])
         hash_both = hash_grantha(data, scripts=['devanagari', 'roman'])
-        assert hash_dev != hash_both
+        # Both should produce SAME hash now (only Devanagari is ever hashed)
+        assert hash_dev == hash_both
+
+    def test_only_devanagari_affects_hash(self):
+        """Test that only Devanagari content affects the hash."""
+        data1 = {
+            'passages': [
+                {
+                    'ref': '1',
+                    'content': {
+                        'sanskrit': {'devanagari': 'पाठः'},
+                        'english_translation': 'Passage'
+                    }
+                }
+            ]
+        }
+        data2 = {
+            'passages': [
+                {
+                    'ref': '1',
+                    'content': {
+                        'sanskrit': {
+                            'devanagari': 'पाठः',
+                            'roman': 'pāṭhaḥ'
+                        },
+                        'english_translation': 'Different translation of the passage'
+                    }
+                }
+            ]
+        }
+        # Should produce same hash (only Devanagari matters)
+        assert hash_grantha(data1) == hash_grantha(data2)

@@ -1,0 +1,114 @@
+"""Extract Devanagari text from strings.
+
+This module provides the canonical implementation for extracting Devanagari
+characters and words from text. It serves as the single source of truth for
+Devanagari extraction across the entire codebase.
+
+The extraction functions:
+- Remove all non-Devanagari content (markdown, YAML, whitespace, etc.)
+- Extract only characters in the Devanagari Unicode block (U+0900-U+097F)
+- Are used for validation hashing, diff comparison, and text repair
+
+## Hash Algorithm Version
+
+HASH_VERSION tracks breaking changes to the extraction algorithm.
+Increment this when making changes that would produce different hashes
+for the same input text.
+
+Version History:
+- v1 (current): Word-boundary-preserving extraction. Devanagari word sequences
+  are joined with single spaces, normalizing gaps from non-Devanagari content.
+- v0 (legacy): No-space extraction. All Devanagari characters concatenated
+  without spaces. (Pre-versioning era)
+"""
+
+import re
+from typing import List, Tuple
+
+# IMPORTANT: Increment this version number when making breaking changes
+# to the extraction or hashing algorithm.
+HASH_VERSION = 1
+
+
+def extract_devanagari(text: str) -> str:
+    """Extracts all Devanagari characters from a string, preserving word boundaries.
+
+    This is the canonical extraction function used across the codebase for:
+    - Validation hash computation (hasher.py)
+    - Devanagari diff comparison (devanagari_diff.py)
+    - Text repair operations (devanagari_repair.py)
+
+    This function extracts Devanagari word sequences and joins them with single
+    spaces. This preserves word boundaries in the original text while normalizing
+    gaps caused by non-Devanagari content (markdown, English, etc.).
+
+    Args:
+        text: The input string (may contain markdown, YAML, multiple scripts, etc.)
+
+    Returns:
+        A string containing only the Devanagari text from the input, with
+        word boundaries preserved. Non-Devanagari content is removed, and
+        the resulting gaps are normalized to single spaces.
+
+    Examples:
+        >>> extract_devanagari("# Sanskrit\\n\\nअग्निमीळे पुरोहितं")
+        'अग्निमीळे पुरोहितं'
+
+        >>> extract_devanagari("अग्निमीळे। पुरोहितं")
+        'अग्निमीळे। पुरोहितं'
+
+        >>> extract_devanagari("अग्निमीळे English पुरोहितं")
+        'अग्निमीळे पुरोहितं'
+    """
+    # Extract Devanagari word sequences and join with single spaces
+    # This preserves word boundaries while normalizing non-Devanagari gaps
+    words = extract_devanagari_words(text)
+    return " ".join(words)
+
+
+def extract_devanagari_words(text: str) -> List[str]:
+    """Extracts Devanagari words (sequences) from text.
+
+    A "word" is defined as any contiguous sequence of Devanagari characters,
+    including consonants, vowels, and combining marks.
+
+    Args:
+        text: Input text (may contain mixed content)
+
+    Returns:
+        List of Devanagari words (sequences of Devanagari characters).
+        Whitespace and non-Devanagari content act as word separators.
+
+    Example:
+        >>> extract_devanagari_words("अग्निमीळे पुरोहितं")
+        ['अग्निमीळे', 'पुरोहितं']
+    """
+    # Find all sequences of Devanagari characters (including combining marks)
+    pattern = r"[\u0900-\u097F]+"
+    return re.findall(pattern, text)
+
+
+def extract_devanagari_words_with_positions(text: str) -> List[Tuple[str, int, int]]:
+    """Extracts Devanagari words with their positions in the text.
+
+    Useful for repair operations where the original positions need to be
+    preserved when making replacements.
+
+    Args:
+        text: Input text
+
+    Returns:
+        List of tuples (word, start_pos, end_pos) where:
+        - word: The Devanagari text sequence
+        - start_pos: Character index where word starts in original text
+        - end_pos: Character index where word ends in original text
+
+    Example:
+        >>> extract_devanagari_words_with_positions("Hello अग्नि world मीळे")
+        [('अग्नि', 6, 10), ('मीळे', 17, 21)]
+    """
+    pattern = r"[\u0900-\u097F]+"
+    matches = []
+    for match in re.finditer(pattern, text):
+        matches.append((match.group(), match.start(), match.end()))
+    return matches
