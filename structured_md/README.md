@@ -1,6 +1,6 @@
 # Structured Markdown Files
 
-This directory contains Grantha Sanskrit texts in structured Markdown format with YAML frontmatter. These files are designed for easy proofreading and editing while maintaining data integrity through cryptographic validation.
+This directory contains Sanskrit texts ("granthas") in structured Markdown format with YAML frontmatter. These files are designed for easy proofreading and editing while maintaining data integrity through cryptographic validation.
 
 ## Content Validation System
 
@@ -11,6 +11,7 @@ Every file includes a **validation hash** that ensures the Devanagari content ha
 - **All other content ignored** (markdown formatting, YAML, English translations, Roman transliteration)
 
 This means you can freely edit:
+
 - Markdown formatting (headers, lists, bold, italic)
 - English translations
 - Roman transliteration
@@ -40,6 +41,7 @@ grantha-converter verify-hash -i structured_md/upanishads/isavasya/isavasya-1.md
 ```
 
 **Success output:**
+
 ```
 ✓ Hash valid for structured_md/upanishads/isavasya/isavasya-1.md
   Version: 1
@@ -47,6 +49,7 @@ grantha-converter verify-hash -i structured_md/upanishads/isavasya/isavasya-1.md
 ```
 
 **Failure output (version mismatch):**
+
 ```
 ✗ Hash version MISMATCH in structured_md/upanishads/isavasya/isavasya-1.md
   File version: 0
@@ -56,6 +59,7 @@ grantha-converter verify-hash -i structured_md/upanishads/isavasya/isavasya-1.md
 ```
 
 **Failure output (content changed):**
+
 ```
 ✗ Hash INVALID for structured_md/upanishads/isavasya/isavasya-1.md
   Expected: abc123...
@@ -73,6 +77,7 @@ grantha-converter update-hash -i structured_md/upanishads/isavasya/isavasya-1.md
 ```
 
 This will:
+
 1. Extract the Devanagari text from the file
 2. Compute a new validation hash
 3. Update both `hash_version` and `validation_hash` in the YAML frontmatter
@@ -185,6 +190,7 @@ git commit -m "Update all hashes to version 1 (word-boundary-preserving)"
 Your file doesn't have a `hash_version` field (legacy file).
 
 **Fix:**
+
 ```bash
 grantha-converter update-hash -i path/to/file.md
 ```
@@ -194,6 +200,7 @@ grantha-converter update-hash -i path/to/file.md
 The file was created with an older hashing algorithm.
 
 **Fix:**
+
 ```bash
 grantha-converter update-hash -i path/to/file.md
 ```
@@ -201,11 +208,13 @@ grantha-converter update-hash -i path/to/file.md
 ### "Hash INVALID" (but you didn't edit Devanagari)
 
 Possible causes:
+
 - Invisible character changes (copy/paste from different source)
 - Line ending changes (CRLF vs LF) affecting Devanagari lines
 - Unicode normalization differences
 
 **Fix:**
+
 ```bash
 # Check what Devanagari text is actually in the file
 grantha-converter verify-hash -i path/to/file.md
@@ -236,11 +245,14 @@ chmod +x .git/hooks/pre-commit
 4. **Prefix**: Result prefixed with `sha256:`
 
 **Example:**
+
 ```markdown
 # Mantra 1
 
 <!-- sanskrit:devanagari -->
+
 अग्निमीळे पुरोहितं
+
 <!-- /sanskrit:devanagari -->
 
 **Translation**: I praise Agni, the priest...
@@ -251,17 +263,17 @@ chmod +x .git/hooks/pre-commit
 
 ### What's Included vs. Excluded
 
-| Content Type | Included in Hash? |
-|--------------|-------------------|
-| Devanagari text | ✅ Yes |
-| Devanagari dandas (।॥) | ✅ Yes |
-| Devanagari numerals (०१२...) | ✅ Yes |
-| Spaces between Devanagari words | ✅ Yes |
-| Roman transliteration | ❌ No |
-| English translation | ❌ No |
-| Markdown formatting | ❌ No |
-| YAML frontmatter | ❌ No |
-| HTML comments | ❌ No |
+| Content Type                      | Included in Hash?   |
+| --------------------------------- | ------------------- |
+| Devanagari text                   | ✅ Yes              |
+| Devanagari dandas (।॥)            | ✅ Yes              |
+| Devanagari numerals (०१२...)      | ✅ Yes              |
+| Spaces between Devanagari words   | ✅ Yes              |
+| Roman transliteration             | ❌ No               |
+| English translation               | ❌ No               |
+| Markdown formatting               | ❌ No               |
+| YAML frontmatter                  | ❌ No               |
+| HTML comments                     | ❌ No               |
 | Multiple spaces → normalized to 1 | ✅ Yes (as 1 space) |
 
 ## See Also
