@@ -13,8 +13,11 @@ py_library(
         "response_parser.py",
         "sampler.py",
     ],
+    # Adds 'tools/lib' to the PYTHONPATH so 'from gemini_processor' works.
+    imports = [".."],
     deps = [
-        requirement("google-genai"),
+        requirement("google_genai"),
+        requirement("pydantic"),
         requirement("pyyaml"),
     ],
 )
@@ -23,11 +26,16 @@ py_library(
 py_test(
     name = "test_cache_manager",
     size = "small",
-    srcs = ["test_cache_manager.py"],
-    main = "test_cache_manager.py",
+    srcs = [
+        "__init__.py",
+        "test_cache_manager.py",
+    ],
+    imports = [".."],
+    main = "__init__.py",
     deps = [
         ":gemini_processor",
         requirement("pytest"),
+        requirement("pydantic"),
     ],
 )
 

@@ -1,0 +1,11 @@
+aksharamukha
+colorama
+google-genai
+jsonschema
+pytest
+pyyaml
+
+# Promote transitive dependencies of aksharamukha to fix the Bazel build.
+# This is required because aksharamukha uses the [unicode] extra.
+fonttools
+unicodedata2

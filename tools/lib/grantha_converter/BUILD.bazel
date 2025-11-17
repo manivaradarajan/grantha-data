@@ -24,8 +24,8 @@ py_library(
         requirement("pyyaml"),
         requirement("aksharamukha"),
         requirement("colorama"),
-        requirement("beautifulsoup4"),
-        requirement("lxml"),
+        requirement("fonttools"),
+        requirement("unicodedata2"),
     ],
 )
 
@@ -70,10 +70,10 @@ py_test(
         "$(location grantha_converter_test/test_hasher.py)",
     ],
     legacy_create_init = False,
-    main = "grantha_converter_test/test_hasher.py",
+    main = "grantha_converter_test/__init__.py",
     deps = [
         ":grantha_converter",
-        "@grantha_pip_pytest//:pkg",
+        requirement("pytest"),
     ],
 )
 
@@ -84,7 +84,7 @@ py_test(
         "grantha_converter_test/__init__.py",
         "grantha_converter_test/test_json_to_md.py",
     ],
-    main = "grantha_converter_test/test_json_to_md.py",
+    main = "grantha_converter_test/__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
@@ -98,7 +98,7 @@ py_test(
         "grantha_converter_test/__init__.py",
         "grantha_converter_test/test_md_to_json.py",
     ],
-    main = "grantha_converter_test/test_md_to_json.py",
+    main = "grantha_converter_test/__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
@@ -116,7 +116,7 @@ py_test(
         ["grantha_converter_test/test_data/**/*"],
         allow_empty = True,
     ),
-    main = "grantha_converter_test/test_integration.py",
+    main = "grantha_converter_test/__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
@@ -126,8 +126,11 @@ py_test(
 py_test(
     name = "test_devanagari_extractor",
     size = "small",
-    srcs = ["test_devanagari_extractor.py"],
-    main = "test_devanagari_extractor.py",
+    srcs = [
+        "__init__.py",
+        "test_devanagari_extractor.py",
+    ],
+    main = "__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
@@ -137,8 +140,11 @@ py_test(
 py_test(
     name = "test_grantha_markdown_validator",
     size = "small",
-    srcs = ["test_grantha_markdown_validator.py"],
-    main = "test_grantha_markdown_validator.py",
+    srcs = [
+        "__init__.py",
+        "test_grantha_markdown_validator.py",
+    ],
+    main = "__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
@@ -148,8 +154,11 @@ py_test(
 py_test(
     name = "commentary_parser_test",
     size = "small",
-    srcs = ["commentary_parser_test.py"],
-    main = "commentary_parser_test.py",
+    srcs = [
+        "__init__.py",
+        "commentary_parser_test.py",
+    ],
+    main = "__init__.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),

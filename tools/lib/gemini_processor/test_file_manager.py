@@ -10,6 +10,7 @@ from gemini_processor.file_manager import (
     FileUploadCache,
     clear_upload_cache,
     get_cached_upload,
+    get_file_hash,
     upload_file_with_cache,
 )
 
@@ -57,16 +58,16 @@ class TestFileUploadCache(unittest.TestCase):
 
     def test_file_hash_calculation(self):
         """Should calculate consistent file hash."""
-        hash1 = self.cache._get_file_hash(str(self.test_file))
-        hash2 = self.cache._get_file_hash(str(self.test_file))
+        hash1 = get_file_hash(str(self.test_file))
+        hash2 = get_file_hash(str(self.test_file))
         self.assertEqual(hash1, hash2)
 
     def test_file_hash_changes_with_content(self):
         """Should produce different hash for different content."""
-        hash1 = self.cache._get_file_hash(str(self.test_file))
+        hash1 = get_file_hash(str(self.test_file))
 
         self.test_file.write_text("Different content", encoding="utf-8")
-        hash2 = self.cache._get_file_hash(str(self.test_file))
+        hash2 = get_file_hash(str(self.test_file))
 
         self.assertNotEqual(hash1, hash2)
 
@@ -84,7 +85,7 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.return_value = mock_file
 
         # Create cache entry
-        file_hash = self.cache._get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(str(self.test_file))
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
@@ -101,7 +102,7 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.return_value = mock_file
 
         # Create cache entry
-        file_hash = self.cache._get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(str(self.test_file))
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
@@ -115,7 +116,7 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.side_effect = Exception("File not found")
 
         # Create cache entry
-        file_hash = self.cache._get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(str(self.test_file))
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
@@ -247,9 +248,7 @@ class TestUploadFileWithCache(unittest.TestCase):
         mock_client = Mock()
         mock_client.files.upload.side_effect = Exception("Upload failed")
 
-        result = upload_file_with_cache(
-            mock_client, str(self.test_file), verbose=False
-        )
+        result = upload_file_with_cache(mock_client, str(self.test_file), verbose=False)
 
         self.assertIsNone(result)
 
