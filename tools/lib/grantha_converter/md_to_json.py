@@ -1,10 +1,12 @@
-"""Markdown to JSON converter for grantha data.
+"""
+Markdown to JSON converter for grantha data.
 
 This module converts a structured Grantha Markdown file back into the canonical
 JSON format. It parses the YAML frontmatter, reconstructs passages and commentaries
 from the Markdown headings and content blocks, and verifies content integrity
 using the `validation_hash` from the frontmatter.
 """
+import logging
 import re
 from typing import Any, Dict, List, Tuple
 
@@ -12,11 +14,15 @@ import yaml
 
 from .devanagari_extractor import HASH_VERSION
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
 # Regex patterns from the specification
 HEADING_MANTRA = re.compile(r'^#\s+(?:Mantra|Valli|Khanda|Anuvaka)\s+([\d\.]+)$')
-HEADING_PREFATORY = re.compile(r'^#\s+Prefatory:\s+([\d\.]+)\s+\((\w+):\s*\"(.*?)\"\)$', re.IGNORECASE | re.MULTILINE)
-HEADING_CONCLUDING = re.compile(r'^#\s+Concluding:\s+([\d\.]+)\s+\((\w+):\s*\"(.*?)\"\)$', re.IGNORECASE | re.MULTILINE)
-HEADING_COMMENTARY = re.compile(r'^#\s+Commentary:\s+([\d\.]+)$', re.IGNORECASE | re.MULTILINE)
+HEADING_PREFATORY = re.compile(r'^#\s+Prefatory:\s+([\d\.]+)\s+\((\w+):\s*"(.*?)"\)$', re.IGNORECASE | re.MULTILINE)
+HEADING_CONCLUDING = re.compile(r'^#\s+Concluding:\s+([\d\.]+)\s+\((\w+):\s*"(.*?)"\)$', re.IGNORECASE | re.MULTILINE)
+HEADING_COMMENTARY = re.compile(r'^#+\s+Commentary:\s+([\d\.]+)$', re.IGNORECASE | re.MULTILINE)
 COMMENTARY_METADATA = re.compile(r'<!--\s*commentary:\s*({.*?})\s*-->')
 HEADING_ANY = re.compile(r'^#\s+.*$', re.MULTILINE)
 
@@ -37,33 +43,25 @@ def parse_sanskrit_content(content: str) -> Dict[str, Any]:
     # Find all metadata comments and their positions
     matches = list(re.finditer(r'<!--\s*(.+?)\s*-->', content))
 
-    known_labels = {
-        'sanskrit:devanagari', 'sanskrit:roman', 'sanskrit:kannada',
-        'english_translation', 'english'
-    }
-    has_known_labels = any(m.group(1).strip() in known_labels for m in matches)
+    # Process content within sanskrit: tags
+    for i, match in enumerate(matches):
+        label = match.group(1).strip()
+        if label.startswith('sanskrit:') :
+            script = label.split(':')[1]
+            # Find the corresponding closing tag
+            closing_tag = f'<!-- /{label} -->'
+            for j in range(i + 1, len(matches)):
+                if matches[j].group(0).strip() == closing_tag:
+                    start_pos = match.end()
+                    end_pos = matches[j].start()
+                    text = content[start_pos:end_pos].strip()
+                    if text:
+                        sanskrit_data[script] = text
+                    break
 
-    if has_known_labels:
-        for i, match in enumerate(matches):
-            label = match.group(1).strip()
-            start_pos = match.end()
-            end_pos = matches[i+1].start() if i + 1 < len(matches) else len(content)
-
-            text = content[start_pos:end_pos].strip()
-
-            if label == 'sanskrit:devanagari':
-                sanskrit_data['devanagari'] = text
-            elif label == 'sanskrit:roman':
-                sanskrit_data['roman'] = text
-            elif label == 'sanskrit:kannada':
-                sanskrit_data['kannada'] = text
-            elif label == 'english_translation':
-                data['english_translation'] = text
-            elif label == 'english':
-                data['english'] = text
-    else:
-        # If no known labels are found, assume the entire block is Devanagari
-        # and clean out any other comments.
+    # If no sanskrit data was found, and there are no explicit tags,
+    # assume the entire block is Devanagari (after cleaning other comments)
+    if not sanskrit_data:
         cleaned_content = re.sub(r'<!--.*?-->', '', content, flags=re.DOTALL).strip()
         if cleaned_content:
             sanskrit_data['devanagari'] = cleaned_content
@@ -130,12 +128,10 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
     structure_keys = get_all_structure_keys(structure_levels)
     lowest_level_key = get_lowest_level_key(structure_levels)
 
-    heading_structure_pattern = r'^#\s+(' + '|'.join(re.escape(key) for key in structure_keys) + r')\s+([\d\.]+)$'
+    heading_structure_pattern = r'^#+\s+(' + '|'.join(re.escape(key) for key in structure_keys) + r')\s+([\d\.]+)$'
     HEADING_STRUCTURE = re.compile(heading_structure_pattern, re.MULTILINE | re.IGNORECASE)
 
     # Handle both dict and list formats for commentaries_metadata
-    # Dict format: {commentary_id: {metadata...}}
-    # List format: [{commentary_id: "id", metadata...}, ...]
     commentaries_dict = {}
     if isinstance(commentaries_metadata, dict):
         commentaries_dict = {cid: {"commentary_id": cid, **meta, "passages": []} for cid, meta in commentaries_metadata.items()}
@@ -163,28 +159,42 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
     if 'metadata' in frontmatter:
         data['metadata'] = frontmatter['metadata']
 
-    all_headings = sorted(
-        list(HEADING_STRUCTURE.finditer(content)) +
-        list(HEADING_PREFATORY.finditer(content)) +
-        list(HEADING_CONCLUDING.finditer(content)) +
-        list(HEADING_COMMENTARY.finditer(content)),
-        key=lambda m: m.start()
-    )
+    data['commentaries'] = commentaries_dict
+
+    # Collect all headings and commentary metadata tags with their start and end positions
+    all_matches = []
+    for pattern in [HEADING_STRUCTURE, HEADING_PREFATORY, HEADING_CONCLUDING, HEADING_COMMENTARY, COMMENTARY_METADATA]:
+        for match in pattern.finditer(content):
+            all_matches.append(match)
+
+    # Sort matches by their start position
+    all_matches.sort(key=lambda m: m.start())
 
     pending_commentary_meta = None
 
-    for i, match in enumerate(all_headings):
-        start_pos = match.end()
-        end_pos = all_headings[i+1].start() if i + 1 < len(all_headings) else len(content)
+    for i, match in enumerate(all_matches):
+        match_text = match.group(0).strip()
 
-        heading_line = match.group(0).strip()
-        raw_body_content = content[start_pos:end_pos].strip()
+        # Determine the end of the current content block
+        content_start = match.end()
+        content_end = all_matches[i+1].start() if i + 1 < len(all_matches) else len(content)
+        body_content = content[content_start:content_end].strip()
+
+        # Check if it's a commentary metadata tag
+        meta_match = COMMENTARY_METADATA.search(match_text)
+        if meta_match:
+            try:
+                import json
+                pending_commentary_meta = json.loads(meta_match.group(1))
+            except (json.JSONDecodeError, yaml.YAMLError):
+                pending_commentary_meta = None
+            continue # This tag itself doesn't have content to process as a passage
 
         # Re-match to identify heading type
-        match_prefatory = HEADING_PREFATORY.match(heading_line)
-        match_concluding = HEADING_CONCLUDING.match(heading_line)
-        match_commentary = HEADING_COMMENTARY.match(heading_line)
-        match_structure = HEADING_STRUCTURE.match(heading_line)
+        match_prefatory = HEADING_PREFATORY.match(match_text)
+        match_concluding = HEADING_CONCLUDING.match(match_text)
+        match_commentary = HEADING_COMMENTARY.match(match_text)
+        match_structure = HEADING_STRUCTURE.match(match_text)
 
         if match_commentary:
             if pending_commentary_meta:
@@ -194,29 +204,13 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
                 if commentary_id and commentary_id in data['commentaries']:
                     commentary_passage = {
                         'ref': ref,
-                        'content': parse_sanskrit_content(raw_body_content)
+                        'content': parse_sanskrit_content(body_content)
                     }
                     data['commentaries'][commentary_id]['passages'].append(commentary_passage)
 
-                pending_commentary_meta = None # Consume it
-            continue
-
-        # This is a content-bearing heading, not a commentary heading.
-        body_content = raw_body_content
-
-        # Reset any stale metadata from a previous loop
-        pending_commentary_meta = None
-
-        # Check for attached commentary metadata for the *next* heading
-        meta_match = COMMENTARY_METADATA.search(body_content)
-        if meta_match and body_content.endswith(meta_match.group(0)):
-            try:
-                import json
-                pending_commentary_meta = json.loads(meta_match.group(1))
-                # Clean the metadata from the current body
-                body_content = body_content[:meta_match.start()].strip()
-            except (json.JSONDecodeError, yaml.YAMLError):
+                # Consume it only after processing the commentary
                 pending_commentary_meta = None
+            continue
 
         # Now process the passage with the cleaned body content
         if match_prefatory:
@@ -257,86 +251,10 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
                 if passage['content']:
                     data['passages'].append(passage)
 
-    data['commentaries'] = [c for c in data['commentaries'].values() if c['passages']]
+    # Filter out commentaries that have no passages
+    commentaries_with_passages = {}
+    for cid, comm_data in data['commentaries'].items():
+        if comm_data['passages']:
+            commentaries_with_passages[cid] = comm_data
+    data['commentaries'] = commentaries_with_passages
     return data
-import json
-
-from .hasher import hash_grantha
-
-
-def markdown_file_to_json_file(input_path: str, output_path: str,
-                               format: str = 'single',
-                               validate_schema: bool = True) -> None:
-    """Reads a Markdown file, converts it to JSON, and writes to a file.
-
-    This function also performs a validation check. It recalculates the hash of
-    the generated JSON based on the parameters in the original Markdown's
-    frontmatter and compares it to the `validation_hash` stored there.
-
-    Args:
-        input_path: The path to the input Markdown file.
-        output_path: The path to the output JSON file.
-        format: 'single' for complete grantha or 'multipart' for grantha parts.
-        validate_schema: Whether to validate against JSON schema (default: True).
-
-    Raises:
-        ValueError: If the validation hash check fails or schema validation fails.
-    """
-    with open(input_path, 'r', encoding='utf-8') as f:
-        markdown_content = f.read()
-
-    frontmatter, body = parse_frontmatter(markdown_content)
-    json_data = convert_to_json(markdown_content)
-
-    # Verify hash version
-    file_version = frontmatter.get('hash_version', None)
-    if file_version is None:
-        raise ValueError(
-            f"Hash version missing. File has no hash_version field.\n"
-            f"This is a legacy/unversioned file. Current version: {HASH_VERSION}\n"
-            f"Please run: grantha-converter update-hash -i \"{input_path}\""
-        )
-
-    if file_version != HASH_VERSION:
-        raise ValueError(
-            f"Hash version mismatch.\n"
-            f"File version: {file_version}\n"
-            f"Current version: {HASH_VERSION}\n"
-            f"The hashing algorithm has changed since this file was generated.\n"
-            f"Please run: grantha-converter update-hash -i \"{input_path}\""
-        )
-
-    # Verify integrity using the same method as verify-hash and update-hash
-    # Extract Devanagari from the markdown body (not from JSON) for consistency
-    from .devanagari_extractor import extract_devanagari
-    from .hasher import hash_text
-
-    expected_hash = frontmatter.get('validation_hash', '').replace('sha256:', '')
-    devanagari_text = extract_devanagari(body)
-    recalculated_hash = hash_text(devanagari_text)
-
-    if expected_hash and recalculated_hash != expected_hash:
-        raise ValueError(
-            f"Validation hash mismatch. Data may be corrupt.\n"
-            f"Expected: {expected_hash}\n"
-            f"Got:      {recalculated_hash}"
-        )
-
-    # Validate against JSON schema if requested
-    if validate_schema:
-        from .schema_validator import validate_grantha_single, validate_grantha_part
-
-        if format == 'multipart':
-            is_valid, errors = validate_grantha_part(json_data)
-            schema_name = 'grantha-part.schema.json'
-        else:  # format == 'single'
-            is_valid, errors = validate_grantha_single(json_data)
-            schema_name = 'grantha.schema.json'
-
-        if not is_valid:
-            error_msg = f"JSON schema validation failed against {schema_name}:\n"
-            error_msg += "\n".join(f"  - {err}" for err in errors)
-            raise ValueError(error_msg)
-
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(json_data, f, ensure_ascii=False, indent=2)

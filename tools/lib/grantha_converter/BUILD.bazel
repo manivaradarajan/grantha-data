@@ -1,5 +1,5 @@
-load("@rules_python//python:defs.bzl", "py_library", "py_binary", "py_test")
 load("@grantha_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -65,13 +65,16 @@ py_test(
         "grantha_converter_test/__init__.py",
         "grantha_converter_test/test_hasher.py",
     ],
-    args = ["-v", "$(location grantha_converter_test/test_hasher.py)"],
+    args = [
+        "-v",
+        "$(location grantha_converter_test/test_hasher.py)",
+    ],
+    legacy_create_init = False,
     main = "grantha_converter_test/test_hasher.py",
     deps = [
         ":grantha_converter",
         requirement("pytest"),
     ],
-    legacy_create_init = False,
 )
 
 py_test(
@@ -109,8 +112,11 @@ py_test(
         "grantha_converter_test/__init__.py",
         "grantha_converter_test/test_integration.py",
     ],
+    data = glob(
+        ["grantha_converter_test/test_data/**/*"],
+        allow_empty = True,
+    ),
     main = "grantha_converter_test/test_integration.py",
-    data = glob(["grantha_converter_test/test_data/**/*"], allow_empty = True),
     deps = [
         ":grantha_converter",
         requirement("pytest"),
