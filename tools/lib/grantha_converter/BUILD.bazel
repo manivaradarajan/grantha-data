@@ -73,7 +73,7 @@ py_test(
     main = "grantha_converter_test/test_hasher.py",
     deps = [
         ":grantha_converter",
-        requirement("pytest"),
+        "@grantha_pip_pytest//:pkg",
     ],
 )
 

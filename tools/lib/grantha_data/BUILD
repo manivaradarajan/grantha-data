@@ -1,4 +1,5 @@
-load("@rules_python//python:defs.bzl", "py_library", "py_binary", "py_test")
+load("@grantha_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 # Main grantha_data library
 py_library(
@@ -31,9 +32,10 @@ py_library(
 # Tests
 py_test(
     name = "grantha_data_test",
-    srcs = glob(["tests/test_*.py"]),
+    srcs = glob(["tests/**/*.py"]),
+    main = "tests/__init__.py",
     deps = [
         ":grantha_data",
-        "@pypi//pytest",
+        requirement("pytest"),
     ],
 )
