@@ -13,6 +13,7 @@ from typing import Dict, List, Optional, Tuple
 @dataclass
 class Boundary:
     """Represents a structural boundary in the text."""
+
     type: str  # 'khanda', 'valli', 'anuvaka', 'prapathaka'
     position: int  # Character position in text
     line_number: int  # Line number in file
@@ -22,51 +23,60 @@ class Boundary:
 
 # Sanskrit ordinal patterns (nominative masculine/feminine forms)
 ORDINALS = [
-    'प्रथम',  # 1st
-    'द्वितीय', 'द्वितीया',  # 2nd
-    'तृतीय', 'तृतीया',  # 3rd
-    'चतुर्थ', 'चतुर्थी',  # 4th
-    'पञ्चम', 'पञ्चमी',  # 5th
-    'षष्ठ', 'षष्ठी',  # 6th
-    'सप्तम', 'सप्तमी',  # 7th
-    'अष्टम', 'अष्टमी',  # 8th
-    'नवम', 'नवमी',  # 9th
-    'दशम', 'दशमी',  # 10th
-    'एकादश',  # 11th
-    'द्वादश',  # 12th
-    'त्रयोदश',  # 13th
-    'चतुर्दश',  # 14th
-    'पञ्चदश',  # 15th
-    'षोडश',  # 16th
+    "प्रथम",  # 1st
+    "द्वितीय",
+    "द्वितीया",  # 2nd
+    "तृतीय",
+    "तृतीया",  # 3rd
+    "चतुर्थ",
+    "चतुर्थी",  # 4th
+    "पञ्चम",
+    "पञ्चमी",  # 5th
+    "षष्ठ",
+    "षष्ठी",  # 6th
+    "सप्तम",
+    "सप्तमी",  # 7th
+    "अष्टम",
+    "अष्टमी",  # 8th
+    "नवम",
+    "नवमी",  # 9th
+    "दशम",
+    "दशमी",  # 10th
+    "एकादश",  # 11th
+    "द्वादश",  # 12th
+    "त्रयोदश",  # 13th
+    "चतुर्दश",  # 14th
+    "पञ्चदश",  # 15th
+    "षोडश",  # 16th
 ]
 
 # Boundary patterns for different structural levels
 BOUNDARY_PATTERNS = {
-    'khanda': [
+    "khanda": [
         # Two separate bold blocks: **प्रथमः** **खण्डः**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ःोम]?\*\*\s+\*\*खण्ड[ःम]\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")[ःोम]?\*\*\s+\*\*खण्ड[ःम]\*\*",
         # Single bold block: **प्रथमः खण्डः**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ःोम]?\s*खण्ड[ःम]\*\*',
-        r'\*\*खण्ड[ःम]\s*\d+\*\*',  # खण्डः 1, खण्डः 2, etc.
+        r"\*\*(" + "|".join(ORDINALS) + r")[ःोम]?\s*खण्ड[ःम]\*\*",
+        r"\*\*खण्ड[ःम]\s*\d+\*\*",  # खण्डः 1, खण्डः 2, etc.
     ],
-    'valli': [
+    "valli": [
         # Two separate bold blocks: **प्रथमा** **वल्ली**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ाी]?\*\*\s+\*\*वल्ली\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")[ाी]?\*\*\s+\*\*वल्ली\*\*",
         # Single bold block: **प्रथमा वल्ली**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ाी]?\s*वल्ली\*\*',
-        r'\*\*वल्ली\s*\d+\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")[ाी]?\s*वल्ली\*\*",
+        r"\*\*वल्ली\s*\d+\*\*",
     ],
-    'anuvaka': [
+    "anuvaka": [
         # Two separate bold blocks: **प्रथमोऽनुवाकः** (note: typically one word)
-        r'\*\*(' + '|'.join(ORDINALS) + r')ोऽनुवाक[ःम]\*\*',
-        r'\*\*अनुवाक[ःम]\s*\d+\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")ोऽनुवाक[ःम]\*\*",
+        r"\*\*अनुवाक[ःम]\s*\d+\*\*",
     ],
-    'prapathaka': [
+    "prapathaka": [
         # Two separate bold blocks: **प्रथमः** **प्रपाठकः**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ःोम]?\*\*\s+\*\*प्रपाठक[ःम]\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")[ःोम]?\*\*\s+\*\*प्रपाठक[ःम]\*\*",
         # Single bold block: **प्रथमः प्रपाठकः**
-        r'\*\*(' + '|'.join(ORDINALS) + r')[ःोम]?\s*प्रपाठक[ःम]\*\*',
-        r'\*\*प्रपाठक[ःम]\s*\d+\*\*',
+        r"\*\*(" + "|".join(ORDINALS) + r")[ःोम]?\s*प्रपाठक[ःम]\*\*",
+        r"\*\*प्रपाठक[ःम]\s*\d+\*\*",
     ],
 }
 
@@ -82,7 +92,7 @@ def detect_structure_boundaries(text: str, verbose: bool = False) -> List[Bounda
         List of Boundary objects in order of appearance
     """
     boundaries = []
-    lines = text.split('\n')
+    lines = text.split("\n")
 
     # Track position in text
     char_position = 0
@@ -105,12 +115,14 @@ def detect_structure_boundaries(text: str, verbose: bool = False) -> List[Bounda
                         position=char_position,
                         line_number=line_num,
                         marker_text=match.group(0),
-                        ordinal=ordinal
+                        ordinal=ordinal,
                     )
                     boundaries.append(boundary)
 
                     if verbose:
-                        print(f"Found {boundary_type} at line {line_num}: {match.group(0)}")
+                        print(
+                            f"Found {boundary_type} at line {line_num}: {match.group(0)}"
+                        )
 
                     break  # Only match first pattern per line
 
@@ -138,35 +150,29 @@ def should_chunk(file_path: str, threshold: int = 200000) -> Tuple[bool, int, st
     file_size = path.stat().st_size
 
     if file_size < threshold:
-        return False, file_size, f"File size ({file_size} bytes) below threshold ({threshold} bytes)"
+        return (
+            False,
+            file_size,
+            f"File size ({file_size} bytes) below threshold ({threshold} bytes)",
+        )
 
-    return True, file_size, f"File size ({file_size} bytes) exceeds threshold ({threshold} bytes)"
+    return (
+        True,
+        file_size,
+        f"File size ({file_size} bytes) exceeds threshold ({threshold} bytes)",
+    )
 
 
 def split_at_boundaries(
     text: str,
     max_size: int = 200000,
     preferred_boundary: Optional[str] = None,
-    verbose: bool = False
+    verbose: bool = False,
 ) -> List[Tuple[str, Dict]]:
-    """Split text at natural boundaries into chunks.
+    """Split text at natural boundaries into chunks using heuristics.
 
-    Args:
-        text: The meghamala markdown content
-        max_size: Maximum chunk size in bytes (default: 200KB)
-        preferred_boundary: Preferred boundary type ('khanda', 'valli', etc.)
-        verbose: Print splitting details
-
-    Returns:
-        List of (chunk_text, metadata) tuples
-        metadata contains: {
-            'chunk_index': int,
-            'total_chunks': int,
-            'boundary_type': str,
-            'starts_at_line': int,
-            'ends_at_line': int,
-            'size': int
-        }
+    WARNING: Do not use this if you have an AI-generated execution plan.
+    Use split_by_execution_plan instead.
     """
     # Detect all boundaries
     boundaries = detect_structure_boundaries(text, verbose=verbose)
@@ -174,14 +180,19 @@ def split_at_boundaries(
     if not boundaries:
         if verbose:
             print("No boundaries found - returning entire text as single chunk")
-        return [(text, {
-            'chunk_index': 0,
-            'total_chunks': 1,
-            'boundary_type': 'none',
-            'starts_at_line': 1,
-            'ends_at_line': len(text.split('\n')),
-            'size': len(text)
-        })]
+        return [
+            (
+                text,
+                {
+                    "chunk_index": 0,
+                    "total_chunks": 1,
+                    "boundary_type": "none",
+                    "starts_at_line": 1,
+                    "ends_at_line": len(text.split("\n")),
+                    "size": len(text),
+                },
+            )
+        ]
 
     # Determine which boundary type to use
     if preferred_boundary:
@@ -192,7 +203,7 @@ def split_at_boundaries(
             selected_boundaries = boundaries
     else:
         # Auto-select: prefer khanda > valli > anuvaka > prapathaka
-        for boundary_type in ['khanda', 'valli', 'anuvaka', 'prapathaka']:
+        for boundary_type in ["khanda", "valli", "anuvaka", "prapathaka"]:
             selected_boundaries = [b for b in boundaries if b.type == boundary_type]
             if selected_boundaries:
                 if verbose:
@@ -206,7 +217,7 @@ def split_at_boundaries(
 
     # Determine chunk split points
     chunks = []
-    lines = text.split('\n')
+    lines = text.split("\n")
     current_start = 0
     current_start_line = 1
 
@@ -217,92 +228,177 @@ def split_at_boundaries(
         # Split if we exceed max_size (or it's the last boundary and we need to split)
         if chunk_size >= max_size or i == len(selected_boundaries) - 1:
             # Get chunk text
-            chunk_text = text[current_start:boundary.position].strip()
+            chunk_text = text[current_start : boundary.position].strip()
 
             if chunk_text:  # Only add non-empty chunks
+                # If it's the very first chunk, don't strip leading/trailing whitespace
+                if not chunks:
+                    chunk_text_content = text[current_start : boundary.position]
+                else:
+                    chunk_text_content = text[current_start : boundary.position].strip()
+
                 metadata = {
-                    'chunk_index': len(chunks),
-                    'total_chunks': -1,  # Will update later
-                    'boundary_type': boundary.type,
-                    'starts_at_line': current_start_line,
-                    'ends_at_line': boundary.line_number - 1,
-                    'size': len(chunk_text)
+                    "chunk_index": len(chunks),
+                    "total_chunks": -1,  # Will update later
+                    "boundary_type": boundary.type,
+                    "starts_at_line": current_start_line,
+                    "ends_at_line": boundary.line_number - 1,
+                    "size": len(chunk_text_content),
                 }
-                chunks.append((chunk_text, metadata))
+                chunks.append((chunk_text_content, metadata))
 
                 if verbose:
-                    print(f"Chunk {len(chunks)}: lines {current_start_line}-{boundary.line_number-1}, "
-                          f"size {len(chunk_text)} bytes")
+                    print(
+                        f"Chunk {len(chunks)}: lines {current_start_line}-{boundary.line_number-1}, "
+                        f"size {len(chunk_text_content)} bytes"
+                    )
 
             # Update start position for next chunk
             current_start = boundary.position
             current_start_line = boundary.line_number
 
     # Add final chunk (from last boundary to end)
-    final_chunk = text[current_start:].strip()
-    if final_chunk:
+    final_chunk_content = text[current_start:]
+    if final_chunk_content:
         metadata = {
-            'chunk_index': len(chunks),
-            'total_chunks': -1,  # Will update later
-            'boundary_type': selected_boundaries[-1].type if selected_boundaries else 'none',
-            'starts_at_line': current_start_line,
-            'ends_at_line': len(lines),
-            'size': len(final_chunk)
+            "chunk_index": len(chunks),
+            "total_chunks": -1,  # Will update later
+            "boundary_type": (
+                selected_boundaries[-1].type if selected_boundaries else "none"
+            ),
+            "starts_at_line": current_start_line,
+            "ends_at_line": len(lines),
+            "size": len(final_chunk_content),
         }
-        chunks.append((final_chunk, metadata))
+        chunks.append((final_chunk_content, metadata))
 
         if verbose:
-            print(f"Final chunk {len(chunks)}: lines {current_start_line}-{len(lines)}, "
-                  f"size {len(final_chunk)} bytes")
+            print(
+                f"Final chunk {len(chunks)}: lines {current_start_line}-{len(lines)}, "
+                f"size {len(final_chunk_content)} bytes"
+            )
 
     # Update total_chunks in all metadata
     total = len(chunks)
     for _, metadata in chunks:
-        metadata['total_chunks'] = total
-
-    if verbose:
-        print(f"\nTotal chunks: {total}")
-        total_size = sum(len(chunk) for chunk, _ in chunks)
-        print(f"Total size: {total_size} bytes")
+        metadata["total_chunks"] = total
 
     return chunks
 
 
 def estimate_chunk_count(file_path: str, max_size: int = 200000) -> Tuple[int, str]:
-    """Estimate how many chunks a file would be split into.
-
-    Args:
-        file_path: Path to the file
-        max_size: Maximum chunk size in bytes
-
-    Returns:
-        Tuple of (estimated_chunks: int, boundary_type: str)
-    """
+    """Estimate how many chunks a file would be split into."""
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             text = f.read()
 
         boundaries = detect_structure_boundaries(text)
 
         if not boundaries:
-            return 1, 'none'
+            return 1, "none"
 
-        # Find most common boundary type
         from collections import Counter
+
         boundary_counts = Counter(b.type for b in boundaries)
         most_common_type = boundary_counts.most_common(1)[0][0]
 
-        # Estimate chunks based on file size and boundary count
         file_size = len(text)
         boundaries_of_type = [b for b in boundaries if b.type == most_common_type]
 
         if not boundaries_of_type:
-            return 1, 'none'
+            return 1, "none"
 
-        # Rough estimate: file_size / max_size, bounded by boundary count
         estimated = max(1, min(len(boundaries_of_type), (file_size // max_size) + 1))
-
         return estimated, most_common_type
 
     except Exception as e:
-        return 1, f'error: {e}'
+        return 1, f"error: {e}"
+
+
+def split_by_execution_plan(
+    text: str, execution_plan: List[Dict], verbose: bool = False
+) -> List[Tuple[str, Dict]]:
+    """Split text specifically according to the LLM-generated execution plan.
+
+    This is a deterministic splitter that obeys strict start/end markers from
+    the Phase 1 Analysis JSON.
+
+    Args:
+        text: The full source text
+        execution_plan: The 'execution_plan' list from the analysis JSON
+        verbose: Print details
+
+    Returns:
+        List of (chunk_text, metadata) tuples.
+    """
+    chunks = []
+    current_pos = 0
+    total_chunks = len(execution_plan)
+
+    for plan_idx, plan in enumerate(execution_plan):
+        chunk_id = plan.get("chunk_id", plan_idx + 1)
+        start_marker = plan.get("start_marker")
+        end_marker = plan.get("end_marker")
+
+        assert start_marker
+        assert end_marker
+
+        # --- START INDEX LOGIC ---
+        if plan_idx == 0:
+            # CRITICAL FIX: The first chunk MUST start at index 0 to include
+            # document titles/preambles that appear before the first section marker.
+            start_idx = 0
+        else:
+            # For subsequent chunks, look for the marker starting from where we left off
+            found_start = text.find(start_marker, current_pos)
+            if found_start == -1:
+                if verbose:
+                    print(
+                        f"Warning: Start marker '{start_marker}' not found for Chunk {chunk_id}. "
+                        f"Using current position {current_pos}."
+                    )
+                start_idx = current_pos
+            else:
+                start_idx = found_start
+
+        # --- END INDEX LOGIC ---
+        # Find the end marker starting from the identified start_idx
+        found_end = text.find(end_marker, start_idx)
+
+        if found_end == -1:
+            if verbose:
+                print(
+                    f"Warning: End marker '{end_marker}' not found for Chunk {chunk_id}. "
+                    f"Extending to end of text."
+                )
+            end_idx = len(text)
+        else:
+            # Include the end marker itself in this chunk
+            end_idx = found_end + len(end_marker)
+
+        # --- EXTRACT ---
+        chunk_content = text[start_idx:end_idx]
+
+        # Validate content existence
+        if not chunk_content.strip():
+            if verbose:
+                print(f"Warning: Chunk {chunk_id} resulted in empty content. Skipping.")
+            continue
+
+        metadata = {
+            "chunk_id": chunk_id,
+            "total_chunks": total_chunks,
+            "start_marker": start_marker,
+            "end_marker": end_marker,
+            "size": len(chunk_content),
+        }
+
+        chunks.append((chunk_content, metadata))
+
+        # Update position for next iteration
+        current_pos = end_idx
+
+        if verbose:
+            print(f"Chunk {chunk_id} extracted: {len(chunk_content)} chars.")
+
+    return chunks

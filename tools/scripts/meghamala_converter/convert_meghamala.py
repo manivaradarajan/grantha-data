@@ -56,9 +56,8 @@ from grantha_converter.devanagari_validator import validate_devanagari_preservat
 from grantha_converter.diff_utils import show_devanagari_diff, show_transliteration_diff
 from grantha_converter.hasher import hash_text
 from grantha_converter.meghamala_chunker import (
-    estimate_chunk_count,
-    should_chunk,
-    split_at_boundaries,
+    # split_at_boundaries,
+    split_by_execution_plan,
 )
 from grantha_converter.meghamala_stitcher import (
     cleanup_temp_chunks,
@@ -870,7 +869,7 @@ def convert_with_regex_chunking(
     model: str = DEFAULT_GEMINI_MODEL,
     use_upload_cache: bool = True,
 ) -> bool:
-    """Convert file using analysis-driven chunking and library-based stitching."""
+    """Convert file using analysis-driven execution plan chunking."""
     try:
         with open(input_file, "r", encoding="utf-8") as f:
             input_text = f.read()
@@ -878,13 +877,32 @@ def convert_with_regex_chunking(
         print(f"Error reading input file: {e}", file=sys.stderr)
         return False
 
-    # Phase 1: Chunking
-    chunks = split_at_boundaries(input_text, verbose=verbose)
+    # --- PHASE 1: CHUNKING (UPDATED) ---
+    # Extract the execution plan from the analysis result
+    chunking_strategy = analysis_result.get("chunking_strategy", {})
+    execution_plan = chunking_strategy.get("execution_plan", [])
+
+    if not execution_plan:
+        print("❌ No execution plan found in analysis result.", file=sys.stderr)
+        return False
+
+    print(f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks)...")
+
+    # Use the deterministic splitter that obeys the JSON plan
+    chunks = split_by_execution_plan(input_text, execution_plan, verbose=verbose)
+
     if not chunks:
         print("❌ Could not split file into chunks.", file=sys.stderr)
         return False
 
-    # Phase 2: Conversion
+    # Validate that we got the expected number of chunks
+    if len(chunks) != len(execution_plan):
+        print(
+            f"⚠️ Warning: Expected {len(execution_plan)} chunks but got {len(chunks)}.",
+            file=sys.stderr,
+        )
+
+    # --- PHASE 2: CONVERSION ---
     temp_file_paths, chunk_validations = _convert_all_chunks(
         client=client,
         chunks=chunks,
@@ -908,8 +926,12 @@ def convert_with_regex_chunking(
 
         # Safely get descriptions and calculate max length
         descriptions = [(v.get("description") or "") for v in chunk_validations]
-        max_desc_len = max(len(d) for d in descriptions) if descriptions else 20
-        max_desc_len = min(max_desc_len, 50)
+        # Handle case where descriptions might be empty
+        if descriptions:
+            max_desc_len = max(len(d) for d in descriptions)
+        else:
+            max_desc_len = 20
+        max_desc_len = min(max(max_desc_len, 20), 50)
 
         header = f"| {'Chunk':<5} | {'Status':<8} | {'Input':>7} | {'Output':>7} | {'Diff':>5} | {'Description':<{max_desc_len}} |"
         print(header)
@@ -928,7 +950,7 @@ def convert_with_regex_chunking(
             diff = v.get("char_diff", 0)
             total_diff += diff
 
-            desc = descriptions[i]
+            desc = descriptions[i] if i < len(descriptions) else ""
             if len(desc) > max_desc_len:
                 desc = desc[: max_desc_len - 3] + "..."
 
@@ -945,7 +967,7 @@ def convert_with_regex_chunking(
         print(f"|{'-'*7}|{'-'*10}|{'-'*9}|{'-'*9}|{'-'*7}|{'-'*(max_desc_len+2)}|")
         print(f"Total Devanagari Character Difference: {total_diff}")
 
-    # Phase 3: Stitching
+    # --- PHASE 3: STITCHING ---
     print(f"\n{'='*60}")
     print("📋 PHASE 4: MERGING AND WRITING OUTPUT")
     print(f"{'='*60}\n")
@@ -962,7 +984,7 @@ def convert_with_regex_chunking(
         return False
     print(f"✓ Merging complete: {len(merged_content)} characters")
 
-    # Phase 4: Validation and Repair
+    # --- PHASE 4: VALIDATION AND REPAIR ---
     if not skip_validation:
         is_valid, validation_message = validate_merged_output(
             input_text, merged_content
