@@ -13,7 +13,7 @@ from typing import Any, Optional
 from google import genai
 
 
-def get_file_hash(file_path: str) -> str:
+def get_file_hash(file_path: Path) -> str:
     """Calculate SHA256 hash of a file.
 
     Args:
@@ -40,13 +40,13 @@ class FileUploadCache:
         cache_file: Path to the cache file.
     """
 
-    def __init__(self, cache_file: str):
+    def __init__(self, cache_file: Path):
         """Initialize FileUploadCache with a cache file path.
 
         Args:
             cache_file: Path to the JSON cache file.
         """
-        self.cache_file = Path(cache_file)
+        self.cache_file = cache_file
 
     def _load_cache(self) -> dict:
         """Load the file upload cache from disk.
@@ -78,7 +78,7 @@ class FileUploadCache:
         except Exception as e:
             print(f"⚠️  Warning: Could not save upload cache: {e}")
 
-    def get_cached_upload(self, client: genai.Client, file_path: str) -> Optional[Any]:
+    def get_cached_upload(self, client: genai.Client, file_path: Path) -> Optional[Any]:
         """Check if we have a valid cached upload for this file.
 
         Args:
@@ -115,7 +115,7 @@ class FileUploadCache:
             return None
 
     def cache_upload(
-        self, file_path: str, uploaded_file: Any, verbose: bool = False
+        self, file_path: Path, uploaded_file: Any, verbose: bool = False
     ) -> None:
         """Cache information about an uploaded file.
 
@@ -167,7 +167,7 @@ class FileUploadCache:
 
 def upload_file_with_cache(
     client: genai.Client,
-    file_path: str,
+    file_path: Path,
     cache_manager: Optional[FileUploadCache] = None,
     mime_type: str = "text/markdown",
     verbose: bool = False,
@@ -187,8 +187,7 @@ def upload_file_with_cache(
     Raises:
         FileNotFoundError: If file_path doesn't exist.
     """
-    file_path_obj = Path(file_path)
-    if not file_path_obj.exists():
+    if not file_path.exists():
         raise FileNotFoundError(f"File not found: {file_path}")
 
     # Check cache if available
@@ -208,7 +207,7 @@ def upload_file_with_cache(
             uploaded_file = client.files.upload(
                 file=f,
                 config={
-                    "display_name": file_path_obj.name,
+                    "display_name": file_path.name,
                     "mime_type": mime_type,
                 },
             )
@@ -230,7 +229,7 @@ def upload_file_with_cache(
 
 
 def get_cached_upload(
-    client: genai.Client, file_path: str, cache_file: str
+    client: genai.Client, file_path: Path, cache_file: Path
 ) -> Optional[Any]:
     """Convenience function to check for cached upload.
 
@@ -242,11 +241,11 @@ def get_cached_upload(
     Returns:
         Gemini File object if valid cache found, None otherwise.
     """
-    cache_manager = FileUploadCache(cache_file)
+    cache_manager = FileUploadCache(Path(cache_file))
     return cache_manager.get_cached_upload(client, file_path)
 
 
-def clear_upload_cache(cache_file: str) -> bool:
+def clear_upload_cache(cache_file: Path) -> bool:
     """Convenience function to clear upload cache.
 
     Args:

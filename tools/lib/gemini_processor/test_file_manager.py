@@ -1,6 +1,5 @@
 """Tests for file_manager module."""
 
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -27,7 +26,7 @@ class TestFileUploadCache(unittest.TestCase):
         self.test_file = self.temp_path / "test.md"
         self.test_file.write_text("Test content", encoding="utf-8")
 
-        self.cache = FileUploadCache(str(self.cache_file))
+        self.cache = FileUploadCache(self.cache_file)
 
     def tearDown(self):
         """Clean up temporary directory."""
@@ -58,23 +57,23 @@ class TestFileUploadCache(unittest.TestCase):
 
     def test_file_hash_calculation(self):
         """Should calculate consistent file hash."""
-        hash1 = get_file_hash(str(self.test_file))
-        hash2 = get_file_hash(str(self.test_file))
+        hash1 = get_file_hash(self.test_file)
+        hash2 = get_file_hash(self.test_file)
         self.assertEqual(hash1, hash2)
 
     def test_file_hash_changes_with_content(self):
         """Should produce different hash for different content."""
-        hash1 = get_file_hash(str(self.test_file))
+        hash1 = get_file_hash(self.test_file)
 
         self.test_file.write_text("Different content", encoding="utf-8")
-        hash2 = get_file_hash(str(self.test_file))
+        hash2 = get_file_hash(self.test_file)
 
         self.assertNotEqual(hash1, hash2)
 
     def test_get_cached_upload_miss(self):
         """Should return None when no cache entry exists."""
         mock_client = Mock()
-        result = self.cache.get_cached_upload(mock_client, str(self.test_file))
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
         self.assertIsNone(result)
 
     def test_get_cached_upload_hit_active_file(self):
@@ -85,12 +84,12 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.return_value = mock_file
 
         # Create cache entry
-        file_hash = get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(self.test_file)
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
-        result = self.cache.get_cached_upload(mock_client, str(self.test_file))
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
         self.assertEqual(result, mock_file)
         mock_client.files.get.assert_called_once_with(name="files/test123")
 
@@ -102,12 +101,12 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.return_value = mock_file
 
         # Create cache entry
-        file_hash = get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(self.test_file)
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
-        result = self.cache.get_cached_upload(mock_client, str(self.test_file))
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
         self.assertIsNone(result)
 
     def test_get_cached_upload_file_not_found_in_gemini(self):
@@ -116,12 +115,12 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client.files.get.side_effect = Exception("File not found")
 
         # Create cache entry
-        file_hash = get_file_hash(str(self.test_file))
+        file_hash = get_file_hash(self.test_file)
         cache_key = f"{self.test_file}:{file_hash}"
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
-        result = self.cache.get_cached_upload(mock_client, str(self.test_file))
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
         self.assertIsNone(result)
 
     def test_cache_upload(self):
@@ -132,7 +131,7 @@ class TestFileUploadCache(unittest.TestCase):
         mock_file.display_name = "test.md"
         mock_file.size_bytes = 1024
 
-        self.cache.cache_upload(str(self.test_file), mock_file, verbose=False)
+        self.cache.cache_upload(self.test_file, mock_file, verbose=False)
 
         # Verify cache was created
         cache_data = self.cache._load_cache()
@@ -186,7 +185,7 @@ class TestUploadFileWithCache(unittest.TestCase):
         mock_client.files.upload.return_value = mock_file
 
         result = upload_file_with_cache(
-            mock_client, str(self.test_file), cache_manager=None, verbose=False
+            mock_client, self.test_file, cache_manager=None, verbose=False
         )
 
         self.assertEqual(result, mock_file)
@@ -202,7 +201,7 @@ class TestUploadFileWithCache(unittest.TestCase):
 
         result = upload_file_with_cache(
             mock_client,
-            str(self.test_file),
+            self.test_file,
             cache_manager=mock_cache_manager,
             verbose=False,
         )
@@ -224,7 +223,7 @@ class TestUploadFileWithCache(unittest.TestCase):
 
         result = upload_file_with_cache(
             mock_client,
-            str(self.test_file),
+            self.test_file,
             cache_manager=mock_cache_manager,
             verbose=False,
         )
@@ -232,7 +231,7 @@ class TestUploadFileWithCache(unittest.TestCase):
         self.assertEqual(result, mock_file)
         mock_client.files.upload.assert_called_once()
         mock_cache_manager.cache_upload.assert_called_once_with(
-            str(self.test_file), mock_file, verbose=False
+            self.test_file, mock_file, verbose=False
         )
 
     def test_upload_nonexistent_file_raises_error(self):
@@ -241,14 +240,14 @@ class TestUploadFileWithCache(unittest.TestCase):
         nonexistent = self.temp_path / "does_not_exist.md"
 
         with self.assertRaises(FileNotFoundError):
-            upload_file_with_cache(mock_client, str(nonexistent), verbose=False)
+            upload_file_with_cache(mock_client, nonexistent, verbose=False)
 
     def test_upload_failure_returns_none(self):
         """Should return None on upload failure."""
         mock_client = Mock()
         mock_client.files.upload.side_effect = Exception("Upload failed")
 
-        result = upload_file_with_cache(mock_client, str(self.test_file), verbose=False)
+        result = upload_file_with_cache(mock_client, self.test_file, verbose=False)
 
         self.assertIsNone(result)
 
@@ -259,7 +258,7 @@ class TestUploadFileWithCache(unittest.TestCase):
         mock_client.files.upload.return_value = mock_file
 
         upload_file_with_cache(
-            mock_client, str(self.test_file), mime_type="text/plain", verbose=False
+            mock_client, self.test_file, mime_type="text/plain", verbose=False
         )
 
         # Check that upload was called with correct mime_type
@@ -288,9 +287,7 @@ class TestConvenienceFunctions(unittest.TestCase):
         mock_client = Mock()
         mock_client.files.get.side_effect = Exception("Not found")
 
-        result = get_cached_upload(
-            mock_client, str(self.test_file), str(self.cache_file)
-        )
+        result = get_cached_upload(mock_client, self.test_file, self.cache_file)
         self.assertIsNone(result)
 
     def test_clear_upload_cache_convenience(self):
@@ -298,7 +295,7 @@ class TestConvenienceFunctions(unittest.TestCase):
         # Create cache file
         self.cache_file.write_text('{"key": "value"}', encoding="utf-8")
 
-        success = clear_upload_cache(str(self.cache_file))
+        success = clear_upload_cache(self.cache_file)
         self.assertTrue(success)
         self.assertFalse(self.cache_file.exists())
 
