@@ -693,12 +693,14 @@ def _convert_all_chunks(
                 use_upload_cache=use_upload_cache,
             )
 
+            # --- UPDATE: Add Commentator and Colophon to Frontmatter ---
             commentaries_metadata = []
             if main_metadata.get("commentary_id"):
                 commentaries_metadata.append(
                     {
                         "commentary_id": main_metadata.get("commentary_id"),
                         "commentator": main_metadata.get("commentator"),
+                        "authored_colophon": main_metadata.get("authored_colophon"),
                     }
                 )
 
