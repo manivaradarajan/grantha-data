@@ -246,9 +246,11 @@ def _prepare_analysis_prompt(
     return analysis_prompt
 
 
-def _call_gemini_for_analysis(client, model, prompt, uploaded_file, file_log_dir: Path):
+def _call_gemini_for_analysis(
+    client, model: str, prompt, uploaded_file, file_log_dir: Path
+):
     """Calls the Gemini API with the analysis prompt."""
-    print("🤖 Calling Gemini API for structural analysis...")
+    print(f"🤖 Calling Gemini API model:'{model}' for structural analysis...")
     config = GEMINI_CONTENT_CONFIG
     contents = [prompt]
     if uploaded_file:
@@ -584,6 +586,7 @@ def _convert_single_chunk(
 
         config = GEMINI_CONTENT_CONFIG
         contents = [prompt, uploaded_chunk_file]
+        print(f"🤖 Calling Gemini API model:'{model}' for chunk conversion...")
         response = client.models.generate_content(
             model=model, contents=contents, config=config
         )
@@ -699,6 +702,7 @@ def _convert_all_chunks(
                 commentaries_metadata.append(
                     {
                         "commentary_id": main_metadata.get("commentary_id"),
+                        "commentary_title": main_metadata.get("commentary_title"),
                         "commentator": main_metadata.get("commentator"),
                         "authored_colophon": main_metadata.get("authored_colophon"),
                     }
@@ -1162,10 +1166,6 @@ Examples:
     parser.add_argument(
         "--conversion-model",
         help="Gemini model for conversion phase (overrides --model)",
-    )
-    parser.add_argument(
-        "--metadata-model",
-        help="Gemini model for metadata inference phase (overrides --model)",
     )
 
     args = parser.parse_args()

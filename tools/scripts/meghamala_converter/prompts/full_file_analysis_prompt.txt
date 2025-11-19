@@ -9,6 +9,8 @@ Extract the metadata as described below.
 *   `canonical_title`: Full Sanskrit name.
 *   `grantha_id`: Standardized ID.
 *   `commentary_id`: Commentary ID or `null`.
+*   `commentary_title`: Name of the commentary in Sanskrit (e.g., "प्रकाशिका", "शाङ्करभाष्यम्") or `null`.
+*   `commentator`: Name of the author...
 *   `commentator`: Name of the author in **Sanskrit Prathama Vibhakti (Nominative Singular)** (e.g., "श्रीरङ्गरामानुजमुनिः").
 *   `authored_colophon`: A constructed Sanskrit phrase indicating authorship, following strict grammatical agreement rules:
     *   **Case:** Convert the author's name to **Plural Instrumental Case** (Tritiya Vibhakti Bahuvachana) to denote respect.
@@ -80,6 +82,7 @@ This is a hypothetical example for a different text to show the exact final stru
     "canonical_title": "छान्दोग्योपनिषत्",
     "grantha_id": "chhandogya-upanishad",
     "commentary_id": "rangaramanuja-muni-prakashika",
+    "commentary_title": "प्रकाशिका",
     "commentator": "श्रीरङ्गरामानुजमुनिः",
     "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
     "structure_type": "khanda"
