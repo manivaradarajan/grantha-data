@@ -74,23 +74,9 @@ def merge_frontmatter(chunk_frontmatters: List[Dict]) -> Dict:
     # Start with first chunk's frontmatter
     merged = chunk_frontmatters[0].copy()
 
-    # Collect all structure_levels
-    all_structure_levels = []
-    for fm in chunk_frontmatters:
-        if 'structure_levels' in fm and fm['structure_levels']:
-            if isinstance(fm['structure_levels'], dict):
-                # Convert to list format if needed
-                for key, value in fm['structure_levels'].items():
-                    if key not in [item.get('key') if isinstance(item, dict) else item for item in all_structure_levels]:
-                        all_structure_levels.append({key: value} if isinstance(value, dict) else value)
-            elif isinstance(fm['structure_levels'], list):
-                for level in fm['structure_levels']:
-                    if level not in all_structure_levels:
-                        all_structure_levels.append(level)
-
-    # Use combined structure_levels if we found any
-    if all_structure_levels and len(all_structure_levels) > len(merged.get('structure_levels', [])):
-        merged['structure_levels'] = all_structure_levels
+    # structure_levels are assumed to be identical across all chunks
+    # from the global analysis, so we just use the first one.
+    # No special merging logic is needed for this field.
 
     # Merge commentaries_metadata
     all_commentaries = []

@@ -14,9 +14,18 @@ Extract the metadata as described below.
 ---
 
 ### **2. Structural Analysis Section (`structural_analysis`):**
-Analyze and define the hierarchical structure of the document.
+Analyze and define the hierarchical structure of the document **and establish the starting coordinate.**
+
 *   **Goal:** Identify all levels of division from the largest to the smallest (e.g., Prapathaka -> Khanda -> Mantra).
-*   **Output:** Represent this hierarchy as a nested JSON object under the `structure_levels` key. For each level, provide a `key` (PascalCase), and `scriptNames` for both Devanagari and roman scripts.
+*   **Output Structure:** Represent this hierarchy as a nested JSON object under the `structure_levels` key. For each level, provide a `key` (PascalCase), and `scriptNames` for both Devanagari and roman scripts.
+*   **Numbering Context (CRITICAL):**
+    1.  **Identify Headers:** Look for the specific headers in the document corresponding to your identified structure levels (e.g., "Prathama Adhyaya", "Panchami Valli", "Dvitiya Patala").
+    2.  **Translate Numerals:** Convert the Sanskrit ordinals or cardinals found in those headers into integers (e.g., *Prathama* -> 1, *Panchami* -> 5, *Ekadasha* -> 11).
+    3.  **Determine Start ID:** Create a `starting_id` string in dot-notation (e.g., "5.1" or "2.3.1") that represents the full coordinate of the **first** unit (Mantra/Sutra/Verse) found in this text.
+    4.  **Logic:**
+        *   If the header is "Fifth Valli" and the first verse is "1", `starting_id` = "5.1".
+        *   If the header is "Chapter 2", Sub-section "Section 3", and the first verse is "1", `starting_id` = "2.3.1".
+        *   If no parent headers exist, `starting_id` = "1".
 
 ---
 
@@ -26,7 +35,8 @@ Devise an optimal, deterministic chunking strategy following a strict validation
 **Protocol:**
 1.  **Goal:** Maximize chunk size to minimize API calls.
 2.  **Hard Rule:** Never split a primary section (e.g., `खण्डः`) internally.
-3.  **Calculation and Validation (CRITICAL):**
+3.  **Chunking Rule:** Each major structural unit (e.g., `खण्डः`, `वल्ली`, `प्रपाठकः`) should be in its own chunk, unless combining them is necessary to meet a minimum chunk size. For this project, there is no minimum chunk size, so create a new chunk for each major structural unit.
+4.  **Calculation and Validation (CRITICAL):**
     *   For each chunk you propose in the `execution_plan`, you **MUST** calculate its character length and report it in the `estimated_character_count` field.
     *   This `estimated_character_count` **MUST NOT** exceed the `safety_character_limit` of **125,000**.
     *   **Self-Correction:** Before finalizing your response, you must verify this condition for all chunks. If any chunk violates the limit, you must split that chunk into two or more smaller, compliant chunks (breaking only at a valid `खण्डः` boundary) and regenerate the plan until all chunks pass validation.
@@ -37,6 +47,7 @@ Devise an optimal, deterministic chunking strategy following a strict validation
 ### **4. Parsing Instructions Section (`parsing_instructions`):**
 Provide instructions for parsing the primary structural units (e.g., `खण्डः`) *within* each chunk.
 *   `recommended_unit`: Name of the logical unit to parse.
+*   `numbering_capture_strategy`: Brief explanation of how to extract the unit number (e.g., "Extract the Devanagari numeral at the end of the bold line").
 *   `start_pattern`: Object with description, examples, and regex.
 *   `end_pattern`: Object with description, examples, and regex.
 *   `pre_content_handling`: Instructions for initial text like `शान्तिपाठः`.
@@ -56,6 +67,8 @@ This is a hypothetical example for a different text to show the exact final stru
     "structure_type": "khanda"
   },
   "structural_analysis": {
+    "starting_id": "1.1.1",
+    "context_justification": "The text contains headers for Prapathaka 1 (Prathama) and Khanda 1 (Prathama). The first parsed unit is Mantra 1. Thus, start ID is 1.1.1.",
     "structure_levels": {
       "key": "Prapathaka",
       "scriptNames": {
@@ -104,6 +117,7 @@ This is a hypothetical example for a different text to show the exact final stru
   "parsing_instructions": {
     "recommended_unit": "Khanda",
     "justification": "The Prapathaka is primarily divided into Khandas, which are the main semantic and structural sections.",
+    "numbering_capture_strategy": "Extract the Devanagari numeral found at the very end of the Mantra heading line (e.g. || 1 ||).",
     "start_pattern": {
       "description": "A new Khanda begins with a bolded heading indicating its number.",
       "examples": [
@@ -127,8 +141,4 @@ This is a hypothetical example for a different text to show the exact final stru
 
 ---
 
-**Now, analyze the following document and generate the single, unified JSON response.**
-
---- START OF DOCUMENT ---
-{input_text}
---- END OF DOCUMENT ---
+Action: Read the attached document and generate the JSON response now.

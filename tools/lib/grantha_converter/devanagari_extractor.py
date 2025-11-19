@@ -27,7 +27,7 @@ from typing import List, Tuple
 
 # IMPORTANT: Increment this version number when making breaking changes
 # to the extraction or hashing algorithm.
-HASH_VERSION = 1
+HASH_VERSION = 2
 
 
 def extract_devanagari(text: str) -> str:
@@ -83,9 +83,20 @@ def extract_devanagari_words(text: str) -> List[str]:
         >>> extract_devanagari_words("अग्निमीळे पुरोहितं")
         ['अग्निमीळे', 'पुरोहितं']
     """
+    # Remove HTML comments first, replacing them with an empty string (zero space)
+    text_without_comments = re.sub(r"<!--.*?-->", "", text)
+
+    # Remove markdown heading lines to ignore Devanagari in headings
+    lines = text_without_comments.split("\n")
+    body_lines = [line for line in lines if not line.strip().startswith("#")]
+    text_without_headings = "\n".join(body_lines)
+
+    # Remove ** markdown, replacing it with an empty string
+    text_cleaned = re.sub(r"\*\*", "", text_without_headings)
+
     # Find all sequences of Devanagari characters (including combining marks)
     pattern = r"[\u0900-\u097F]+"
-    return re.findall(pattern, text)
+    return re.findall(pattern, text_cleaned)
 
 
 def extract_devanagari_words_with_positions(text: str) -> List[Tuple[str, int, int]]:

@@ -94,7 +94,7 @@ class FileUploadCache:
             return None
 
         cache = self._load_cache()
-        cache_key = f"{file_path}:{file_hash}"
+        cache_key = file_hash
 
         if cache_key not in cache:
             return None
@@ -130,7 +130,7 @@ class FileUploadCache:
             return
 
         cache = self._load_cache()
-        cache_key = f"{file_path}:{file_hash}"
+        cache_key = file_hash
 
         cache[cache_key] = {
             "name": uploaded_file.name,

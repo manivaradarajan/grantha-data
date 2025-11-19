@@ -23,9 +23,11 @@ import sys
 import tempfile
 import time
 import traceback
+import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
+from typing import Final
 
 # Third-party imports
 import yaml
@@ -34,11 +36,21 @@ from colorama import init as colorama_init
 
 # Local imports
 from gemini_processor.cache_manager import AnalysisCache
-from gemini_processor.file_manager import get_file_hash
+from gemini_processor.file_manager import (
+    FileUploadCache,
+    get_file_hash,
+    upload_file_with_cache,
+)
 from gemini_processor.prompt_manager import PromptManager
 from gemini_processor.sampler import create_smart_sample
 from google import genai
-from google.genai import types
+from google.genai.types import (
+    GenerateContentConfig,
+    SafetySetting,
+    HarmCategory,
+    HarmBlockThreshold,
+    ThinkingConfig,
+)
 from grantha_converter.devanagari_repair import extract_devanagari, repair_file
 from grantha_converter.devanagari_validator import validate_devanagari_preservation
 from grantha_converter.diff_utils import show_devanagari_diff, show_transliteration_diff
@@ -55,7 +67,7 @@ from grantha_converter.meghamala_stitcher import (
 )
 
 # Constants
-DEFAULT_GEMINI_MODEL = "gemini-2.0-flash-exp"
+DEFAULT_GEMINI_MODEL = "gemini-2.5-pro"
 
 # Get the directory where this script is located
 SCRIPT_DIR = Path(__file__).parent
@@ -63,160 +75,94 @@ PROMPTS_DIR = SCRIPT_DIR / "prompts"
 LOGS_DIR = Path("logs")  # Save logs in current working directory
 UPLOAD_CACHE_FILE = SCRIPT_DIR / ".file_upload_cache.json"
 
+# Reusable config used for Gemini generate_content calls.
+# This configuration is constant for all calls in this script. It's defined
+# once to avoid duplication and to make intent explicit. Do not mutate this
+# object in-place; if mutation is required, create a new instance instead.
+GEMINI_CONTENT_CONFIG: Final = GenerateContentConfig(
+    #    thinking_config=ThinkingConfig(thinking_level='low'),
+    safety_settings=[
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=HarmBlockThreshold.BLOCK_NONE,
+        ),
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+            threshold=HarmBlockThreshold.BLOCK_NONE,
+        ),
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+            threshold=HarmBlockThreshold.BLOCK_NONE,
+        ),
+        SafetySetting(
+            category=HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=HarmBlockThreshold.BLOCK_NONE,
+        ),
+    ],
+)
+
 # Initialize prompt manager
 prompt_manager = PromptManager(PROMPTS_DIR)
 
 # Global log directory for current run
-_current_log_dir = None
-_current_file_subdir = None
+_run_log_dir: Path | None = None
 
 
-def _create_log_directory(file_subdir: str = None) -> Path:
-    """Create a timestamped log directory for this run.
+class Tee:
+    """A file-like object that tees output to a file and another stream."""
 
-    Args:
-        file_subdir: Optional subdirectory for multi-file runs (e.g., "part-01")
+    def __init__(self, stream, log_path: Path):
+        self.stream = stream
+        self.log_file = open(log_path, "w", encoding="utf-8")
 
-    Returns:
-        Path to the created log directory
-    """
-    global _current_log_dir, _current_file_subdir
+    def write(self, data):
+        self.stream.write(data)
+        self.log_file.write(data)
+        self.flush()
 
-    # Update file subdirectory if provided
-    if file_subdir is not None:
-        _current_file_subdir = file_subdir
+    def flush(self):
+        self.stream.flush()
+        self.log_file.flush()
 
-    # Create base run directory if it doesn't exist
-    if _current_log_dir is None:
+    def __getattr__(self, name):
+        return getattr(self.stream, name)
+
+
+def get_run_log_dir() -> Path:
+    """Gets or creates the main log directory for the current run."""
+    global _run_log_dir
+    if _run_log_dir is None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        _current_log_dir = LOGS_DIR / f"run_{timestamp}"
-        _current_log_dir.mkdir(parents=True, exist_ok=True)
-        print(f"📁 Logging to: {_current_log_dir}")
-
-    # Return file-specific subdirectory if set, otherwise base directory
-    if _current_file_subdir:
-        file_log_dir = _current_log_dir / _current_file_subdir
-        file_log_dir.mkdir(parents=True, exist_ok=True)
-        return file_log_dir
-    else:
-        return _current_log_dir
+        _run_log_dir = LOGS_DIR / f"run_{timestamp}"
+        _run_log_dir.mkdir(parents=True, exist_ok=True)
+    return _run_log_dir
 
 
-def _save_to_log(filename: str, content: str, subdir: str = None):
-    """Save content to a log file in the current run's log directory.
-
-    Args:
-        filename: Name of the file to save
-        content: Content to write
-        subdir: Optional subdirectory within the log directory
-    """
-    log_dir = _create_log_directory()
-    if subdir:
-        save_dir = log_dir / subdir
-        save_dir.mkdir(parents=True, exist_ok=True)
-    else:
-        save_dir = log_dir
-
-    file_path = save_dir / filename
-
-    try:
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        print(f"  💾 Saved: {file_path.relative_to(LOGS_DIR)}")
-    except Exception as e:
-        print(f"  ⚠️  Warning: Could not save log file {filename}: {e}", file=sys.stderr)
+def get_file_log_dir(input_file_stem: str) -> Path:
+    """Gets or creates the log directory for a specific file within the current run."""
+    run_log_dir = get_run_log_dir()
+    file_log_dir = run_log_dir / input_file_stem
+    file_log_dir.mkdir(parents=True, exist_ok=True)
+    return file_log_dir
 
 
-def _load_upload_cache() -> dict:
-    """Load the file upload cache from disk.
-
-    Returns:
-        Dict mapping file_hash -> upload info
-    """
-    if not UPLOAD_CACHE_FILE.exists():
-        return {}
-
-    try:
-        with open(UPLOAD_CACHE_FILE, "r") as f:
-            return json.load(f)
-    except Exception as e:
-        print(f"⚠️  Warning: Could not load upload cache: {e}", file=sys.stderr)
-        return {}
-
-
-def _save_upload_cache(cache: dict):
-    """Save the file upload cache to disk.
+def _save_log_file(log_path: Path, content: str):
+    """Saves content to a specified path in the log directory.
 
     Args:
-        cache: Dict mapping file_hash -> upload info
+        log_path: The full path to the log file.
+        content: The content to write.
     """
     try:
-        with open(UPLOAD_CACHE_FILE, "w") as f:
-            json.dump(cache, f, indent=2)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text(content, encoding="utf-8")
+        try:
+            relative_path = log_path.relative_to(Path.cwd())
+        except ValueError:
+            relative_path = log_path
+        print(f"  💾 Saved: {relative_path}")
     except Exception as e:
-        print(f"⚠️  Warning: Could not save upload cache: {e}", file=sys.stderr)
-
-
-def _get_cached_upload(client: genai.Client, file_path: str, file_hash: str):
-    """Check if we have a valid cached upload for this file.
-
-    Args:
-        client: Gemini client to verify file still exists
-        file_path: Path to the file
-        file_hash: SHA256 hash of the file
-
-    Returns:
-        Gemini File object if valid, None otherwise
-    """
-    cache = _load_upload_cache()
-    cache_key = f"{file_path}:{file_hash}"
-
-    if cache_key not in cache:
-        return None
-
-    cached_info = cache[cache_key]
-    file_name = cached_info.get("name")
-
-    # Verify the file still exists in Gemini and return the File object
-    try:
-        file_info = client.files.get(name=file_name)
-        if file_info.state == "ACTIVE":
-            print(f"✓ Using cached upload: {file_name}")
-            print(f"  Uploaded: {cached_info.get('uploaded_at')}")
-            return file_info  # Return the actual File object
-        else:
-            print(
-                f"⚠️  Cached file not active (state: {file_info.state}), will re-upload"
-            )
-            return None
-    except Exception as e:
-        print(f"⚠️  Cached file not found in Gemini, will re-upload")
-        return None
-
-
-def _cache_upload(file_path: str, file_hash: str, uploaded_file) -> None:
-    """Cache information about an uploaded file.
-
-    Args:
-        file_path: Path to the file
-        file_hash: SHA256 hash of the file
-        uploaded_file: The uploaded file object from Gemini
-    """
-    cache = _load_upload_cache()
-    cache_key = f"{file_path}:{file_hash}"
-
-    cache[cache_key] = {
-        "name": uploaded_file.name,
-        "uri": uploaded_file.uri,
-        "display_name": uploaded_file.display_name,
-        "size_bytes": uploaded_file.size_bytes,
-        "uploaded_at": datetime.now().isoformat(),
-        "file_path": str(file_path),
-        "file_hash": file_hash,
-    }
-
-    _save_upload_cache(cache)
-    print(f"  💾 Cached upload info")
+        print(f"  ⚠️  Warning: Could not save log file {log_path}: {e}", file=sys.stderr)
 
 
 def _repair_json_escapes(text: str) -> str:
@@ -271,54 +217,41 @@ def _handle_analysis_cache(input_file, force_reanalysis, use_cache, verbose=Fals
 
     return None, cache
 
-def _upload_file_for_analysis(client, input_file, use_upload_cache):
+
+upload_cache_manager = FileUploadCache(UPLOAD_CACHE_FILE)
+
+
+def _upload_file_for_analysis(
+    client, input_file: Path, use_upload_cache, file_log_dir: Path
+):
     """Uploads a file to the Gemini API for analysis, using a cache."""
-    file_hash = get_file_hash(input_file)
-    uploaded_file = None
-    was_cached = False
-
-    if use_upload_cache:
-        print("📤 Checking for cached file upload...")
-        uploaded_file = _get_cached_upload(client, input_file, file_hash)
-        was_cached = uploaded_file is not None
-    else:
-        print("📤 Upload caching disabled")
-
-    if not uploaded_file:
-        print("📤 Uploading file to Gemini File API...")
-        try:
-            with open(input_file, "rb") as f:
-                uploaded_file = client.files.upload(
-                    file=f,
-                    config={
-                        "display_name": Path(input_file).name,
-                        "mime_type": "text/markdown",
-                    },
-                )
-            print(f"✓ File uploaded: {uploaded_file.name}")
-            print(f"  URI: {uploaded_file.uri}")
-            if use_upload_cache:
-                _cache_upload(input_file, file_hash, uploaded_file)
-        except Exception as e:
-            print(f"⚠️  File upload failed: {e}", file=sys.stderr)
-            print("   Falling back to text embedding...", file=sys.stderr)
-            traceback.print_exc()
-            uploaded_file = None # Ensure it's None on failure
+    cache_manager = upload_cache_manager if use_upload_cache else None
+    uploaded_file = upload_file_with_cache(
+        client=client,
+        file_path=input_file,
+        cache_manager=cache_manager,
+        verbose=True,
+    )
 
     if uploaded_file:
-        _save_to_log(
-            "00_uploaded_file_info.txt",
+        analysis_log_dir = file_log_dir / "analysis"
+        _save_log_file(
+            analysis_log_dir / "00_uploaded_file_info.txt",
             f"File name: {uploaded_file.name}\n"
             f"Display name: {uploaded_file.display_name}\n"
             f"Size: {uploaded_file.size_bytes} bytes\n"
             f"State: {uploaded_file.state}\n"
-            f"URI: {uploaded_file.uri}\n"
-            f"Cached: {'Yes' if was_cached else 'No'}\n",
-            subdir="analysis",
+            f"URI: {uploaded_file.uri}\n",
         )
+    else:
+        print("   Falling back to text embedding...", file=sys.stderr)
+
     return uploaded_file
 
-def _prepare_analysis_prompt(template_name, full_text, uploaded_file):
+
+def _prepare_analysis_prompt(
+    template_name, full_text, uploaded_file, file_log_dir: Path
+):
     """Prepares the analysis prompt, using file API or text embedding."""
     template = prompt_manager.load_template(template_name)
     print(f"  📄 Using prompt: {template_name}")
@@ -339,31 +272,31 @@ def _prepare_analysis_prompt(template_name, full_text, uploaded_file):
             print("📄 Using text embedding for analysis")
         analysis_prompt = template.format(input_text=analysis_text)
 
-    _save_to_log("01_analysis_prompt.txt", analysis_prompt, subdir="analysis")
+    analysis_log_dir = file_log_dir / "analysis"
+    _save_log_file(analysis_log_dir / "01_analysis_prompt.txt", analysis_prompt)
     return analysis_prompt
 
-def _call_gemini_for_analysis(client, model, prompt, uploaded_file):
+
+def _call_gemini_for_analysis(client, model, prompt, uploaded_file, file_log_dir: Path):
     """Calls the Gemini API with the analysis prompt."""
     print("🤖 Calling Gemini API for structural analysis...")
-    config = types.GenerateContentConfig(
-        safety_settings=[
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-        ]
-    )
+    # Use the shared, module-level config constant to avoid duplication
+    config = GEMINI_CONTENT_CONFIG
     contents = [prompt]
     if uploaded_file:
         contents.append(uploaded_file)
 
-    response = client.models.generate_content(model=model, contents=contents, config=config)
+    response = client.models.generate_content(
+        model=model, contents=contents, config=config
+    )
 
     if not response.text:
         raise ValueError("Empty response from Gemini API during file analysis")
 
-    _save_to_log("02_analysis_response_raw.txt", response.text, subdir="analysis")
+    analysis_log_dir = file_log_dir / "analysis"
+    _save_log_file(analysis_log_dir / "02_analysis_response_raw.txt", response.text)
     return response.text
+
 
 def _parse_analysis_response(response_text):
     """Parses and validates the JSON response from the analysis API call."""
@@ -389,16 +322,25 @@ def _parse_analysis_response(response_text):
         return analysis_result
 
     except json.JSONDecodeError as e:
-        print(f"\n❌ Error: Could not parse JSON from Gemini response: {e}", file=sys.stderr)
+        print(
+            f"\n❌ Error: Could not parse JSON from Gemini response: {e}",
+            file=sys.stderr,
+        )
         # ... (error printing logic)
         raise ValueError(f"Invalid JSON response from Gemini: {e}")
+
 
 def _validate_analysis_result(analysis_result):
     """Validates the structure and content of the parsed analysis result."""
     if "metadata" not in analysis_result:
         raise ValueError("Missing 'metadata' section in analysis response")
-    if "chunking_strategy" not in analysis_result or "parsing_instructions" not in analysis_result:
-        raise ValueError("Missing 'chunking_strategy' or 'parsing_instructions' in analysis response")
+    if (
+        "chunking_strategy" not in analysis_result
+        or "parsing_instructions" not in analysis_result
+    ):
+        raise ValueError(
+            "Missing 'chunking_strategy' or 'parsing_instructions' in analysis response"
+        )
 
     metadata = analysis_result.get("metadata", {})
     chunking_strategy = analysis_result.get("chunking_strategy", {})
@@ -412,7 +354,10 @@ def _validate_analysis_result(analysis_result):
     if "execution_plan" not in chunking_strategy:
         print(f"Warning: Missing execution_plan in chunking_strategy", file=sys.stderr)
     if "recommended_unit" not in parsing_instructions:
-        print(f"Warning: Missing recommended_unit in parsing_instructions", file=sys.stderr)
+        print(
+            f"Warning: Missing recommended_unit in parsing_instructions",
+            file=sys.stderr,
+        )
 
     print("✓ Analysis complete")
     execution_plan = chunking_strategy.get("execution_plan", [])
@@ -421,8 +366,11 @@ def _validate_analysis_result(analysis_result):
         f"  • Parsing unit: {parsing_instructions.get('recommended_unit', 'unknown')}"
     )
 
+
 def analyze_file_structure(
-    input_file: str,
+    input_file: Path,
+    file_log_dir: Path,
+    client: genai.Client | None = None,
     verbose: bool = False,
     use_cache: bool = True,
     use_upload_cache: bool = True,
@@ -434,13 +382,15 @@ def analyze_file_structure(
     """
     print("🔍 Analyzing file structure...")
 
-    cached_result, cache = _handle_analysis_cache(input_file, force_reanalysis, use_cache, verbose)
-    if cached_result:
-        return cached_result
+    cached_result, cache = _handle_analysis_cache(
+        input_file, force_reanalysis, use_cache, verbose
+    )
 
-    api_key = os.environ.get("GEMINI_API_KEY")
-    if not api_key:
-        raise ValueError("Error: GEMINI_API_KEY environment variable not set.")
+    if client is None:
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("Error: GEMINI_API_KEY environment variable not set.")
+        client = genai.Client(api_key=api_key)
 
     try:
         with open(input_file, "r", encoding="utf-8") as f:
@@ -448,13 +398,26 @@ def analyze_file_structure(
     except FileNotFoundError:
         raise FileNotFoundError(f"Error: Input file not found: {input_file}")
 
-    client = genai.Client(api_key=api_key)
+    uploaded_file = _upload_file_for_analysis(
+        client, input_file, use_upload_cache, file_log_dir
+    )
 
-    uploaded_file = _upload_file_for_analysis(client, input_file, use_upload_cache)
+    analysis_prompt = _prepare_analysis_prompt(
+        "full_file_analysis_prompt.txt", full_text, uploaded_file, file_log_dir
+    )
 
-    analysis_prompt = _prepare_analysis_prompt("full_file_analysis_prompt.txt", full_text, uploaded_file)
+    if cached_result:
+        print("🚀 Skipping Gemini API call (using cached analysis)")
+        analysis_log_dir = file_log_dir / "analysis"
+        _save_log_file(
+            analysis_log_dir / "03_analysis_result_from_cache.json",
+            json.dumps(cached_result, indent=2, ensure_ascii=False),
+        )
+        return cached_result
 
-    response_text = _call_gemini_for_analysis(client, model, analysis_prompt, uploaded_file)
+    response_text = _call_gemini_for_analysis(
+        client, model, analysis_prompt, uploaded_file, file_log_dir
+    )
 
     analysis_result = _parse_analysis_response(response_text)
 
@@ -464,8 +427,6 @@ def analyze_file_structure(
         cache.save(analysis_result, verbose=verbose)
 
     return analysis_result
-
-
 
 
 def _hide_editor_comments_in_content(content: str) -> tuple[str, str]:
@@ -513,7 +474,9 @@ def _hide_editor_comments_in_content(content: str) -> tuple[str, str]:
     return original_content, modified_content
 
 
-def _validate_devanagari_unchanged(original_content: str, modified_content: str) -> bool:
+def _validate_devanagari_unchanged(
+    original_content: str, modified_content: str
+) -> bool:
     """Validates that no Devanagari characters were altered during processing.
 
     Args:
@@ -633,377 +596,502 @@ def _strip_code_fences(text: str) -> str:
     return text.strip()
 
 
-def create_first_chunk_prompt(chunk_text: str, part_num: int) -> str:
-    """Create prompt for first chunk that extracts metadata AND converts content.
-
-    Args:
-        chunk_text: The text of the first chunk
-        part_num: Part number
-
-    Returns:
-        Formatted prompt that requests both metadata and converted markdown
-
-    Raises:
-        FileNotFoundError: If the prompt template file is missing
-    """
+def create_chunk_conversion_prompt(analysis_result: dict) -> str:
+    """Creates the prompt for chunk conversion, which will be used with an uploaded file."""
     try:
-        template = prompt_manager.load_template("first_chunk_prompt.txt")
-        print(f"  📄 Using prompt: first_chunk_prompt.txt")
-        return template.format(chunk_text=chunk_text)
-    except Exception as e:
-        print(f"Error loading first chunk prompt template: {e}", file=sys.stderr)
-        raise
-
-
-def parse_first_chunk_response(response_text: str) -> tuple[dict, str]:
-    """Parse first chunk response into metadata dict and converted body.
-
-    Returns:
-        (metadata_dict, converted_body) or (None, None) if parsing fails
-    """
-    # Split by metadata separator
-    if "---METADATA---" not in response_text:
-        print(
-            "Warning: No metadata separator found in first chunk response",
-            file=sys.stderr,
-        )
-        return None, None
-
-    parts = response_text.split("---METADATA---", 1)
-    metadata_part = parts[0].strip()
-    content_part = parts[1].strip() if len(parts) > 1 else ""
-
-    # Strip code fences from content
-    content_part = strip_code_fences(content_part)
-
-    # Parse metadata JSON
-    try:
-        # Remove any markdown code fences around JSON
-        metadata_part = re.sub(
-            r"^```(?:json)?\s*\n", "", metadata_part, flags=re.MULTILINE
-        )
-        metadata_part = re.sub(r"\n```\s*$", "", metadata_part)
-        metadata_part = metadata_part.strip()
-
-        metadata = json.loads(metadata_part)
-        return metadata, content_part
-    except json.JSONDecodeError as e:
-        print(f"Warning: Failed to parse metadata JSON: {e}", file=sys.stderr)
-        print(f"Metadata part: {metadata_part[:200]}...", file=sys.stderr)
-        return None, None
-
-
-def create_chunk_conversion_prompt(chunk_text: str) -> str:
-    """Create simple conversion prompt for subsequent chunks (no metadata extraction).
-
-    Args:
-        chunk_text: The text of the chunk to convert
-
-    Returns:
-        Formatted prompt for chunk continuation
-
-    Raises:
-        FileNotFoundError: If the prompt template file is missing
-    """
-    try:
-        # Load the chunk continuation template
         continuation_template = prompt_manager.load_template(
             "chunk_continuation_prompt.txt"
         )
         print(f"  📄 Using prompt: chunk_continuation_prompt.txt")
 
-        # Format with the chunk text
-        return continuation_template.format(chunk_text=chunk_text)
+        metadata = analysis_result.get("metadata", {})
+        commentary_id = metadata.get("commentary_id")
+        if not commentary_id:
+            commentary_id = "prakasika"
+
+        # Convert the analysis result to a JSON string for injection into the prompt
+        analysis_json = json.dumps(analysis_result, indent=2, ensure_ascii=False)
+
+        return continuation_template.format(
+            commentary_id=commentary_id, analysis_json=analysis_json
+        )
     except Exception as e:
-        print(f"Error loading chunk continuation prompt template: {e}", file=sys.stderr)
+        print(f"Error creating chunk conversion prompt: {e}", file=sys.stderr)
+        traceback.print_exc()
         raise
 
 
-def __normalize_marker(text: str) -> str:
-    """Normalize text by removing markdown formatting for marker matching.
+def _convert_single_chunk(
+    client: genai.Client,
+    chunk_text: str,
+    chunk_metadata: dict,
+    model: str,
+    analysis_result: dict,
+    file_log_dir: Path,
+    use_upload_cache: bool,
+) -> str:
+    """Calls the Gemini API to convert a single chunk of text using the File API."""
+    chunk_index = chunk_metadata.get("chunk_index")
+    chunk_log_dir = file_log_dir / "chunks" / f"chunk_{chunk_index}"
 
-    Removes bold (**), italic (*), and extra whitespace to allow flexible matching.
+    temp_chunk_dir = Path(tempfile.gettempdir()) / "grantha_temp_chunks"
+    temp_chunk_dir.mkdir(exist_ok=True)
+    temp_file_path = temp_chunk_dir / f"chunk_{chunk_index}.md"
+
+    try:
+        with open(temp_file_path, "w", encoding="utf-8") as f:
+            f.write(chunk_text)
+
+        cache_manager = upload_cache_manager if use_upload_cache else None
+        uploaded_chunk_file = upload_file_with_cache(
+            client=client,
+            file_path=temp_file_path,
+            cache_manager=cache_manager,
+            verbose=True,
+        )
+
+        if not uploaded_chunk_file:
+            raise ValueError(f"Failed to upload chunk {chunk_index} to File API.")
+
+        _save_log_file(
+            chunk_log_dir / "00_uploaded_chunk_info.txt",
+            f"File name: {uploaded_chunk_file.name}\n"
+            f"Display name: {uploaded_chunk_file.display_name}\n"
+            f"Size: {uploaded_chunk_file.size_bytes} bytes\n"
+            f"State: {uploaded_chunk_file.state}\n"
+            f"URI: {uploaded_chunk_file.uri}\n",
+        )
+
+        prompt = create_chunk_conversion_prompt(analysis_result)
+        _save_log_file(chunk_log_dir / "01_chunk_input.md", chunk_text)
+        _save_log_file(chunk_log_dir / "02_conversion_prompt.txt", prompt)
+
+        config = GEMINI_CONTENT_CONFIG
+        contents = [prompt, uploaded_chunk_file]
+        response = client.models.generate_content(
+            model=model, contents=contents, config=config
+        )
+
+        if not response.text:
+            raise ValueError("Empty response from Gemini API during chunk conversion")
+
+        _save_log_file(chunk_log_dir / "03_conversion_response_raw.txt", response.text)
+        converted_body = _strip_code_fences(response.text)
+        _save_log_file(chunk_log_dir / "04_converted_body.md", converted_body)
+
+        return converted_body
+    finally:
+        # Clean up the temporary file
+        if temp_file_path.exists():
+            temp_file_path.unlink()
+
+
+def _validate_chunk_devanagari(
+    chunk_text: str,
+    converted_body: str,
+    chunk_metadata: dict,
+    file_log_dir: Path,
+    no_diff: bool,
+    show_transliteration: bool,
+) -> dict:
+    """Validates Devanagari preservation for a single chunk."""
+    chunk_index = chunk_metadata.get("chunk_index")
+    if chunk_index is None:
+        raise ValueError(
+            "Missing 'chunk_index' in chunk_metadata, which is required for validation."
+        )
+    try:
+        chunk_index = int(chunk_index)
+    except ValueError:
+        raise TypeError(
+            f"Invalid 'chunk_index': Expected an integer string, but got '{chunk_index}'"
+        )
+
+    chunk_log_dir = file_log_dir / "chunks" / f"chunk_{chunk_index}"
+
+    def save_diff_log(filename: str, content: str, subdir: str | None = None):
+        log_path = chunk_log_dir / filename
+        _save_log_file(log_path, content)
+
+    description = chunk_metadata.get("description")
+    input_devanagari = extract_devanagari(chunk_text)
+    output_devanagari = extract_devanagari(converted_body)
+
+    validation_status = "PASSED"
+    diff_chars = 0
+    if input_devanagari != output_devanagari:
+        validation_status = "MISMATCH"
+        diff_chars = abs(len(input_devanagari) - len(output_devanagari))
+        print(
+            f"  ⚠️  Devanagari mismatch in chunk {chunk_index} ({len(input_devanagari)} -> {len(output_devanagari)} chars, diff: {diff_chars})",
+            file=sys.stderr,
+        )
+        if not no_diff:
+            show_devanagari_diff(input_devanagari, output_devanagari)
+            if show_transliteration:
+                show_transliteration_diff(
+                    input_devanagari, output_devanagari, chunk_index, save_diff_log
+                )
+    else:
+        print(f"  ✓ Devanagari preserved ({len(input_devanagari)} chars)")
+
+    return {
+        "chunk_index": chunk_index,
+        "description": description,
+        "status": validation_status,
+        "input_chars": len(input_devanagari),
+        "output_chars": len(output_devanagari),
+        "char_diff": diff_chars,
+    }
+
+
+def _convert_all_chunks(
+    client: genai.Client,
+    chunks: list[tuple[str, dict]],
+    analysis_result: dict,
+    file_log_dir: Path,
+    model: str,
+    no_diff: bool,
+    show_transliteration: bool,
+    verbose: bool,
+    use_upload_cache: bool,
+) -> tuple[list[str] | None, list[dict] | None]:
     """
-    # Remove bold markers
-    text = text.replace("**", "")
-    # Remove italic markers (single asterisk, but not double)
-    # Normalize multiple spaces to single space
-    text = re.sub(r"\s+", " ", text)
-    return text.strip()
+    Orchestrates the conversion of all chunks, saving each to a temp file.
 
-
-def _find_chunk_start(i, chunk_spec, lines, previous_chunks, verbose, text):
-    """Determines the starting byte position and line number for a chunk."""
-    if i == 0:
-        if verbose and chunk_spec.get("start_marker"):
-            print("  ℹ️  First chunk: ignoring start_marker, including content from beginning")
-        return 0, 1
-
-    start_marker = chunk_spec.get("start_marker", "")
-    if start_marker:
-        normalized_start_marker = __normalize_marker(start_marker)
-        for line_idx, line in enumerate(lines):
-            if normalized_start_marker in __normalize_marker(line):
-                chunk_start = sum(len(l) + 1 for l in lines[:line_idx])
-                return chunk_start, line_idx + 1
-
-        print(f"  ⚠️  Warning: Could not find start_marker '{start_marker[:50]}...' for chunk {chunk_spec.get('chunk_id')}", file=sys.stderr)
-        return None, None
-
-    if previous_chunks:
-        chunk_start = previous_chunks[-1][1]["end_pos"]
-        start_line = text[:chunk_start].count("\n") + 1
-        return chunk_start, start_line
-
-    return 0, 1
-
-def _find_chunk_end(i, chunk_spec, lines, execution_plan, start_line):
-    """Determines the ending byte position for a chunk."""
-    end_marker = chunk_spec.get("end_marker", "")
-    if i == len(execution_plan) - 1 and not end_marker:
-        return len("\n".join(lines))
-
-    if end_marker:
-        normalized_end_marker = __normalize_marker(end_marker)
-        for line_idx in range(start_line - 1, len(lines)):
-            if normalized_end_marker in __normalize_marker(lines[line_idx]):
-                return sum(len(l) + 1 for l in lines[: line_idx + 1])
-
-        print(f"  ⚠️  Warning: Could not find end_marker '{end_marker[:50]}...' for chunk {chunk_spec.get('chunk_id')}, using EOF", file=sys.stderr)
-        return len("\n".join(lines))
-
-    if i < len(execution_plan) - 1:
-        next_start_marker = execution_plan[i + 1].get("start_marker", "")
-        if next_start_marker:
-            normalized_next_marker = __normalize_marker(next_start_marker)
-            for line_idx in range(start_line - 1, len(lines)):
-                if normalized_next_marker in __normalize_marker(lines[line_idx]):
-                    return sum(len(l) + 1 for l in lines[:line_idx])
-
-    return len("\n".join(lines))
-
-def _split_by_execution_plan(
-    text: str, execution_plan: list[dict], verbose: bool = False
-) -> list[tuple[str, dict]]:
-    """Split text using execution plan from structural analysis."""
-    print(f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks specified)")
-    chunks = []
-    lines = text.split("\n")
-
-    for i, chunk_spec in enumerate(execution_plan):
-        chunk_start, start_line = _find_chunk_start(i, chunk_spec, lines, chunks, verbose, text)
-        if chunk_start is None:
-            continue
-
-        chunk_end = _find_chunk_end(i, chunk_spec, lines, execution_plan, start_line)
-
-        chunk_text = text[chunk_start:chunk_end]
-        chunk_id = chunk_spec.get("chunk_id", i + 1)
-        description = chunk_spec.get("description", f"Chunk {chunk_id}")
-
-        chunk_metadata = {
-            "chunk_index": i,
-            "chunk_id": chunk_id,
-            "total_chunks": len(execution_plan),
-            "description": description,
-            "start_line": start_line,
-            "end_pos": chunk_end,
-        }
-        chunks.append((chunk_text, chunk_metadata))
-
-        if verbose or i < 3 or i >= len(execution_plan) - 1:
-            end_line = start_line + chunk_text.count("\n")
-            chunk_size = len(chunk_text)
-            print(f"  • Chunk {chunk_id}: {description[:50]} (lines {start_line}-{end_line}, {chunk_size:,} bytes)")
-        elif i == 3:
-            print("  • ...")
-
-    print(f"✓ Split into {len(chunks)} chunks")
-    return chunks
-
-
-def _build_and_write_final_output(output_file, input_text, analysis_result, converted_bodies, skip_validation, verbose):
-    """Builds the final output file from converted chunks and performs post-processing."""
+    Returns a list of temporary file paths.
+    """
     print(f"\n{'='*60}")
-    print("📋 PHASE 4: MERGING AND WRITING OUTPUT")
+    print(f"📋 PHASE 3: CONVERTING {len(chunks)} CHUNKS WITH GEMINI")
     print(f"{'='*60}\n")
 
-    merged_body = "\n\n".join(body.strip() for body in converted_bodies if body.strip())
-    print(f"🔗 Merging {len(converted_bodies)} converted chunks")
-    print(f"  • Total merged size: {len(merged_body):,} bytes")
+    temp_dir = tempfile.mkdtemp(prefix="grantha_chunks_")
+    print(f"  📦 Created temporary chunk directory: {temp_dir}")
 
-    metadata = analysis_result.get("metadata", {})
-    grantha_id = metadata.get("grantha_id", "unknown")
-    canonical_title = metadata.get("canonical_title", "Unknown")
-    commentary_id = metadata.get("commentary_id")
-    commentator = metadata.get("commentator")
+    temp_file_paths = []
+    chunk_validations = []
+    main_metadata = analysis_result.get("metadata", {})
 
-    validation_hash = hash_text(merged_body)
+    for i, (chunk_text, chunk_metadata) in enumerate(chunks):
+        # Ensure chunk_index is 1-based for display and logging directories
+        display_chunk_index = i + 1
+        chunk_metadata["chunk_index"] = (
+            display_chunk_index  # Update chunk_metadata in place
+        )
 
-    frontmatter = {
-        "grantha_id": grantha_id,
-        "part_num": metadata.get("part_num", 1),
-        "canonical_title": canonical_title,
-        "text_type": "upanishad",
-        "language": "sanskrit",
-        "scripts": ["devanagari"],
-        "structure_levels": analysis_result.get("structural_analysis", {}).get("structure_levels", {}),
-        "validation_hash": validation_hash,
-    }
-    if commentary_id:
-        frontmatter["commentaries_metadata"] = [{"commentary_id": commentary_id, "commentator": commentator or "Unknown", "language": "sanskrit"}]
+        description = chunk_metadata.get("description", f"Chunk {display_chunk_index}")
+        print(
+            f"🔄 Converting chunk {display_chunk_index}/{len(chunks)}: {description[:70]}..."
+        )
 
-    frontmatter_yaml = yaml.dump(frontmatter, allow_unicode=True, sort_keys=False)
-    final_content = f"---\n{frontmatter_yaml}---\n\n{merged_body}"
+        try:
+            converted_body = _convert_single_chunk(
+                client=client,
+                chunk_text=chunk_text,
+                chunk_metadata=chunk_metadata,  # This now has 1-based index
+                model=model,
+                analysis_result=analysis_result,
+                file_log_dir=file_log_dir,
+                use_upload_cache=use_upload_cache,
+            )
 
-    output_path = Path(output_file)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_file, "w", encoding="utf-8") as f:
-        f.write(final_content)
-    print(f"✓ Output written: {output_file}\n")
-
-    # Post-processing
-    print("🔒 Hiding editor comments...")
-    original_content, modified_content = _hide_editor_comments_in_content(final_content)
-    if original_content != modified_content:
-        if not _validate_devanagari_unchanged(original_content, modified_content):
-            print("❌ Devanagari altered during comment hiding", file=sys.stderr)
-            return False
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(modified_content)
-        print("✓ Editor comments hidden\n")
-    else:
-        print("✓ No editor comments found\n")
-
-    if not skip_validation:
-        print("✅ Validating Devanagari preservation...")
-        input_devanagari = extract_devanagari(input_text)
-        output_devanagari = extract_devanagari(modified_content)
-
-        if input_devanagari == output_devanagari:
-            print(f"✓ Validation passed: {len(input_devanagari)} Devanagari characters preserved\n")
-        else:
-            diff = abs(len(input_devanagari) - len(output_devanagari))
-            print(f"⚠️  Validation failed: {diff} character difference")
-            if diff < 1000:
-                print(f"⚠️  Attempting repair...")
-                repair_successful, repair_message = repair_file(
-                    input_file=input_file,
-                    output_file=output_file,
-                    max_diff_size=1000,
-                    skip_frontmatter=True,
-                    verbose=verbose,
-                    dry_run=False,
-                    min_similarity=0.85,
-                    conservative=True,
-                    create_backup=True,
+            # Construct commentaries_metadata
+            commentaries_metadata = []
+            if main_metadata.get("commentary_id"):
+                commentaries_metadata.append(
+                    {
+                        "commentary_id": main_metadata.get("commentary_id"),
+                        "commentator": main_metadata.get("commentator"),
+                    }
                 )
-                if repair_successful:
-                    print(f"✓ {repair_message}\n")
-                    with open(output_file, "r", encoding="utf-8") as f:
-                        repaired_content = f.read()
-                    repaired_body = repaired_content.split("---\n\n", 2)[-1]
-                    new_hash = hash_text(repaired_body)
-                    repaired_content = repaired_content.replace(f"validation_hash: {validation_hash}", f"validation_hash: {new_hash}", 1)
-                    with open(output_file, "w", encoding="utf-8") as f:
-                        f.write(repaired_content)
-                    print("✓ Validation hash recalculated\n")
-                else:
-                    print(f"❌ {repair_message}", file=sys.stderr)
-                    return False
-            else:
-                print(f"❌ Difference too large ({diff} chars) - cannot auto-repair", file=sys.stderr)
-                return False
 
-    print(f"✅ CONVERSION COMPLETE: {output_file}")
-    return True
+            # Create the frontmatter for the chunk file
+            chunk_frontmatter = {
+                "grantha_id": main_metadata.get("grantha_id"),
+                "part_num": main_metadata.get("part_num", 1),
+                "canonical_title": main_metadata.get("canonical_title"),
+                "structure_type": main_metadata.get("structure_type"),
+                "commentaries_metadata": (
+                    commentaries_metadata if commentaries_metadata else None
+                ),
+                "structure_levels": analysis_result.get("structural_analysis", {}).get(
+                    "structure_levels", {}
+                ),
+            }
+            # Remove keys that are None
+            chunk_frontmatter = {
+                k: v for k, v in chunk_frontmatter.items() if v is not None
+            }
+
+            frontmatter_yaml = yaml.dump(
+                chunk_frontmatter, allow_unicode=True, sort_keys=False
+            )
+            full_chunk_content = f"---\n{frontmatter_yaml}---\n\n{converted_body}"
+
+            # Save to temp file
+            temp_file = Path(temp_dir) / f"chunk_{i:03d}.md"
+            with open(temp_file, "w", encoding="utf-8") as f:
+                f.write(full_chunk_content)
+            temp_file_paths.append(str(temp_file))
+
+            # Perform validation
+            validation_result = _validate_chunk_devanagari(
+                chunk_text,
+                converted_body,
+                chunk_metadata,  # This now has 1-based index
+                file_log_dir,
+                no_diff,
+                show_transliteration,
+            )
+            chunk_validations.append(validation_result)
+
+        except Exception as e:
+            print(
+                f"❌ Error converting chunk {chunk_metadata.get('chunk_index')}: {e}",  # This now uses 1-based index
+                file=sys.stderr,
+            )
+            traceback.print_exc()
+            cleanup_temp_chunks(temp_file_paths, verbose=True)  # Clean up on failure
+            return None, None
+
+    return temp_file_paths, chunk_validations
+
 
 def convert_with_regex_chunking(
+    client: genai.Client,
     input_file: str,
     output_file: str,
     analysis_result: dict,
+    file_log_dir: Path,
     skip_validation: bool = False,
     no_diff: bool = False,
     show_transliteration: bool = False,
     verbose: bool = False,
     model: str = DEFAULT_GEMINI_MODEL,
+    use_upload_cache: bool = True,
 ) -> bool:
-    """Convert file using analysis-driven regex chunking.
-
-    Uses metadata and splitting instructions from analyze_file_structure()
-    to split and convert the file intelligently.
-
-    Args:
-        input_file: Path to input file
-        output_file: Path to output file
-        analysis_result: Dict from analyze_file_structure() containing
-                        metadata and splitting_instructions
-        skip_validation: Skip Devanagari validation
-        no_diff: Suppress diff output when validation fails
-        show_transliteration: Show Harvard-Kyoto transliteration diff
-        verbose: Print detailed progress
-
-    Returns:
-        True if successful, False otherwise
-    """
-    metadata = analysis_result.get("metadata", {})
-
-    # Support both old format (splitting_instructions) and new format (chunking_strategy + parsing_instructions)
-    chunking_strategy = analysis_result.get("chunking_strategy", {})
-
+    """Convert file using analysis-driven chunking and library-based stitching."""
     try:
         with open(input_file, "r", encoding="utf-8") as f:
             input_text = f.read()
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
-        if verbose:
-            traceback.print_exc()
         return False
 
-    chunks = _split_and_validate_chunks(input_text, chunking_strategy, verbose)
-    if chunks is None:
+    # Phase 1: Chunking
+    chunks = split_at_boundaries(input_text, verbose=verbose)
+    if not chunks:
+        print("❌ Could not split file into chunks.", file=sys.stderr)
         return False
 
-    total_chunks = len(chunks)
-
-    converted_bodies, chunk_validations = _convert_all_chunks(chunks, input_file, model, no_diff, show_transliteration, verbose)
-    if converted_bodies is None:
+    # Phase 2: Conversion
+    temp_file_paths, chunk_validations = _convert_all_chunks(
+        client=client,
+        chunks=chunks,
+        analysis_result=analysis_result,
+        file_log_dir=file_log_dir,
+        model=model,
+        no_diff=no_diff,
+        show_transliteration=show_transliteration,
+        verbose=verbose,
+        use_upload_cache=use_upload_cache,
+    )
+    if not temp_file_paths:
+        print("❌ Chunk conversion failed.", file=sys.stderr)
         return False
 
-    # Print per-chunk validation summary
-    print(f"\n📊 Per-Chunk Devanagari Validation Summary:")
-    passed_count = sum(1 for v in chunk_validations if v["status"] == "PASSED")
-    failed_count = len(chunk_validations) - passed_count
-    print(f"  ✅ Passed: {passed_count}/{len(chunk_validations)}")
-    if failed_count > 0:
-        print(f"  ⚠️  Mismatches: {failed_count}/{len(chunk_validations)}", file=sys.stderr)
-        for v in chunk_validations:
-            if v["status"] == "MISMATCH":
-                print(f"    • Chunk {v['chunk']} ({v['unit_name']}): {v['input_chars']:,} → {v['output_chars']:,} (diff: {v['diff']:,})", file=sys.stderr)
+    # Display chunk validation summary
+    if chunk_validations:
+        print(f"\n{'='*60}")
+        print("📋 CHUNK VALIDATION SUMMARY")
+        print(f"{'='*60}")
 
-    return _build_and_write_final_output(output_file, input_text, analysis_result, converted_bodies, skip_validation, verbose)
+        # Safely get descriptions and calculate max length
+        descriptions = [(v.get("description") or "") for v in chunk_validations]
+        max_desc_len = max(len(d) for d in descriptions) if descriptions else 20
+        max_desc_len = min(max_desc_len, 50)
 
+        header = f"| {'Chunk':<5} | {'Status':<8} | {'Input':>7} | {'Output':>7} | {'Diff':>5} | {'Description':<{max_desc_len}} |"
+        print(header)
+        print(f"|{'-'*7}|{'-'*10}|{'-'*9}|{'-'*9}|{'-'*7}|{'-'*(max_desc_len+2)}|")
 
+        total_diff = 0
+        for i, v in enumerate(chunk_validations):
+            status = v.get("status", "N/A")
+            if status == "MISMATCH":
+                status_color = Fore.YELLOW
+            elif status == "PASSED":
+                status_color = Fore.GREEN
+            else:
+                status_color = ""
 
+            diff = v.get("char_diff", 0)
+            total_diff += diff
 
+            desc = descriptions[i]
+            if len(desc) > max_desc_len:
+                desc = desc[: max_desc_len - 3] + "..."
+
+            row = (
+                f"| {v.get('chunk_index', ''):<5} "
+                f"| {status_color}{status:<8}{Style.RESET_ALL} "
+                f"| {v.get('input_chars', ''):>7} "
+                f"| {v.get('output_chars', ''):>7} "
+                f"| {diff:>5} "
+                f"| {desc:<{max_desc_len}} |"
+            )
+            print(row)
+
+        print(f"|{'-'*7}|{'-'*10}|{'-'*9}|{'-'*9}|{'-'*7}|{'-'*(max_desc_len+2)}|")
+        print(f"Total Devanagari Character Difference: {total_diff}")
+
+    # Phase 3: Stitching
+    print(f"\n{'='*60}")
+    print("📋 PHASE 4: MERGING AND WRITING OUTPUT")
+    print(f"{'='*60}\n")
+    success, merged_content, message = merge_chunks(temp_file_paths, verbose=verbose)
+    if not success:
+        print(f"❌ Merging failed: {message}", file=sys.stderr)
+        cleanup_temp_chunks(temp_file_paths, verbose=True)
+        return False
+    print(f"✓ {message}")
+
+    if merged_content is None:
+        print("❌ Merging failed: No content returned", file=sys.stderr)
+        cleanup_temp_chunks(temp_file_paths, verbose=True)
+        return False
+    print(f"✓ Merging complete: {len(merged_content)} characters")
+
+    # Phase 4: Validation and Repair
+    if not skip_validation:
+        is_valid, validation_message = validate_merged_output(
+            input_text, merged_content
+        )
+        if is_valid:
+            print(f"✓ {validation_message}\n")
+        else:
+            print(f"⚠️  {validation_message}", file=sys.stderr)
+
+            # Parse pre-repair diff
+            pre_repair_diff_match = re.search(
+                r"(\d+) character difference", validation_message
+            )
+            pre_repair_diff = (
+                int(pre_repair_diff_match.group(1))
+                if pre_repair_diff_match
+                else float("inf")
+            )
+
+            # Log pre-repair file
+            repair_log_dir = file_log_dir / "repair"
+            _save_log_file(repair_log_dir / "01_pre_repair_output.md", merged_content)
+
+            print("   Attempting repair...")
+            # For repair to work, we need to write the broken content to the output file first
+            with open(output_file, "w", encoding="utf-8") as f:
+                f.write(merged_content)
+
+            # Run repair
+            repair_successful, repair_message = repair_file(
+                input_file=input_file,
+                output_file=output_file,
+                max_diff_size=2000,  # Increased max diff for repair
+                skip_frontmatter=False,  # Frontmatter is already there
+                verbose=verbose,
+                dry_run=False,
+                min_similarity=0.80,
+                conservative=True,
+                create_backup=True,
+            )
+
+            if repair_successful:
+                repaired_content = Path(output_file).read_text(encoding="utf-8")
+
+                # Log post-repair file
+                _save_log_file(
+                    repair_log_dir / "02_post_repair_output.md", repaired_content
+                )
+
+                # Validate post-repair
+                post_is_valid, post_validation_message = validate_merged_output(
+                    input_text, repaired_content
+                )
+
+                post_repair_diff = 0
+                if not post_is_valid:
+                    post_repair_diff_match = re.search(
+                        r"(\d+) character difference", post_validation_message
+                    )
+                    post_repair_diff = (
+                        int(post_repair_diff_match.group(1))
+                        if post_repair_diff_match
+                        else float("inf")
+                    )
+
+                # Compare and decide
+                if post_repair_diff < pre_repair_diff:
+                    print(
+                        f"✓ Repair accepted: Devanagari diff improved from {pre_repair_diff} to {post_repair_diff} chars."
+                    )
+                    merged_content = repaired_content
+                else:
+                    print(
+                        f"⚠️  Repair rejected: Devanagari diff did not improve (pre: {pre_repair_diff}, post: {post_repair_diff}). Reverting to pre-repair version."
+                    )
+                    # Revert the output file to the pre-repair state
+                    with open(output_file, "w", encoding="utf-8") as f:
+                        f.write(merged_content)
+            else:
+                # Repair failed to run
+                print(f"❌ {repair_message}", file=sys.stderr)
+                cleanup_temp_chunks(temp_file_paths, verbose=True)
+                return False
+
+    # Final write
+    output_path = Path(output_file)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(merged_content)
+    print(f"✓ Output written to {output_file}")
+
+    # Final cleanup
+    cleanup_temp_chunks(temp_file_paths, verbose=verbose)
+    print(f"✓ Temporary chunks cleaned up.")
+
+    print(f"\n✅ CONVERSION COMPLETE: {output_file}")
+    return True
 
 
 def _process_file(input_path, output_path, args, models):
     """Processes a single file, from analysis to conversion."""
-    _create_log_directory(file_subdir=input_path.stem)
+    file_log_dir = get_file_log_dir(input_path.stem)
+
+    # Save the input file to the log directory.
+    _save_log_file(
+        file_log_dir / "input_file.md",
+        input_path.read_text(encoding="utf-8"),
+    )
 
     print(f"\n{'='*60}")
     print(f"🔄 Converting: {input_path.name} -> {output_path.name}")
     print(f"{'='*60}")
 
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        print("Error: GEMINI_API_KEY environment variable not set.", file=sys.stderr)
+        return False
+    client = genai.Client(api_key=api_key)
+
     try:
         analysis = analyze_file_structure(
-            str(input_path),
+            client=client,
+            input_file=input_path,
+            file_log_dir=file_log_dir,
             verbose=False,
             use_cache=True,
             use_upload_cache=not args.no_upload_cache,
             force_reanalysis=args.force_analysis,
-            model=models['analysis'],
+            model=models["analysis"],
         )
     except Exception as e:
         print(f"❌ File analysis failed for {input_path.name}: {e}", file=sys.stderr)
@@ -1020,7 +1108,9 @@ def _process_file(input_path, output_path, args, models):
             analysis_metadata["commentary_id"] = args.commentary_id
         if args.commentator:
             analysis_metadata["commentator"] = args.commentator
-        analysis_metadata["part_num"] = _extract_part_number_from_filename(input_path.name)
+        analysis_metadata["part_num"] = _extract_part_number_from_filename(
+            input_path.name
+        )
         analysis["metadata"] = analysis_metadata
 
     # Display analysis results
@@ -1032,16 +1122,46 @@ def _process_file(input_path, output_path, args, models):
         print(f"  📝 Commentary: {metadata.get('commentary_id')}")
     print(f"  🏗️ Structure: {metadata.get('structure_type', 'unknown')}")
 
+    chunking_strategy = analysis.get("chunking_strategy", {})
+    execution_plan = chunking_strategy.get("execution_plan", [])
+    num_chunks = len(execution_plan)
+
+    if num_chunks > 0:
+        # Use the estimated character count provided by the analysis
+        chunk_lengths = [c.get("estimated_character_count", 0) for c in execution_plan]
+
+        # Filter out any chunks that might have a zero or missing length
+        valid_lengths = [l for l in chunk_lengths if l > 0]
+
+        if valid_lengths:
+            min_chunk_len = min(valid_lengths)
+            max_chunk_len = max(valid_lengths)
+            avg_chunk_len = sum(valid_lengths) / len(valid_lengths)
+
+            # Get target size from the correct nested location
+            proposed_strategy = chunking_strategy.get("proposed_strategy", {})
+            target_chars = proposed_strategy.get("safety_character_limit", "N/A")
+
+            print(f"  📦 Chunking Strategy:")
+            print(f"    • Total Chunks: {num_chunks}")
+            print(f"    • Target Chars/Chunk: {target_chars}")
+            print(
+                f"    • Estimated Lengths (chars): Min={min_chunk_len}, Max={max_chunk_len}, Avg={avg_chunk_len:.0f}"
+            )
+
     try:
         success = convert_with_regex_chunking(
+            client=client,
             input_file=str(input_path),
             output_file=str(output_path),
             analysis_result=analysis,
+            file_log_dir=file_log_dir,
             skip_validation=args.skip_validation,
             no_diff=args.no_diff,
             show_transliteration=args.show_transliteration,
             verbose=False,
-            model=models['conversion'],
+            model=models["conversion"],
+            use_upload_cache=not args.no_upload_cache,
         )
     except Exception as e:
         print(f"❌ Conversion failed for {input_path.name}: {e}", file=sys.stderr)
@@ -1050,8 +1170,15 @@ def _process_file(input_path, output_path, args, models):
 
     return success
 
+
 def main():
     colorama_init(autoreset=True)
+
+    # Must happen before any logging is configured
+    run_log_dir = get_run_log_dir()
+    sys.stdout = Tee(sys.stdout, run_log_dir / "stdout.log")
+    sys.stderr = Tee(sys.stderr, run_log_dir / "stderr.log")
+    print(f"📁 Logging to: {run_log_dir}")
 
     parser = argparse.ArgumentParser(
         description="Convert meghamala markdown to Grantha structured markdown using Gemini API",
@@ -1069,11 +1196,20 @@ Examples:
     # Input options (mutually exclusive)
     input_group = parser.add_mutually_exclusive_group(required=True)
     input_group.add_argument("-i", "--input", help="Input meghamala markdown file")
-    input_group.add_argument("-d", "--directory", help="Input directory containing multiple parts")
+    input_group.add_argument(
+        "-d", "--directory", help="Input directory containing multiple parts"
+    )
 
-    parser.add_argument("-o", "--output", required=True, help="Output file or directory")
-    parser.add_argument("--grantha-id", help="Grantha identifier (required for directory mode)")
-    parser.add_argument("--canonical-title", help="Canonical Devanagari title (required for directory mode)")
+    parser.add_argument(
+        "-o", "--output", required=True, help="Output file or directory"
+    )
+    parser.add_argument(
+        "--grantha-id", help="Grantha identifier (required for directory mode)"
+    )
+    parser.add_argument(
+        "--canonical-title",
+        help="Canonical Devanagari title (required for directory mode)",
+    )
     parser.add_argument("--commentary-id", help="Commentary identifier")
     parser.add_argument("--commentator", help="Commentator name in Devanagari")
     parser.add_argument(
@@ -1125,8 +1261,8 @@ Examples:
     args = parser.parse_args()
 
     models = {
-        'analysis': args.analysis_model or args.model,
-        'conversion': args.conversion_model or args.model,
+        "analysis": args.analysis_model or args.model,
+        "conversion": args.conversion_model or args.model,
     }
 
     if args.input:
@@ -1141,10 +1277,7 @@ Examples:
         success = _process_file(input_path, output_path, args, models)
         return 0 if success else 1
 
-    else: # Directory mode
-        if not args.grantha_id or not args.canonical_title:
-            parser.error("--grantha-id and --canonical-title are required for directory mode.")
-
+    else:  # Directory mode
         input_dir = Path(args.directory)
         output_dir = Path(args.output)
         if not input_dir.is_dir():
@@ -1157,7 +1290,64 @@ Examples:
             print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
             return 1
 
-        print(f"📚 Found {len(parts)} part(s) to convert in {input_dir.name}:")
+        # If ID and Title are not provided, infer them from the first part.
+        if not args.grantha_id or not args.canonical_title:
+            print(
+                "\n🔍 No --grantha-id or --canonical-title provided. Inferring from first file..."
+            )
+            first_file_path, _ = parts[0]
+
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key:
+                print(
+                    "Error: GEMINI_API_KEY environment variable not set.",
+                    file=sys.stderr,
+                )
+                return 1
+            client = genai.Client(api_key=api_key)
+
+            first_file_log_dir = get_file_log_dir(first_file_path.stem)
+
+            try:
+                analysis = analyze_file_structure(
+                    client=client,
+                    input_file=first_file_path,
+                    file_log_dir=first_file_log_dir,
+                    force_reanalysis=args.force_analysis,
+                    model=models["analysis"],
+                    use_cache=True,
+                    use_upload_cache=not args.no_upload_cache,
+                )
+                inferred_metadata = analysis.get("metadata", {})
+
+                if not args.grantha_id:
+                    args.grantha_id = inferred_metadata.get("grantha_id")
+                if not args.canonical_title:
+                    args.canonical_title = inferred_metadata.get("canonical_title")
+
+                if not args.grantha_id or not args.canonical_title:
+                    print(
+                        f"❌ Error: Could not infer grantha_id and canonical_title from {first_file_path.name}.",
+                        file=sys.stderr,
+                    )
+                    print(
+                        "   Please provide them with --grantha-id and --canonical-title.",
+                        file=sys.stderr,
+                    )
+                    return 1
+
+                print(f"  ✓ Inferred grantha_id: {args.grantha_id}")
+                print(f"  ✓ Inferred canonical_title: {args.canonical_title}")
+
+            except Exception as e:
+                print(
+                    f"❌ Analysis of first file failed, cannot infer metadata: {e}",
+                    file=sys.stderr,
+                )
+                traceback.print_exc()
+                return 1
+
+        print(f"\n📚 Found {len(parts)} part(s) to convert in {input_dir.name}:")
         for file_path, part_num in parts:
             print(f"   - Part {part_num}: {file_path.name}")
         print()
