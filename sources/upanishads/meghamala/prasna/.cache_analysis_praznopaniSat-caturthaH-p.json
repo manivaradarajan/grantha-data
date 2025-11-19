@@ -1,20 +1,25 @@
 {
   "file_hash": "c4b68eadc0512ee1ff58a8779694d8dadfafb50dc6f2632e5ed52720ea811907",
-  "timestamp": "2025-11-15T10:54:04.782312",
+  "timestamp": "2025-11-19T00:59:28.434150",
   "analysis": {
     "metadata": {
       "canonical_title": "प्रश्नोपनिषत्",
       "grantha_id": "prashna-upanishad",
       "commentary_id": "rangaramanuja-muni-prakashika",
-      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
       "structure_type": "prashna"
     },
     "structural_analysis": {
+      "starting_id": "4.1",
+      "context_justification": "The document begins with the header 'चतुर्थः प्रश्नः' (Fourth Praśna), indicating the primary structural unit is Praśna 4. The first numbered mantra is '।।१।।'. Therefore, the starting coordinate is 4.1.",
+      "suggested_filename": "prashna-upanishad-rangaramanuja-04-01",
+      "filename_justification": "Combines the grantha ID ('prashna-upanishad'), a slug from the commentator's name ('rangaramanuja'), and the zero-padded, hyphenated starting ID ('04-01') for a unique and sortable filename.",
       "structure_levels": {
         "key": "Prashna",
         "scriptNames": {
           "devanagari": "प्रश्नः",
-          "roman": "prashna"
+          "roman": "praśna"
         },
         "children": {
           "key": "Mantra",
@@ -27,40 +32,41 @@
     },
     "chunking_strategy": {
       "proposed_strategy": {
-        "name": "Validated Group by Character Count (Single Prashna)",
-        "description": "The input document contains only the Fourth Prashna, which is processed as a single chunk as its size is well below the safety limit of 125,000 characters.",
+        "name": "Validated Group by Character Count",
+        "description": "This strategy combines consecutive major structural units (Praśnas) into chunks, strictly ensuring no chunk exceeds the safety character limit. Since the provided text contains only a single Praśna and is very small, it is processed as one atomic chunk.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "Prashna 4 (Mantra 1 through 11) with the Prakashika commentary.",
-          "start_marker": "**चतुर्थः प्रश्नः**",
+          "description": "The complete Fourth Praśna (Praśna 4).",
+          "start_marker": "**चतुर्थः** **प्रश्नः**",
           "end_marker": "।। इति चतुर्थप्रश्नप्रकाशिका ।।",
-          "estimated_character_count": 5500
+          "estimated_character_count": 6483
         }
       ]
     },
     "parsing_instructions": {
-      "recommended_unit": "Mantra_Commentary_Block",
-      "justification": "The optimal unit captures the Upanishadic verse (Mantra) and its corresponding commentary (Prakashika) together, using the verse numbering as the primary anchor.",
+      "recommended_unit": "Mantra",
+      "justification": "The Praśna is primarily divided into sequentially numbered Mantras, which represent the smallest complete semantic units containing both the original text and its commentary.",
+      "numbering_capture_strategy": "Extract the Devanagari numeral located between the double danda markers (।।...।।) at the end of the bolded mantra line.",
       "start_pattern": {
-        "description": "The unit starts with the original Upanishadic verse text. The verse text is reliably followed by its unique numerical identifier (।।X।।).",
+        "description": "A new Mantra begins with a bolded line containing the full Sanskrit text of the mantra, ending with its number enclosed in double dandas.",
         "examples": [
-          "**अथ हैनं सौर्यायणी गार्ग्य: पप्रच्छ । भगवन् !...",
-          "तस्मै स होवाच – यथा गार्ग्य ! मरीचयोऽर्कस्यास्तं गच्छतः..."
+          "**अथ हैनं सौर्यायणी गार्ग्य: पप्रच्छ । भगवन् ! एतस्मिन् पुरुषे कानि स्वपन्ति । कान्यस्मिन् जाग्रति । कतर एषः स्वप्नान् पश्यति । कस्यैतत् सुखं भवति । कस्मिन्नु सर्वे सम्प्रतिष्ठिता भवन्ति’ इति ।।१।।**",
+          "**प्राणाग्नय एव एतस्मिन् पुरे जाग्रति । गार्हपत्यो ह वा एषोऽपानः व्यानोऽन्वाहार्यपचन: यत् गार्हपत्यात् प्रणीयते, प्रणयनादाहवनीयः प्राणः ।। ३ ।।**"
         ],
-        "regex": "([\\u0900-\\u097F][\\s\\S]*?)(?:।। *\\d+ *।।)"
+        "regex": "^\\\\*\\\\*.+?।।([०-९]+)।।\\\\*\\\\*$"
       },
       "end_pattern": {
-        "description": "The end of the unit is the last word of the commentary associated with that Mantra, immediately preceding the start of the next Mantra's verse text, or the final concluding marker.",
+        "description": "The commentary for a mantra implicitly ends where the next mantra's start pattern begins. The final mantra's commentary ends with the chapter colophon.",
         "examples": [
-          "कस्य हेतोः एतद्वैषयिकं सुखम् इत्यर्थः ।।",
+          "**तस्मै स होवाच – यथा गार्ग्य ! ... स्वपिति इति आचक्षते ॥ २ ॥** (This start pattern marks the end of the previous mantra's section)",
           "।। इति चतुर्थप्रश्नप्रकाशिका ।।"
         ],
-        "regex": "(?:(?=[\\u0900-\\u097F][\\s\\S]*?([\\u0900-\\u097F][\\s\\S]*?)(?:।। *\\d+ *।।))|।। इति चतुर्थप्रश्नप्रकाशिका ।।)"
+        "regex": "(?=^\\\\*\\\\*.+?।।[०-९]+।।\\\\*\\\\*$)|(।।\\s*इति\\s*चतुर्थप्रश्नप्रकाशिका\\s*।।)"
       },
-      "pre_content_handling": "The initial titles ('प्रश्नोपनिषत्', 'चतुर्थः प्रश्नः', and the bracketed summary) should be treated as overall document headers preceding the first Mantra unit."
+      "pre_content_handling": "The initial text '[जीवस्य स्वप्नसुषुप्तिविषयकः प्रश्नः]' should be parsed as a 'Contextual Header' for the entire Praśna, as it describes the topic of the questions to follow."
     }
   },
   "version": "1.0"

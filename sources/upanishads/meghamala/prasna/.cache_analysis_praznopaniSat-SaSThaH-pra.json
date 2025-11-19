@@ -1,20 +1,25 @@
 {
   "file_hash": "394a06e4f6ed7da428f7b6102b8353a5d581218b7097e5e19a283a570881f28c",
-  "timestamp": "2025-11-15T10:54:40.722168",
+  "timestamp": "2025-11-19T01:04:19.966337",
   "analysis": {
     "metadata": {
       "canonical_title": "प्रश्नोपनिषत्",
       "grantha_id": "prashna-upanishad",
       "commentary_id": "rangaramanuja-muni-prakashika",
-      "commentator": "श्रीरङ्गरामानुजमुनि",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
       "structure_type": "prashna"
     },
     "structural_analysis": {
+      "starting_id": "6.1",
+      "context_justification": "The document begins with the header for the Sixth Praśna (षष्ठः प्रश्नः) and the first numbered mantra in the text is '१'. Therefore, the starting coordinate is 6.1.",
+      "suggested_filename": "prashna-upanishad-rangaramanuja-06-01",
+      "filename_justification": "Combines the grantha ID ('prashna-upanishad'), a slug for the commentator ('rangaramanuja'), and the zero-padded starting ID ('06-01') for unique, sortable file naming.",
       "structure_levels": {
         "key": "Prashna",
         "scriptNames": {
           "devanagari": "प्रश्नः",
-          "roman": "prashna"
+          "roman": "praśna"
         },
         "children": {
           "key": "Mantra",
@@ -27,40 +32,40 @@
     },
     "chunking_strategy": {
       "proposed_strategy": {
-        "name": "Single Section Chunking",
-        "description": "The provided text constitutes a single structural unit (the Sixth Prashna) which is significantly below the safety character limit, allowing it to be processed in a single chunk.",
+        "name": "Validated Group by Character Count",
+        "description": "This strategy groups consecutive primary structural units (Praśnas). Since the provided text is a single unit and its size is well below the safety limit, it forms a single chunk.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "The entirety of the Sixth Prashna (Mantra 1 through 8) and its accompanying Prakashika commentary, including the concluding summary and doxology.",
-          "start_marker": "प्रश्नोपनिषत्",
+          "description": "The entirety of the Sixth Praśna and its commentary.",
+          "start_marker": "**षष्ठः** **प्रश्नः**",
           "end_marker": "।। इति श्रीरङ्गरामानुजमुनिविरचितप्रश्नोपनिषत्प्रकाशिका समाप्ता ।।",
-          "estimated_character_count": 14350
+          "estimated_character_count": 9548
         }
       ]
     },
     "parsing_instructions": {
-      "recommended_unit": "Mantra",
-      "justification": "The document structures content around individual Mantras, which are followed immediately by their respective commentary (Prakashika). The Mantra serves as the optimal atomic unit containing both source text and exegesis.",
+      "recommended_unit": "Prashna",
+      "justification": "The Upanishad is canonically divided into six 'Praśnas' (Questions), which are the primary structural and thematic units.",
+      "numbering_capture_strategy": "For mantras within a Praśna, extract the Devanagari numeral from the '।। [num] ।।' pattern that follows the bolded mantra text.",
       "start_pattern": {
-        "description": "A new Mantra unit (source text followed by commentary) begins immediately after the numerical end marker (।। [num] ।।) of the previous Mantra's text, or after a structural boundary (like a Prashna heading).",
+        "description": "A new Praśna begins with a bolded heading indicating its ordinal number followed by the word 'प्रश्नः'.",
         "examples": [
-          "**अथ हैनं सुकेशा भारद्वाजः पप्रच्छ** (Start of Mantra 1)",
-          "तस्मै स होवाच । (Start of Mantra 2)"
+          "**षष्ठः** **प्रश्नः**"
         ],
-        "regex": null
+        "regex": "\\*\\*([\\u0900-\\u097F]+)\\s*\\*\\*\\s*\\*\\*प्रश्नः\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of the root Mantra text is consistently marked by a Devanagari numeral enclosed in double danda, which acts as the delimiter separating the source text from the commentary.",
+        "description": "The end of a Praśna is marked by a concluding line, typically indicating the end of that section's commentary or the section itself.",
         "examples": [
-          "।। १ ।।",
-          "।।२।।"
+          "।। इति षष्ठः प्रश्नः ।।",
+          "।। इति षष्ठप्रश्नप्रकाशिका ।।"
         ],
-        "regex": "।।\\s*[०-९]+\\s*।।"
+        "regex": "।।\\s+इति\\s+.*?प्रश्न(प्रकाशिका)?\\s+।।"
       },
-      "pre_content_handling": "The initial lines providing the Grantha title, Prashna number, and subject heading (e.g., **प्रश्नोपनिषत्**, **षष्ठः प्रश्नः**) should be treated as structural headers before Mantra 1 begins. The final metrical verse (`क्षेमाय य: करुणया...`) and the final colophons are concluding material."
+      "pre_content_handling": "Content in square brackets immediately following a Praśna heading, like '[जीवस्य षोडशकलत्वं परमात्मोपासनं च]', should be parsed as a topic summary or metadata for that Praśna, not as part of the mantra content."
     }
   },
   "version": "1.0"

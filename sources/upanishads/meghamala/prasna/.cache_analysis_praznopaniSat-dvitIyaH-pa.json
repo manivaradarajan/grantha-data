@@ -1,17 +1,22 @@
 {
   "file_hash": "1b4fb2e7c1a65675dab4833a88cfe25cd3483ac6eaf2e1816522f6e578c8594e",
-  "timestamp": "2025-11-15T10:48:58.164002",
+  "timestamp": "2025-11-19T00:54:23.737512",
   "analysis": {
     "metadata": {
       "canonical_title": "प्रश्नोपनिषत्",
-      "grantha_id": "prasna-upanishad",
+      "grantha_id": "prashna-upanishad",
       "commentary_id": "rangaramanuja-muni-prakashika",
-      "commentator": "श्रीरङ्गरामानुजमुनि",
-      "structure_type": "praśna"
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "prashna"
     },
     "structural_analysis": {
+      "starting_id": "2.1",
+      "context_justification": "The text begins with the header 'द्वितीयः प्रश्नः' (Second Question), establishing the first-level coordinate as 2. The first verse (mantra) is numbered '१', establishing the second-level coordinate as 1. Thus, the start ID is 2.1.",
+      "suggested_filename": "prashna-upanishad-rangaramanuja-muni-02-01",
+      "filename_justification": "Combines the grantha ID ('prashna-upanishad'), a slug of the commentator ('rangaramanuja-muni'), and the zero-padded, hyphenated start ID ('02-01') for a unique, sortable filename.",
       "structure_levels": {
-        "key": "Praśna",
+        "key": "Prashna",
         "scriptNames": {
           "devanagari": "प्रश्नः",
           "roman": "praśna"
@@ -27,39 +32,40 @@
     },
     "chunking_strategy": {
       "proposed_strategy": {
-        "name": "Single Praśna Chunk",
-        "description": "The entire provided content is the Second Praśna, which is small enough to constitute a single, complete chunk, respecting the character limit.",
+        "name": "Validated Group by Character Count",
+        "description": "This strategy combines consecutive Prashnas, strictly ensuring no chunk exceeds the safety character limit. The plan is regenerated internally if any proposed chunk is too large.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "The entirety of the Second Praśna, including all Mantras (1 through 13) and the associated Prakashika commentary.",
-          "start_marker": "**द्वितीयः प्रश्नः**",
+          "description": "The entirety of the second Prashna (द्वितीयः प्रश्नः).",
+          "start_marker": "**द्वितीयः** **प्रश्नः**",
           "end_marker": "।। इति द्वितीयप्रश्नप्रकाशिका ।।",
-          "estimated_character_count": 5500
+          "estimated_character_count": 6125
         }
       ]
     },
     "parsing_instructions": {
-      "recommended_unit": "Mantra",
-      "justification": "The primary structural unit within the Praśna is the Mantra, which is clearly numbered and forms the unit immediately followed by its commentary.",
+      "recommended_unit": "Prashna",
+      "justification": "The Upanishad is primarily divided into Prashnas (Questions), which are the main semantic and structural sections.",
+      "numbering_capture_strategy": "For the Mantras within a Prashna, extract the Devanagari numeral enclosed by '।।' symbols at the end of the bolded verse line (e.g., '।। १ ।।').",
       "start_pattern": {
-        "description": "A new Mantra (verse) begins with the verse number enclosed in double danda marks, following the core text.",
+        "description": "A new Prashna begins with a bolded heading indicating its Sanskrit ordinal number followed by the word 'प्रश्नः'.",
         "examples": [
-          "वरिष्ठः इति ।। १ ।।",
-          "विधारयामः ।। २ ।।"
+          "**द्वितीयः** **प्रश्नः**",
+          "**तृतीयः** **प्रश्नः**"
         ],
-        "regex": "।।\\s*(\\d+)\\s*।।"
+        "regex": "\\*\\*([\\u0900-\\u097F]+)\\*\\*\\s*\\*\\*प्रश्नः\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of a Mantra unit (including its commentary) is marked by the start of the subsequent Mantra's core text, or by the chapter conclusion marker.",
+        "description": "The end of a Prashna's commentary is marked by a concluding line identifying the section.",
         "examples": [
-          "**तस्मै स होवाच आकाशो ह वा एष देवो..."
+          "।। इति द्वितीयप्रश्नप्रकाशिका ।।"
         ],
-        "regex": "\\*\\*[\\u0900-\\u097F\\s]*?\\*\\*\\s*\\*\\*[\\u0900-\\u097F\\s]*?\\*\\*"
+        "regex": "।।\\s*इति\\s*[\\u0900-\\u097F]+प्रश्नप्रकाशिका\\s*।।"
       },
-      "pre_content_handling": "Treat the initial text (Grantha title, Praśna number, and section title [प्राणप्रशंसा]) as prefatory metadata before the first Mantra (।। १ ।।)."
+      "pre_content_handling": "The optional topic heading in square brackets (e.g., '[प्राणप्रशंसा]') should be captured and associated with the following Prashna as a subtitle."
     }
   },
   "version": "1.0"
