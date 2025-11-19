@@ -85,7 +85,7 @@ class TestFileUploadCache(unittest.TestCase):
 
         # Create cache entry
         file_hash = get_file_hash(self.test_file)
-        cache_key = f"{self.test_file}:{file_hash}"
+        cache_key = file_hash
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
@@ -102,7 +102,7 @@ class TestFileUploadCache(unittest.TestCase):
 
         # Create cache entry
         file_hash = get_file_hash(self.test_file)
-        cache_key = f"{self.test_file}:{file_hash}"
+        cache_key = file_hash
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
@@ -116,7 +116,7 @@ class TestFileUploadCache(unittest.TestCase):
 
         # Create cache entry
         file_hash = get_file_hash(self.test_file)
-        cache_key = f"{self.test_file}:{file_hash}"
+        cache_key = file_hash
         cache_data = {cache_key: {"name": "files/test123"}}
         self.cache._save_cache(cache_data)
 
