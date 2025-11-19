@@ -9,7 +9,12 @@ Extract the metadata as described below.
 *   `canonical_title`: Full Sanskrit name.
 *   `grantha_id`: Standardized ID.
 *   `commentary_id`: Commentary ID or `null`.
-*   `commentator`: Commentator name or `null`.
+*   `commentator`: Name of the author in **Sanskrit Prathama Vibhakti (Nominative Singular)** (e.g., "श्रीरङ्गरामानुजमुनिः").
+*   `authored_colophon`: A constructed Sanskrit phrase indicating authorship, following strict grammatical agreement rules:
+    *   **Case:** Convert the author's name to **Plural Instrumental Case** (Tritiya Vibhakti Bahuvachana) to denote respect.
+    *   **Agreement:** Append the word "viracita" (composed by), modified to match the gender of the commentary title.
+    *   *Example (Feminine Commentary):* If commentary is *Prakāśikā* or *Ṭīkā*, use feminine ending with plural author: "श्रीरङ्गरामानुजमुनिभिः विरचिता".
+    *   *Example (Neuter Commentary):* If commentary is *Bhāṣyam*, use neuter ending with plural author: "शंकराचार्यैः विरचितम्".
 
 ---
 
@@ -27,19 +32,31 @@ Analyze and define the hierarchical structure of the document **and establish th
         *   If the header is "Chapter 2", Sub-section "Section 3", and the first verse is "1", `starting_id` = "2.3.1".
         *   If no parent headers exist, `starting_id` = "1".
 
+    5.  **Suggested Filename (Sort-Safe):** Generate a `suggested_filename` for file output.
+        *   **Prerequisite:** You must have already calculated `metadata.grantha_id`, `metadata.commentary_id`, and `starting_id`.
+        *   **Logic:**
+            1.  **Slugify Commentary:** Take `metadata.commentary_id` (or `commentator` if ID is null), remove generic words like "bhashya" or "tika", and convert to a short, lowercase slug (e.g., "rangaramanuja").
+            2.  **Format ID:** Take the `starting_id` (from step 3), replace dots (`.`) with hyphens (`-`), and **zero-pad** every segment to 2 digits (e.g., `1.1` -> `01-01`).
+        *   **Pattern:** `{grantha_id}-{commentary_slug}-{formatted_id}`
+        *   **Example:** `katha-upanishad-rangaramanuja-02-01`
+        *   **Example 2:** If text is Chandogya (6.1.1) with Shankara: `"chandogya-shankara-06-01-01"`.
+
 ---
 
 ### **3. Chunking Strategy Section (`chunking_strategy`):**
 Devise an optimal, deterministic chunking strategy following a strict validation protocol.
 
 **Protocol:**
-1.  **Goal:** Maximize chunk size to minimize API calls.
-2.  **Hard Rule:** Never split a primary section (e.g., `खण्डः`) internally.
-3.  **Chunking Rule:** Each major structural unit (e.g., `खण्डः`, `वल्ली`, `प्रपाठकः`) should be in its own chunk, unless combining them is necessary to meet a minimum chunk size. For this project, there is no minimum chunk size, so create a new chunk for each major structural unit.
+1.  **Goal:** Minimize API calls by grouping consecutive sections into the largest possible chunks that fit safely within limits.
+2.  **Hard Rule:** Never split a primary section (e.g., `खण्डः`, `वल्ली`) internally.
+3.  **Grouping Strategy (OPTIMIZED):**
+    *   **Agglomerate:** Combine consecutive major structural units (e.g., Khandas) into a single chunk.
+    *   **Soft Target:** Aim for a chunk size between **50,000 and 80,000 characters**.
+    *   **Hard Cap:** Strictly ensure no chunk exceeds the **Safety Limit of 125,000 characters**.
+    *   **Logic:** Start with the first section. Keep adding subsequent sections to the current chunk *until* adding the next section would breach the Safety Limit. Only then start a new chunk.
 4.  **Calculation and Validation (CRITICAL):**
     *   For each chunk you propose in the `execution_plan`, you **MUST** calculate its character length and report it in the `estimated_character_count` field.
-    *   This `estimated_character_count` **MUST NOT** exceed the `safety_character_limit` of **125,000**.
-    *   **Self-Correction:** Before finalizing your response, you must verify this condition for all chunks. If any chunk violates the limit, you must split that chunk into two or more smaller, compliant chunks (breaking only at a valid `खण्डः` boundary) and regenerate the plan until all chunks pass validation.
+    *   **Self-Correction:** If any chunk exceeds 125,000 characters, you must split it (breaking only at a valid structural boundary) and regenerate the plan.
 *   **Output:** Provide a machine-readable `execution_plan` that adheres to this protocol.
 
 ---
@@ -63,12 +80,15 @@ This is a hypothetical example for a different text to show the exact final stru
     "canonical_title": "छान्दोग्योपनिषत्",
     "grantha_id": "chhandogya-upanishad",
     "commentary_id": "rangaramanuja-muni-prakashika",
-    "commentator": "श्रीरङ्गरामानुजमुनि",
+    "commentator": "श्रीरङ्गरामानुजमुनिः",
+    "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
     "structure_type": "khanda"
   },
   "structural_analysis": {
     "starting_id": "1.1.1",
     "context_justification": "The text contains headers for Prapathaka 1 (Prathama) and Khanda 1 (Prathama). The first parsed unit is Mantra 1. Thus, start ID is 1.1.1.",
+    "suggested_filename": "chandogya-upanishad-rangaramanuja-01-01-01",
+    "filename_justification": "Combines grantha ID, commentary author, and zero-padded start ID (01-01-01) for unique, sortable naming.",
     "structure_levels": {
       "key": "Prapathaka",
       "scriptNames": {
@@ -137,8 +157,3 @@ This is a hypothetical example for a different text to show the exact final stru
     "pre_content_handling": "Handle the initial 'शान्तिपाठः' as a 'Prefatory' section before the first Khanda."
   }
 }
-```
-
----
-
-Action: Read the attached document and generate the JSON response now.

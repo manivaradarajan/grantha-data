@@ -318,19 +318,7 @@ def estimate_chunk_count(file_path: str, max_size: int = 200000) -> Tuple[int, s
 def split_by_execution_plan(
     text: str, execution_plan: List[Dict], verbose: bool = False
 ) -> List[Tuple[str, Dict]]:
-    """Split text specifically according to the LLM-generated execution plan.
-
-    This is a deterministic splitter that obeys strict start/end markers from
-    the Phase 1 Analysis JSON.
-
-    Args:
-        text: The full source text
-        execution_plan: The 'execution_plan' list from the analysis JSON
-        verbose: Print details
-
-    Returns:
-        List of (chunk_text, metadata) tuples.
-    """
+    """Split text specifically according to the LLM-generated execution plan."""
     chunks = []
     current_pos = 0
     total_chunks = len(execution_plan)
@@ -345,35 +333,42 @@ def split_by_execution_plan(
 
         # --- START INDEX LOGIC ---
         if plan_idx == 0:
-            # CRITICAL FIX: The first chunk MUST start at index 0 to include
-            # document titles/preambles that appear before the first section marker.
             start_idx = 0
         else:
-            # For subsequent chunks, look for the marker starting from where we left off
             found_start = text.find(start_marker, current_pos)
             if found_start == -1:
                 if verbose:
                     print(
-                        f"Warning: Start marker '{start_marker}' not found for Chunk {chunk_id}. "
-                        f"Using current position {current_pos}."
+                        f"Warning: Start marker '{start_marker}' not found. Using pos {current_pos}."
                     )
                 start_idx = current_pos
             else:
                 start_idx = found_start
 
         # --- END INDEX LOGIC ---
-        # Find the end marker starting from the identified start_idx
+        # Default: Find the first occurrence after start
         found_end = text.find(end_marker, start_idx)
 
+        # AMBIGUITY CHECK:
+        # If the text contains the end marker multiple times, we might have picked the early one.
+        # In a single-chunk scenario (total_chunks=1), we almost certainly want the LAST one.
+        if total_chunks == 1 and found_end != -1:
+            last_occurrence = text.rfind(end_marker)
+            if last_occurrence != found_end:
+                if verbose:
+                    print(
+                        f"Chunk {chunk_id}: Found marker early at {found_end}, but taking last occurrence at {last_occurrence} for single-chunk mode."
+                    )
+                found_end = last_occurrence
+
+        # Fallback if not found
         if found_end == -1:
             if verbose:
                 print(
-                    f"Warning: End marker '{end_marker}' not found for Chunk {chunk_id}. "
-                    f"Extending to end of text."
+                    f"Warning: End marker '{end_marker}' not found. Extending to end."
                 )
             end_idx = len(text)
         else:
-            # Include the end marker itself in this chunk
             end_idx = found_end + len(end_marker)
 
         # --- EXTRACT ---

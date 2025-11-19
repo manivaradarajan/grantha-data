@@ -5,11 +5,9 @@ Convert meghamala markdown to Grantha structured markdown using Gemini API.
 Usage:
     python convert_meghamala.py \
         -i input.md \
-        -o output.md \
+        --output-dir ./output \
         --grantha-id kena-upanishad \
-        --canonical-title "केनोपनिषत्" \
-        --commentary-id kena-rangaramanuja \
-        --commentator "रङ्गरामानुजमुनिः"
+        --canonical-title "केनोपनिषत्"
 """
 
 # Standard library imports
@@ -27,7 +25,7 @@ import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
-from typing import Final
+from typing import Final, Optional
 
 # Third-party imports
 import yaml
@@ -56,7 +54,6 @@ from grantha_converter.devanagari_validator import validate_devanagari_preservat
 from grantha_converter.diff_utils import show_devanagari_diff, show_transliteration_diff
 from grantha_converter.hasher import hash_text
 from grantha_converter.meghamala_chunker import (
-    # split_at_boundaries,
     split_by_execution_plan,
 )
 from grantha_converter.meghamala_stitcher import (
@@ -75,11 +72,7 @@ LOGS_DIR = Path("logs")  # Save logs in current working directory
 UPLOAD_CACHE_FILE = SCRIPT_DIR / ".file_upload_cache.json"
 
 # Reusable config used for Gemini generate_content calls.
-# This configuration is constant for all calls in this script. It's defined
-# once to avoid duplication and to make intent explicit. Do not mutate this
-# object in-place; if mutation is required, create a new instance instead.
 GEMINI_CONTENT_CONFIG: Final = GenerateContentConfig(
-    #    thinking_config=ThinkingConfig(thinking_level='low'),
     safety_settings=[
         SafetySetting(
             category=HarmCategory.HARM_CATEGORY_HARASSMENT,
@@ -146,12 +139,7 @@ def get_file_log_dir(input_file_stem: str) -> Path:
 
 
 def _save_log_file(log_path: Path, content: str):
-    """Saves content to a specified path in the log directory.
-
-    Args:
-        log_path: The full path to the log file.
-        content: The content to write.
-    """
+    """Saves content to a specified path in the log directory."""
     try:
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_path.write_text(content, encoding="utf-8")
@@ -165,30 +153,12 @@ def _save_log_file(log_path: Path, content: str):
 
 
 def _repair_json_escapes(text: str) -> str:
-    """Attempt to repair common JSON escape sequence issues.
-
-    Gemini sometimes returns regex patterns with single backslashes which are
-    invalid in JSON. This function attempts to fix those issues.
-
-    Args:
-        text: The JSON text that may have escape issues
-
-    Returns:
-        Repaired JSON text
-    """
-    # Find all strings that look like regex patterns in the JSON
-    # Pattern: "regex": "..." where ... contains backslashes
+    """Attempt to repair common JSON escape sequence issues."""
     regex_pattern = r'"regex":\s*"([^"]*)"'
 
     def fix_regex(match):
         regex_value = match.group(1)
-        # Double all single backslashes that aren't already doubled
-        # This is tricky because we need to handle:
-        # \* -> \\*
-        # \\ -> \\ (already correct)
-        # \S -> \\S
         fixed = regex_value.replace("\\", "\\\\")
-        # But if they were already doubled, we just quadrupled them, so fix that
         fixed = fixed.replace("\\\\\\\\", "\\\\")
         return f'"regex": "{fixed}"'
 
@@ -279,7 +249,6 @@ def _prepare_analysis_prompt(
 def _call_gemini_for_analysis(client, model, prompt, uploaded_file, file_log_dir: Path):
     """Calls the Gemini API with the analysis prompt."""
     print("🤖 Calling Gemini API for structural analysis...")
-    # Use the shared, module-level config constant to avoid duplication
     config = GEMINI_CONTENT_CONFIG
     contents = [prompt]
     if uploaded_file:
@@ -325,7 +294,6 @@ def _parse_analysis_response(response_text):
             f"\n❌ Error: Could not parse JSON from Gemini response: {e}",
             file=sys.stderr,
         )
-        # ... (error printing logic)
         raise ValueError(f"Invalid JSON response from Gemini: {e}")
 
 
@@ -429,20 +397,7 @@ def analyze_file_structure(
 
 
 def _hide_editor_comments_in_content(content: str) -> tuple[str, str]:
-    """Hides editor comments in square brackets with HTML comment tags.
-
-    This function wraps any text enclosed in square brackets (e.g., `[some comment]`)
-    with `<!-- hide -->` and `<!-- /hide -->`. It is idempotent and will not modify
-    comments that are already hidden. It also ignores standard Markdown links like
-    `[text](url)`.
-
-    Args:
-        content: The content to process.
-
-    Returns:
-        A tuple containing the original and modified content.
-        If no changes are made, both strings will be identical.
-    """
+    """Hides editor comments in square brackets with HTML comment tags."""
     original_content = content
     modified_content = content
 
@@ -473,40 +428,8 @@ def _hide_editor_comments_in_content(content: str) -> tuple[str, str]:
     return original_content, modified_content
 
 
-def _validate_devanagari_unchanged(
-    original_content: str, modified_content: str
-) -> bool:
-    """Validates that no Devanagari characters were altered during processing.
-
-    Args:
-        original_content: The original file content.
-        modified_content: The content after hiding comments.
-
-    Returns:
-        True if the Devanagari text is identical, False otherwise.
-    """
-    original_devanagari = extract_devanagari(original_content)
-    modified_devanagari = extract_devanagari(modified_content)
-    return original_devanagari == modified_devanagari
-
-
 def _extract_part_number_from_filename(filename: str) -> int:
-    """
-    Extract part number from filename.
-
-    Patterns supported:
-    - 03-01.md → part 1 of section 3
-    - part-3.md → part 3
-    - brihadaranyaka-03.md → part 3
-    - 01.md → part 1
-    - name-tRtIya.md → part 3 (Sanskrit numbers)
-
-    Args:
-        filename: Name of the file (not full path)
-
-    Returns:
-        Part number, or 1 if not found
-    """
+    """Extract part number from filename."""
     # Sanskrit number words to digits
     sanskrit_numbers = {
         "prathama": 1,
@@ -546,7 +469,7 @@ def _extract_part_number_from_filename(filename: str) -> int:
     if match:
         return int(match.group(1))
 
-    # Pattern 3: Sanskrit number words (check longest matches first to avoid false positives)
+    # Pattern 3: Sanskrit number words
     sorted_sanskrit = sorted(sanskrit_numbers.items(), key=lambda x: -len(x[0]))
     for sanskrit, number in sorted_sanskrit:
         if sanskrit.lower() in name:
@@ -567,12 +490,7 @@ def _extract_part_number_from_filename(filename: str) -> int:
 
 
 def _get_directory_parts(directory: Path) -> list:
-    """
-    Get all markdown files in directory sorted by part number.
-
-    Returns:
-        List of tuples: (file_path, part_number)
-    """
+    """Get all markdown files in directory sorted by part number."""
     md_files = []
     for file in directory.glob("*.md"):
         if file.name.upper() == "PROVENANCE.yaml":
@@ -587,7 +505,6 @@ def _get_directory_parts(directory: Path) -> list:
 
 def _strip_code_fences(text: str) -> str:
     """Remove markdown code fences from text."""
-    # Remove ```yaml, ```markdown, ```md, ```yml, etc.
     text = re.sub(
         r"^```(?:yaml|markdown|md|yml|text)?\s*\n", "", text, flags=re.MULTILINE
     )
@@ -596,7 +513,7 @@ def _strip_code_fences(text: str) -> str:
 
 
 def create_chunk_conversion_prompt(analysis_result: dict) -> str:
-    """Creates the prompt for chunk conversion, which will be used with an uploaded file."""
+    """Creates the prompt for chunk conversion."""
     try:
         continuation_template = prompt_manager.load_template(
             "chunk_continuation_prompt.txt"
@@ -680,7 +597,6 @@ def _convert_single_chunk(
 
         return converted_body
     finally:
-        # Clean up the temporary file
         if temp_file_path.exists():
             temp_file_path.unlink()
 
@@ -695,17 +611,7 @@ def _validate_chunk_devanagari(
 ) -> dict:
     """Validates Devanagari preservation for a single chunk."""
     chunk_index = chunk_metadata.get("chunk_index")
-    if chunk_index is None:
-        raise ValueError(
-            "Missing 'chunk_index' in chunk_metadata, which is required for validation."
-        )
-    try:
-        chunk_index = int(chunk_index)
-    except ValueError:
-        raise TypeError(
-            f"Invalid 'chunk_index': Expected an integer string, but got '{chunk_index}'"
-        )
-
+    assert chunk_index
     chunk_log_dir = file_log_dir / "chunks" / f"chunk_{chunk_index}"
 
     def save_diff_log(filename: str, content: str, subdir: str | None = None):
@@ -755,11 +661,7 @@ def _convert_all_chunks(
     verbose: bool,
     use_upload_cache: bool,
 ) -> tuple[list[str] | None, list[dict] | None]:
-    """
-    Orchestrates the conversion of all chunks, saving each to a temp file.
-
-    Returns a list of temporary file paths.
-    """
+    """Orchestrates the conversion of all chunks, saving each to a temp file."""
     print(f"\n{'='*60}")
     print(f"📋 PHASE 3: CONVERTING {len(chunks)} CHUNKS WITH GEMINI")
     print(f"{'='*60}\n")
@@ -772,11 +674,8 @@ def _convert_all_chunks(
     main_metadata = analysis_result.get("metadata", {})
 
     for i, (chunk_text, chunk_metadata) in enumerate(chunks):
-        # Ensure chunk_index is 1-based for display and logging directories
         display_chunk_index = i + 1
-        chunk_metadata["chunk_index"] = (
-            display_chunk_index  # Update chunk_metadata in place
-        )
+        chunk_metadata["chunk_index"] = display_chunk_index
 
         description = chunk_metadata.get("description", f"Chunk {display_chunk_index}")
         print(
@@ -787,14 +686,13 @@ def _convert_all_chunks(
             converted_body = _convert_single_chunk(
                 client=client,
                 chunk_text=chunk_text,
-                chunk_metadata=chunk_metadata,  # This now has 1-based index
+                chunk_metadata=chunk_metadata,
                 model=model,
                 analysis_result=analysis_result,
                 file_log_dir=file_log_dir,
                 use_upload_cache=use_upload_cache,
             )
 
-            # Construct commentaries_metadata
             commentaries_metadata = []
             if main_metadata.get("commentary_id"):
                 commentaries_metadata.append(
@@ -804,7 +702,6 @@ def _convert_all_chunks(
                     }
                 )
 
-            # Create the frontmatter for the chunk file
             chunk_frontmatter = {
                 "grantha_id": main_metadata.get("grantha_id"),
                 "part_num": main_metadata.get("part_num", 1),
@@ -817,7 +714,6 @@ def _convert_all_chunks(
                     "structure_levels", {}
                 ),
             }
-            # Remove keys that are None
             chunk_frontmatter = {
                 k: v for k, v in chunk_frontmatter.items() if v is not None
             }
@@ -827,17 +723,15 @@ def _convert_all_chunks(
             )
             full_chunk_content = f"---\n{frontmatter_yaml}---\n\n{converted_body}"
 
-            # Save to temp file
             temp_file = Path(temp_dir) / f"chunk_{i:03d}.md"
             with open(temp_file, "w", encoding="utf-8") as f:
                 f.write(full_chunk_content)
             temp_file_paths.append(str(temp_file))
 
-            # Perform validation
             validation_result = _validate_chunk_devanagari(
                 chunk_text,
                 converted_body,
-                chunk_metadata,  # This now has 1-based index
+                chunk_metadata,
                 file_log_dir,
                 no_diff,
                 show_transliteration,
@@ -846,11 +740,11 @@ def _convert_all_chunks(
 
         except Exception as e:
             print(
-                f"❌ Error converting chunk {chunk_metadata.get('chunk_index')}: {e}",  # This now uses 1-based index
+                f"❌ Error converting chunk {chunk_metadata.get('chunk_index')}: {e}",
                 file=sys.stderr,
             )
             traceback.print_exc()
-            cleanup_temp_chunks(temp_file_paths, verbose=True)  # Clean up on failure
+            cleanup_temp_chunks(temp_file_paths, verbose=True)
             return None, None
 
     return temp_file_paths, chunk_validations
@@ -877,8 +771,7 @@ def convert_with_regex_chunking(
         print(f"Error reading input file: {e}", file=sys.stderr)
         return False
 
-    # --- PHASE 1: CHUNKING (UPDATED) ---
-    # Extract the execution plan from the analysis result
+    # --- PHASE 1: CHUNKING ---
     chunking_strategy = analysis_result.get("chunking_strategy", {})
     execution_plan = chunking_strategy.get("execution_plan", [])
 
@@ -887,15 +780,12 @@ def convert_with_regex_chunking(
         return False
 
     print(f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks)...")
-
-    # Use the deterministic splitter that obeys the JSON plan
     chunks = split_by_execution_plan(input_text, execution_plan, verbose=verbose)
 
     if not chunks:
         print("❌ Could not split file into chunks.", file=sys.stderr)
         return False
 
-    # Validate that we got the expected number of chunks
     if len(chunks) != len(execution_plan):
         print(
             f"⚠️ Warning: Expected {len(execution_plan)} chunks but got {len(chunks)}.",
@@ -918,19 +808,13 @@ def convert_with_regex_chunking(
         print("❌ Chunk conversion failed.", file=sys.stderr)
         return False
 
-    # Display chunk validation summary
     if chunk_validations:
         print(f"\n{'='*60}")
         print("📋 CHUNK VALIDATION SUMMARY")
         print(f"{'='*60}")
 
-        # Safely get descriptions and calculate max length
         descriptions = [(v.get("description") or "") for v in chunk_validations]
-        # Handle case where descriptions might be empty
-        if descriptions:
-            max_desc_len = max(len(d) for d in descriptions)
-        else:
-            max_desc_len = 20
+        max_desc_len = max(len(d) for d in descriptions) if descriptions else 20
         max_desc_len = min(max(max_desc_len, 20), 50)
 
         header = f"| {'Chunk':<5} | {'Status':<8} | {'Input':>7} | {'Output':>7} | {'Diff':>5} | {'Description':<{max_desc_len}} |"
@@ -940,16 +824,13 @@ def convert_with_regex_chunking(
         total_diff = 0
         for i, v in enumerate(chunk_validations):
             status = v.get("status", "N/A")
-            if status == "MISMATCH":
-                status_color = Fore.YELLOW
-            elif status == "PASSED":
-                status_color = Fore.GREEN
-            else:
-                status_color = ""
-
+            status_color = (
+                Fore.YELLOW
+                if status == "MISMATCH"
+                else Fore.GREEN if status == "PASSED" else ""
+            )
             diff = v.get("char_diff", 0)
             total_diff += diff
-
             desc = descriptions[i] if i < len(descriptions) else ""
             if len(desc) > max_desc_len:
                 desc = desc[: max_desc_len - 3] + "..."
@@ -993,8 +874,6 @@ def convert_with_regex_chunking(
             print(f"✓ {validation_message}\n")
         else:
             print(f"⚠️  {validation_message}", file=sys.stderr)
-
-            # Parse pre-repair diff
             pre_repair_diff_match = re.search(
                 r"(\d+) character difference", validation_message
             )
@@ -1004,21 +883,18 @@ def convert_with_regex_chunking(
                 else float("inf")
             )
 
-            # Log pre-repair file
             repair_log_dir = file_log_dir / "repair"
             _save_log_file(repair_log_dir / "01_pre_repair_output.md", merged_content)
 
             print("   Attempting repair...")
-            # For repair to work, we need to write the broken content to the output file first
             with open(output_file, "w", encoding="utf-8") as f:
                 f.write(merged_content)
 
-            # Run repair
             repair_successful, repair_message = repair_file(
                 input_file=input_file,
                 output_file=output_file,
-                max_diff_size=2000,  # Increased max diff for repair
-                skip_frontmatter=False,  # Frontmatter is already there
+                max_diff_size=2000,
+                skip_frontmatter=False,
                 verbose=verbose,
                 dry_run=False,
                 min_similarity=0.80,
@@ -1028,17 +904,12 @@ def convert_with_regex_chunking(
 
             if repair_successful:
                 repaired_content = Path(output_file).read_text(encoding="utf-8")
-
-                # Log post-repair file
                 _save_log_file(
                     repair_log_dir / "02_post_repair_output.md", repaired_content
                 )
-
-                # Validate post-repair
                 post_is_valid, post_validation_message = validate_merged_output(
                     input_text, repaired_content
                 )
-
                 post_repair_diff = 0
                 if not post_is_valid:
                     post_repair_diff_match = re.search(
@@ -1050,21 +921,16 @@ def convert_with_regex_chunking(
                         else float("inf")
                     )
 
-                # Compare and decide
                 if post_repair_diff < pre_repair_diff:
                     print(
-                        f"✓ Repair accepted: Devanagari diff improved from {pre_repair_diff} to {post_repair_diff} chars."
+                        f"✓ Repair accepted: Diff improved {pre_repair_diff} -> {post_repair_diff}."
                     )
                     merged_content = repaired_content
                 else:
-                    print(
-                        f"⚠️  Repair rejected: Devanagari diff did not improve (pre: {pre_repair_diff}, post: {post_repair_diff}). Reverting to pre-repair version."
-                    )
-                    # Revert the output file to the pre-repair state
+                    print(f"⚠️  Repair rejected: Diff did not improve. Reverting.")
                     with open(output_file, "w", encoding="utf-8") as f:
                         f.write(merged_content)
             else:
-                # Repair failed to run
                 print(f"❌ {repair_message}", file=sys.stderr)
                 cleanup_temp_chunks(temp_file_paths, verbose=True)
                 return False
@@ -1075,16 +941,18 @@ def convert_with_regex_chunking(
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(merged_content)
     print(f"✓ Output written to {output_file}")
-
-    # Final cleanup
     cleanup_temp_chunks(temp_file_paths, verbose=verbose)
-    print(f"✓ Temporary chunks cleaned up.")
-
     print(f"\n✅ CONVERSION COMPLETE: {output_file}")
     return True
 
 
-def _process_file(input_path, output_path, args, models):
+def _process_file(
+    input_path: Path,
+    output_dir: Path,
+    args,
+    models,
+    filename_override: Optional[str] = None,
+):
     """Processes a single file, from analysis to conversion."""
     file_log_dir = get_file_log_dir(input_path.stem)
 
@@ -1095,7 +963,7 @@ def _process_file(input_path, output_path, args, models):
     )
 
     print(f"\n{'='*60}")
-    print(f"🔄 Converting: {input_path.name} -> {output_path.name}")
+    print(f"🔄 Processing: {input_path.name}")
     print(f"{'='*60}")
 
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -1135,6 +1003,29 @@ def _process_file(input_path, output_path, args, models):
         )
         analysis["metadata"] = analysis_metadata
 
+    # --- DETERMINE OUTPUT PATH ---
+    # If an override was provided (via -o in single mode), use it.
+    # Otherwise, look for 'suggested_filename' in the analysis.
+    # Fallback to input_stem_converted.md if neither exists.
+    if filename_override:
+        final_filename = filename_override
+    else:
+        suggestion = analysis.get("structural_analysis", {}).get("suggested_filename")
+        if suggestion:
+            final_filename = f"{suggestion}.md"
+        else:
+            final_filename = f"{input_path.stem}_converted.md"
+
+    # Handle case where filename_override might be a full path (from -o)
+    if filename_override and Path(filename_override).is_absolute():
+        final_output_path = Path(filename_override)
+    elif filename_override and os.sep in filename_override:
+        final_output_path = Path(filename_override)
+    else:
+        final_output_path = output_dir / final_filename
+
+    print(f"🎯 Target Output: {final_output_path}")
+
     # Display analysis results
     metadata = analysis.get("metadata", {})
     print(f"\n✓ Analysis complete for {input_path.name}:")
@@ -1142,40 +1033,28 @@ def _process_file(input_path, output_path, args, models):
     print(f"  🆔 ID: {metadata.get('grantha_id', 'unknown')}")
     if metadata.get("commentary_id"):
         print(f"  📝 Commentary: {metadata.get('commentary_id')}")
-    print(f"  🏗️ Structure: {metadata.get('structure_type', 'unknown')}")
 
     chunking_strategy = analysis.get("chunking_strategy", {})
     execution_plan = chunking_strategy.get("execution_plan", [])
     num_chunks = len(execution_plan)
 
     if num_chunks > 0:
-        # Use the estimated character count provided by the analysis
         chunk_lengths = [c.get("estimated_character_count", 0) for c in execution_plan]
-
-        # Filter out any chunks that might have a zero or missing length
         valid_lengths = [l for l in chunk_lengths if l > 0]
-
         if valid_lengths:
-            min_chunk_len = min(valid_lengths)
-            max_chunk_len = max(valid_lengths)
             avg_chunk_len = sum(valid_lengths) / len(valid_lengths)
-
-            # Get target size from the correct nested location
             proposed_strategy = chunking_strategy.get("proposed_strategy", {})
             target_chars = proposed_strategy.get("safety_character_limit", "N/A")
-
-            print(f"  📦 Chunking Strategy:")
-            print(f"    • Total Chunks: {num_chunks}")
-            print(f"    • Target Chars/Chunk: {target_chars}")
+            print(f"  📦 Strategy: {num_chunks} chunks (Target: {target_chars} chars)")
             print(
-                f"    • Estimated Lengths (chars): Min={min_chunk_len}, Max={max_chunk_len}, Avg={avg_chunk_len:.0f}"
+                f"    • Est. Lengths: Min={min(valid_lengths)}, Max={max(valid_lengths)}, Avg={avg_chunk_len:.0f}"
             )
 
     try:
         success = convert_with_regex_chunking(
             client=client,
             input_file=str(input_path),
-            output_file=str(output_path),
+            output_file=str(final_output_path),
             analysis_result=analysis,
             file_log_dir=file_log_dir,
             skip_validation=args.skip_validation,
@@ -1195,8 +1074,6 @@ def _process_file(input_path, output_path, args, models):
 
 def main():
     colorama_init(autoreset=True)
-
-    # Must happen before any logging is configured
     run_log_dir = get_run_log_dir()
     sys.stdout = Tee(sys.stdout, run_log_dir / "stdout.log")
     sys.stderr = Tee(sys.stderr, run_log_dir / "stderr.log")
@@ -1206,25 +1083,35 @@ def main():
         description="Convert meghamala markdown to Grantha structured markdown using Gemini API",
         epilog="""
 Examples:
-  # Single file with auto-detected part number
-  %(prog)s -i input.md -o output.md
+  # Single file, auto-named output
+  %(prog)s -i input.md --output-dir ./out
+
+  # Single file, explicit output name
+  %(prog)s -i input.md -o my_custom_name.md
 
   # Directory mode - converts all files, requires ID and title
-  %(prog)s -d sources/upanishads/meghamala/brihadaranyaka/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्"
+  %(prog)s -d sources/upanishads/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्"
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    # Input options (mutually exclusive)
     input_group = parser.add_mutually_exclusive_group(required=True)
     input_group.add_argument("-i", "--input", help="Input meghamala markdown file")
     input_group.add_argument(
         "-d", "--directory", help="Input directory containing multiple parts"
     )
 
+    # Changed: -o is now optional and specific to filename override
     parser.add_argument(
-        "-o", "--output", required=True, help="Output file or directory"
+        "-o", "--output", help="Explicit output filename (overrides auto-naming)"
     )
+    # Added: --output-dir for target directory
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory to save output files (default: current dir)",
+    )
+
     parser.add_argument(
         "--grantha-id", help="Grantha identifier (required for directory mode)"
     )
@@ -1248,12 +1135,12 @@ Examples:
     parser.add_argument(
         "--show-transliteration",
         action="store_true",
-        help="Show Harvard-Kyoto transliteration diff in addition to Devanagari diff",
+        help="Show Harvard-Kyoto transliteration diff",
     )
     parser.add_argument(
         "--force-analysis",
         action="store_true",
-        help="Force re-analysis: clear cache, re-analyze file, and save new result to cache",
+        help="Force re-analysis: clear cache, re-analyze file, and save new result",
     )
     parser.add_argument(
         "--no-upload-cache",
@@ -1261,7 +1148,6 @@ Examples:
         help="Disable file upload caching (always upload fresh)",
     )
 
-    # Model selection
     parser.add_argument(
         "--model",
         default=DEFAULT_GEMINI_MODEL,
@@ -1287,38 +1173,66 @@ Examples:
         "conversion": args.conversion_model or args.model,
     }
 
+    # Prepare Output Directory
+    output_dir = Path(args.output_dir)
+    # If user passed -o directory/filename.md, we treat that as absolute/relative override.
+    # If -o is just filename.md, we combine with output_dir.
+    # In directory mode, -o is treated as the output directory if provided (for backward compatibility)
+    # or better, mapped to --output-dir if provided?
+    # Let's stick to the parser logic: args.output_dir is the folder.
+
+    if not output_dir.exists():
+        output_dir.mkdir(parents=True, exist_ok=True)
+
     if args.input:
         input_path = Path(args.input)
-        output_path = Path(args.output)
-        if output_path.is_dir() or str(output_path).endswith("/"):
-            output_path.mkdir(parents=True, exist_ok=True)
-            output_path = output_path / (input_path.stem + "_converted.md")
-        else:
-            output_path.parent.mkdir(parents=True, exist_ok=True)
+        filename_override = args.output  # Might be None
 
-        success = _process_file(input_path, output_path, args, models)
+        # Case: user used -o for directory in previous version?
+        # Current logic: -o is filename.
+        # Check if -o looks like a directory (ends in slash or is existing dir)
+        if args.output and (args.output.endswith(os.sep) or Path(args.output).is_dir()):
+            print(
+                f"⚠️  Warning: -o/--output '{args.output}' looks like a directory but is now treated as a filename override.",
+                file=sys.stderr,
+            )
+            print(f"   Please use --output-dir for directories.", file=sys.stderr)
+
+        success = _process_file(
+            input_path, output_dir, args, models, filename_override=filename_override
+        )
         return 0 if success else 1
 
     else:  # Directory mode
         input_dir = Path(args.directory)
-        output_dir = Path(args.output)
         if not input_dir.is_dir():
             print(f"Error: {input_dir} is not a directory", file=sys.stderr)
             return 1
-        output_dir.mkdir(parents=True, exist_ok=True)
+
+        # In Directory Mode, if -o is provided, we treat it as output_dir to maintain some backward compatibility
+        # or strict override? Strict override implies one file, which doesn't work for directory input.
+        # Let's map -o to output_dir if provided and output_dir is default.
+        if args.output:
+            if args.output_dir == ".":
+                output_dir = Path(args.output)
+                output_dir.mkdir(parents=True, exist_ok=True)
+            else:
+                print(
+                    f"⚠️  Warning: Both -o and --output-dir provided in directory mode. Ignoring -o.",
+                    file=sys.stderr,
+                )
 
         parts = _get_directory_parts(input_dir)
         if not parts:
             print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
             return 1
 
-        # If ID and Title are not provided, infer them from the first part.
+        # Infer metadata logic (same as before)
         if not args.grantha_id or not args.canonical_title:
             print(
                 "\n🔍 No --grantha-id or --canonical-title provided. Inferring from first file..."
             )
             first_file_path, _ = parts[0]
-
             api_key = os.environ.get("GEMINI_API_KEY")
             if not api_key:
                 print(
@@ -1327,7 +1241,6 @@ Examples:
                 )
                 return 1
             client = genai.Client(api_key=api_key)
-
             first_file_log_dir = get_file_log_dir(first_file_path.stem)
 
             try:
@@ -1341,7 +1254,6 @@ Examples:
                     use_upload_cache=not args.no_upload_cache,
                 )
                 inferred_metadata = analysis.get("metadata", {})
-
                 if not args.grantha_id:
                     args.grantha_id = inferred_metadata.get("grantha_id")
                 if not args.canonical_title:
@@ -1349,35 +1261,23 @@ Examples:
 
                 if not args.grantha_id or not args.canonical_title:
                     print(
-                        f"❌ Error: Could not infer grantha_id and canonical_title from {first_file_path.name}.",
-                        file=sys.stderr,
-                    )
-                    print(
-                        "   Please provide them with --grantha-id and --canonical-title.",
+                        f"❌ Error: Could not infer metadata from {first_file_path.name}.",
                         file=sys.stderr,
                     )
                     return 1
-
                 print(f"  ✓ Inferred grantha_id: {args.grantha_id}")
                 print(f"  ✓ Inferred canonical_title: {args.canonical_title}")
-
             except Exception as e:
-                print(
-                    f"❌ Analysis of first file failed, cannot infer metadata: {e}",
-                    file=sys.stderr,
-                )
-                traceback.print_exc()
+                print(f"❌ Analysis of first file failed: {e}", file=sys.stderr)
                 return 1
 
-        print(f"\n📚 Found {len(parts)} part(s) to convert in {input_dir.name}:")
-        for file_path, part_num in parts:
-            print(f"   - Part {part_num}: {file_path.name}")
-        print()
-
+        print(f"\n📚 Found {len(parts)} part(s) to convert in {input_dir.name}")
         failed_parts = []
         for file_path, part_num in parts:
-            output_file = output_dir / file_path.name
-            if not _process_file(file_path, output_file, args, models):
+            # We pass None for filename_override so each file gets auto-named based on analysis
+            if not _process_file(
+                file_path, output_dir, args, models, filename_override=None
+            ):
                 failed_parts.append(file_path.name)
 
         if failed_parts:
