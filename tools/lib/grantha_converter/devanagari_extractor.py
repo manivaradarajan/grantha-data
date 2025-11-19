@@ -84,7 +84,7 @@ def extract_devanagari_words(text: str) -> List[str]:
         ['अग्निमीळे', 'पुरोहितं']
     """
     # Remove HTML comments first, replacing them with an empty string (zero space)
-    text_without_comments = re.sub(r"<!--.*?-->", "", text)
+    text_without_comments = re.sub(r"", "", text, flags=re.DOTALL)
 
     # Remove markdown heading lines to ignore Devanagari in headings
     lines = text_without_comments.split("\n")
