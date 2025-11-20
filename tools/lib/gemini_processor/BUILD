@@ -1,0 +1,61 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""A client for interacting with the Gemini API."""
+
+load("@grantha_pip//:requirements.bzl", "requirement")
+load("@grantha_pip//:requirements.bzl", "requirement")
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "client",
+    srcs = ["client.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tools/lib/gemini_processor:file_manager",
+        requirement("google-genai"),
+    ],
+)
+
+py_library(
+    name = "replay_client",
+    srcs = ["replay_client.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "cache_manager",
+    srcs = ["cache_manager.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "prompt_manager",
+    srcs = ["prompt_manager.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "sampler",
+    srcs = ["sampler.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "file_manager",
+    srcs = ["file_manager.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tools/lib/grantha_converter:hasher",
+    ],
+)

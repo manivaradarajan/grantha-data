@@ -39,8 +39,8 @@ def extract_devanagari(text: str) -> str:
     - Text repair operations (devanagari_repair.py)
 
     This function extracts Devanagari word sequences and joins them with single
-    spaces. This preserves word boundaries in the original text while normalizing
-    gaps caused by non-Devanagari content (markdown, English, etc.).
+    spaces. This preserves word boundaries while normalizing non-Devanagari gaps
+    caused by non-Devanagari content (markdown, English, etc.).
 
     Args:
         text: The input string (may contain markdown, YAML, multiple scripts, etc.)
@@ -85,6 +85,12 @@ def extract_devanagari_words(text: str) -> List[str]:
     """
     # Remove HTML comments first, replacing them with an empty string (zero space)
     text_without_comments = re.sub(r"", "", text, flags=re.DOTALL)
+
+    # Remove YAML frontmatter
+    if text_without_comments.strip().startswith("---"):
+        parts = text_without_comments.split("---", 2)
+        if len(parts) == 3:
+            text_without_comments = parts[2] # Keep only the content after the second ---
 
     # Remove markdown heading lines to ignore Devanagari in headings
     lines = text_without_comments.split("\n")

@@ -13,7 +13,8 @@ py_library(
     ),
     visibility = ["//visibility:public"],
     deps = [
-        "//tools/lib/grantha_converter",
+        "//tools/lib/grantha_converter:md_to_json",
+        "//tools/lib/grantha_converter:hasher",
     ],
 )
 

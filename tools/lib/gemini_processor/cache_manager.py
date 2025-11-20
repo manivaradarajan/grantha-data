@@ -22,13 +22,15 @@ class AnalysisCache:
         cache_path: Path to the cache file.
     """
 
-    def __init__(self, input_file: str):
+    def __init__(self, input_file: str, cache_dir: Optional[Path] = None):
         """Initialize AnalysisCache for a given input file.
 
         Args:
             input_file: Path to the file being analyzed.
+            cache_dir: Optional directory to store the cache file.
         """
         self.input_file = Path(input_file)
+        self.cache_dir = cache_dir
         self.cache_path = self._get_cache_path()
 
     def _get_cache_path(self) -> Path:
@@ -37,8 +39,17 @@ class AnalysisCache:
         Returns:
             Path to the cache file.
         """
-        cache_filename = f".cache_analysis_{self.input_file.stem}.json"
-        return self.input_file.parent / cache_filename
+        # Create a short, stable hash of the absolute file path to ensure uniqueness
+        path_hash = hashlib.sha256(str(self.input_file.resolve()).encode()).hexdigest()[:8]
+        cache_filename = f"{self.input_file.stem}-{path_hash}.json"
+        
+        if self.cache_dir:
+            print(f"  - Using specified cache directory: {self.cache_dir}")
+            return self.cache_dir / cache_filename
+        
+        print(f"  - Using default cache location (next to input file).")
+        # Fallback to the input file's directory if no cache_dir is provided
+        return self.input_file.parent / f".cache_analysis_{cache_filename}"
 
     def _get_file_hash(self) -> str:
         """Calculate SHA256 hash of the input file.
@@ -118,6 +129,10 @@ class AnalysisCache:
             True if cache saved successfully, False otherwise.
         """
         try:
+            # Ensure the cache directory exists before writing
+            if self.cache_dir:
+                self.cache_dir.mkdir(parents=True, exist_ok=True)
+
             file_hash = self._get_file_hash()
             timestamp = datetime.now().isoformat()
 

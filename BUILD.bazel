@@ -1,8 +1,0 @@
-# Root BUILD file for grantha-data
-
-package(default_visibility = ["//visibility:public"])
-
-exports_files([
-    "requirements.txt",
-    "pyproject.toml",
-])

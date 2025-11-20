@@ -1,0 +1,29 @@
+load("@rules_python//python:defs.bzl", "py_test")
+
+py_test(
+    name = "test_utils",
+    srcs = ["test_utils.py"],
+    imports = ["../.."],
+    deps = [
+        "//tools/lib/grantha_converter:utils",
+    ],
+)
+
+py_test(
+    name = "test_chunk_converter",
+    srcs = ["test_chunk_converter.py"],
+    imports = ["../.."],
+    deps = [
+        "//tools/lib/grantha_converter:chunk_converter",
+        "//tools/lib/gemini_processor:client",
+    ],
+)
+
+py_test(
+    name = "test_validator",
+    srcs = ["test_validator.py"],
+    imports = ["../.."],
+    deps = [
+        "//tools/lib/grantha_converter:validator",
+    ],
+)
