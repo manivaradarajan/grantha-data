@@ -20,10 +20,7 @@ classifiers = [
 # CORRECTED SECTION
 [tool.setuptools]
 packages = ["grantha_converter", "tools", "tools.scripts"]
-package_dir = {
-    "grantha_converter" = "tools/lib/grantha_converter",
-    "tools" = "tools"
-}
+package_dir = {"grantha_converter" = "tools/lib/grantha_converter", "tools" = "tools"}
 
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
