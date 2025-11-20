@@ -84,6 +84,45 @@ def load_ocr_prompt() -> str:
         raise IOError(f"Failed to read prompt file {PROMPT_FILE}: {e}")
 
 
+def strip_markdown_fences(text: str) -> str:
+    """Strip markdown code fences from Gemini response.
+
+    Removes opening and closing code fences like ```xml, ```markdown, ```, etc.
+    that Gemini sometimes wraps responses in.
+
+    Args:
+        text: The text content to clean.
+
+    Returns:
+        Text with markdown code fences removed.
+
+    Example:
+        >>> strip_markdown_fences("```xml\\n<tag>content</tag>\\n```")
+        '<tag>content</tag>'
+        >>> strip_markdown_fences("```\\nplain text\\n```")
+        'plain text'
+        >>> strip_markdown_fences("no fences here")
+        'no fences here'
+    """
+    text = text.strip()
+
+    # Remove opening fence (```xml, ```markdown, ```, etc.)
+    if text.startswith("```"):
+        # Find the end of the first line (the opening fence)
+        first_newline = text.find("\n")
+        if first_newline != -1:
+            text = text[first_newline + 1 :]
+
+    # Remove closing fence
+    if text.endswith("```"):
+        # Find the start of the last line (the closing fence)
+        last_newline = text.rfind("\n```")
+        if last_newline != -1:
+            text = text[:last_newline]
+
+    return text.strip()
+
+
 def retry_with_exponential_backoff(
     func,
     max_attempts: int = MAX_RETRY_ATTEMPTS,
@@ -727,6 +766,8 @@ def process_pdf(
         except Exception as e:
             logger.error(f"Failed to extract text from {chunk_path.name}: {e}")
             return 1
+
+        extracted_text = strip_markdown_fences(extracted_text)
 
         # Preview extracted content
         preview = extracted_text[:200].replace("\n", " ")

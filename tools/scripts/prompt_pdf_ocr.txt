@@ -16,13 +16,13 @@ You are an expert OCR engine specializing in Sanskrit Devanagari script, particu
 2.  **Identify and format each distinct Commentary block:**
     *   Start with: `<commentary id=[Name/Identifier] ref=[MantraNumber]>`.
         *   The identifier (e.g., "आ.भा.", "सु.", "प्र.दी.", or "पदार्थ") must be accurately extracted from the input text. If the commentary starts immediately without an identifier, use `पदार्थ` or the best fitting context identifier (often word-meaning/general explanation).
-        *   Swallow the introductory separator text (e.g., "प्र.दी. -" becomes `<commentary id=प्र.दी. >`).
+        *   Swallow the introductory separator text (e.g., "प्र.दी. -" becomes `<commentary id="प्र.दी." >`).
         *   The `ref` attribute **must** match the `ref` number of the preceding primary mantra/mantra group being commented upon (use `1` if it is a general introduction/word meaning for the first group of the text block).
     *   Follow with the full Devanagari text, **preserving any bold formatting (`**text**`) using Markdown bold syntax.**
     *   End with: `</commentary>`
 
 3.  **Identify and format Editorial Headings (enclosed in square brackets `[ ]` OR parentheses `( )` in the input):**
-    *   Enclose these verbatim with: `<editorial> [text] </editorial>`. (Retain the original brackets/parentheses if present in the text, although often the external structure `<editorial>` is sufficient).
+    *   Enclose these verbatim with: `<editorial> [text] </editorial>` and `<editorial> [text] </editorial>`. (Retain the original brackets/parentheses if present in the text.
 
 4.  **Identify and format Section Headers (major organizational titles, usually centered and larger, and embedded within the text flow):**
     *   Enclose these with: `<section-header>header</section-header>`.
