@@ -17,19 +17,15 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-# CORRECTED SECTION
 [tool.setuptools]
-packages = ["grantha_converter", "tools", "tools.scripts"]
-[tool.setuptools.package-dir]
-grantha_converter = "tools/lib/grantha_converter"
+packages = ["find:"]
 
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
 
 [project.scripts]
-# This script mapping is now correct because both packages will be installed
-grantha-converter = "grantha_converter.cli:main"
-vishvas-markup-to-structured-markdown = "grantha_converter.html_details_cli:main"
-grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
+grantha-converter = "tools.lib.grantha_converter.cli:main"
+vishvas-markup-to-structured-markdown = "tools.lib.grantha_converter.html_details_cli:main"
+grantha-repair-devanagari = "tools.lib.grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "tools.scripts.pdf_ocr:main"
