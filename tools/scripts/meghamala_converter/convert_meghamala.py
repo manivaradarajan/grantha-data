@@ -146,6 +146,11 @@ Examples:
         help="Disable file upload caching (always upload fresh)",
     )
     parser.add_argument(
+        "--clear-upload-cache",
+        action="store_true",
+        help="Clear expired entries (>48h old) from upload cache before starting",
+    )
+    parser.add_argument(
         "--no-cache",
         action="store_true",
         help="Disable analysis caching",
@@ -280,6 +285,17 @@ def run_main(argv: Optional[List[str]] = None):
         else:
             client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
             print(f"📁 Upload Cache File: {UPLOAD_CACHE_FILE}")
+
+            # Clean up expired cache entries if requested
+            if args.clear_upload_cache:
+                from gemini_processor.file_manager import FileUploadCache
+
+                cache = FileUploadCache(UPLOAD_CACHE_FILE)
+                removed_count = cache.cleanup_expired()
+                if removed_count > 0:
+                    print(f"🧹 Cleaned up {removed_count} expired upload cache entries")
+                else:
+                    print("✓ Upload cache is clean (no expired entries)")
 
         prompt_manager = PromptManager(args.prompts_dir)
         converter = MeghamalaConverter(client, prompt_manager, args, models)

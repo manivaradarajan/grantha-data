@@ -5,6 +5,7 @@ from typing import Optional
 
 # Third-party imports
 from google import genai
+from google.genai import types
 from google.genai.types import (
     GenerateContentConfig,
     SafetySetting,
@@ -56,14 +57,29 @@ class GeminiClient(BaseGeminiClient):
         )
 
     def upload_file(
-        self, file_path: Path, use_upload_cache: bool = True, verbose: bool = False
+        self,
+        file_path: Path,
+        use_upload_cache: bool = True,
+        verbose: bool = False,
+        mime_type: str = "text/markdown",
     ):
-        """Uploads a file to the Gemini API, using a cache if available."""
+        """Uploads a file to the Gemini API, using a cache if available.
+
+        Args:
+            file_path: Path to the file to upload.
+            use_upload_cache: Whether to use upload caching.
+            verbose: Enable verbose logging.
+            mime_type: MIME type of the file (e.g., "application/pdf", "text/markdown").
+
+        Returns:
+            Uploaded file object from Gemini API.
+        """
         cache_manager = self.upload_cache_manager if use_upload_cache else None
         return upload_file_with_cache(
             client=self.client,
             file_path=file_path,
             cache_manager=cache_manager,
+            mime_type=mime_type,
             verbose=verbose,
         )
 
@@ -72,14 +88,40 @@ class GeminiClient(BaseGeminiClient):
         model: str,
         prompt: str,
         uploaded_file=None,
+        config: Optional[GenerateContentConfig] = None,
     ):
-        """Calls the Gemini API with the given prompt and optional uploaded file."""
-        contents = [prompt]
+        """Calls the Gemini API with the given prompt and optional uploaded file.
+
+        Args:
+            model: Gemini model name.
+            prompt: Text prompt for the model.
+            uploaded_file: Optional uploaded file object from upload_file().
+            config: Optional GenerateContentConfig. If None, uses default safety settings.
+
+        Returns:
+            Generated text response.
+
+        Raises:
+            ValueError: If response is empty.
+        """
+        # Build Content with proper Part structure
+        parts = [types.Part.from_text(text=prompt)]
         if uploaded_file:
-            contents.append(uploaded_file)
+            # Convert uploaded file to URI-based Part
+            parts.append(types.Part.from_uri(file_uri=uploaded_file.uri, mime_type=uploaded_file.mime_type))
+
+        contents = [
+            types.Content(
+                role="user",
+                parts=parts,
+            ),
+        ]
+
+        # Use provided config or default
+        generation_config = config if config is not None else GEMINI_CONTENT_CONFIG
 
         response = self.client.models.generate_content(
-            model=model, contents=contents, config=GEMINI_CONTENT_CONFIG
+            model=model, contents=contents, config=generation_config
         )
 
         if not response.text:

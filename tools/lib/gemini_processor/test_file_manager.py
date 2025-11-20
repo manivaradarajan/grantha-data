@@ -2,6 +2,7 @@
 
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
 
@@ -12,6 +13,19 @@ from gemini_processor.file_manager import (
     get_file_hash,
     upload_file_with_cache,
 )
+
+
+def _make_timestamp(hours_ago: float) -> str:
+    """Helper to create ISO timestamp for testing.
+
+    Args:
+        hours_ago: How many hours in the past to create timestamp for.
+
+    Returns:
+        ISO format timestamp string.
+    """
+    timestamp = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
+    return timestamp.isoformat()
 
 
 class TestFileUploadCache(unittest.TestCase):
@@ -77,33 +91,45 @@ class TestFileUploadCache(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_get_cached_upload_hit_active_file(self):
-        """Should return file object for valid cached upload."""
+        """Should return file object for valid fresh cached upload."""
         mock_client = Mock()
         mock_file = Mock()
         mock_file.state = "ACTIVE"
         mock_client.files.get.return_value = mock_file
 
-        # Create cache entry
+        # Create cache entry with fresh timestamp (uploaded 1 hour ago)
         file_hash = get_file_hash(self.test_file)
         cache_key = file_hash
-        cache_data = {cache_key: {"name": "files/test123"}}
+        cache_data = {
+            cache_key: {
+                "name": "files/test123",
+                "uploaded_at": _make_timestamp(hours_ago=1),
+            }
+        }
         self.cache._save_cache(cache_data)
 
         result = self.cache.get_cached_upload(mock_client, self.test_file)
         self.assertEqual(result, mock_file)
+        # Should still call API to get file object (fresh files skip validation
+        # but still need to fetch the file object)
         mock_client.files.get.assert_called_once_with(name="files/test123")
 
     def test_get_cached_upload_inactive_file(self):
-        """Should return None if cached file is not active."""
+        """Should return None if cached file is not active (validation window)."""
         mock_client = Mock()
         mock_file = Mock()
         mock_file.state = "PROCESSING"
         mock_client.files.get.return_value = mock_file
 
-        # Create cache entry
+        # Create cache entry in validation window (47 hours old)
         file_hash = get_file_hash(self.test_file)
         cache_key = file_hash
-        cache_data = {cache_key: {"name": "files/test123"}}
+        cache_data = {
+            cache_key: {
+                "name": "files/test123",
+                "uploaded_at": _make_timestamp(hours_ago=47),
+            }
+        }
         self.cache._save_cache(cache_data)
 
         result = self.cache.get_cached_upload(mock_client, self.test_file)
@@ -114,10 +140,15 @@ class TestFileUploadCache(unittest.TestCase):
         mock_client = Mock()
         mock_client.files.get.side_effect = Exception("File not found")
 
-        # Create cache entry
+        # Create cache entry with fresh timestamp
         file_hash = get_file_hash(self.test_file)
         cache_key = file_hash
-        cache_data = {cache_key: {"name": "files/test123"}}
+        cache_data = {
+            cache_key: {
+                "name": "files/test123",
+                "uploaded_at": _make_timestamp(hours_ago=1),
+            }
+        }
         self.cache._save_cache(cache_data)
 
         result = self.cache.get_cached_upload(mock_client, self.test_file)
@@ -159,6 +190,107 @@ class TestFileUploadCache(unittest.TestCase):
         """Should return True for non-existent cache."""
         success = self.cache.clear()
         self.assertTrue(success)
+
+    def test_get_cached_upload_expired_file(self):
+        """Should return None for expired cached upload without API call."""
+        mock_client = Mock()
+
+        # Create cache entry that's expired (50 hours old)
+        file_hash = get_file_hash(self.test_file)
+        cache_data = {
+            file_hash: {
+                "name": "files/test123",
+                "uploaded_at": _make_timestamp(hours_ago=50),
+            }
+        }
+        self.cache._save_cache(cache_data)
+
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
+        self.assertIsNone(result)
+        # Should NOT call API for expired files
+        mock_client.files.get.assert_not_called()
+
+    def test_get_cached_upload_near_expiration_validates(self):
+        """Should validate with API for files near expiration (46-48h old)."""
+        mock_client = Mock()
+        mock_file = Mock()
+        mock_file.state = "ACTIVE"
+        mock_client.files.get.return_value = mock_file
+
+        # Create cache entry in validation window (47 hours old)
+        file_hash = get_file_hash(self.test_file)
+        cache_data = {
+            file_hash: {
+                "name": "files/test123",
+                "uploaded_at": _make_timestamp(hours_ago=47),
+            }
+        }
+        self.cache._save_cache(cache_data)
+
+        result = self.cache.get_cached_upload(mock_client, self.test_file)
+        self.assertEqual(result, mock_file)
+        # SHOULD call API to validate near-expiration files
+        mock_client.files.get.assert_called_once_with(name="files/test123")
+
+    def test_cleanup_expired_removes_old_entries(self):
+        """Should remove expired cache entries."""
+        # Create cache with both fresh and expired entries
+        fresh_hash = "fresh_hash_123"
+        expired_hash = "expired_hash_456"
+
+        cache_data = {
+            fresh_hash: {
+                "name": "files/fresh",
+                "uploaded_at": _make_timestamp(hours_ago=1),  # Fresh
+            },
+            expired_hash: {
+                "name": "files/expired",
+                "uploaded_at": _make_timestamp(hours_ago=50),  # Expired
+            },
+        }
+        self.cache._save_cache(cache_data)
+
+        # Run cleanup
+        removed_count = self.cache.cleanup_expired()
+
+        # Should have removed 1 entry
+        self.assertEqual(removed_count, 1)
+
+        # Verify only fresh entry remains
+        loaded_cache = self.cache._load_cache()
+        self.assertEqual(len(loaded_cache), 1)
+        self.assertIn(fresh_hash, loaded_cache)
+        self.assertNotIn(expired_hash, loaded_cache)
+
+    def test_cleanup_expired_preserves_fresh_entries(self):
+        """Should preserve all fresh cache entries."""
+        # Create cache with only fresh entries
+        cache_data = {
+            "hash1": {
+                "name": "files/test1",
+                "uploaded_at": _make_timestamp(hours_ago=1),
+            },
+            "hash2": {
+                "name": "files/test2",
+                "uploaded_at": _make_timestamp(hours_ago=5),
+            },
+        }
+        self.cache._save_cache(cache_data)
+
+        # Run cleanup
+        removed_count = self.cache.cleanup_expired()
+
+        # Should have removed 0 entries
+        self.assertEqual(removed_count, 0)
+
+        # Verify all entries remain
+        loaded_cache = self.cache._load_cache()
+        self.assertEqual(len(loaded_cache), 2)
+
+    def test_cleanup_expired_no_entries(self):
+        """Should handle cleanup with empty cache."""
+        removed_count = self.cache.cleanup_expired()
+        self.assertEqual(removed_count, 0)
 
 
 class TestUploadFileWithCache(unittest.TestCase):
