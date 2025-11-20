@@ -3,14 +3,14 @@ import tempfile
 from pathlib import Path
 import sys
 import traceback
-from typing import Optional # New import
+from typing import Optional
 
 # Third-party imports
 from colorama import Fore, Style
 import yaml
 
 # Local imports
-from gemini_processor.client import GeminiClient
+from gemini_processor.base_client import BaseGeminiClient
 from gemini_processor.prompt_manager import PromptManager
 from grantha_converter.analyzer import Analyzer
 from grantha_converter.chunk_converter import ChunkConverter
@@ -28,13 +28,11 @@ from grantha_converter.devanagari_repair import repair_file
 class MeghamalaConverter:
     """Orchestrates the conversion of a single Meghamala file."""
 
-    def __init__(self, client: GeminiClient, prompt_manager: PromptManager, args, models: dict, replay_from: Optional[Path] = None, input_file_stem: Optional[str] = None):
+    def __init__(self, client: BaseGeminiClient, prompt_manager: PromptManager, args, models: dict):
         self.client = client
         self.prompt_manager = prompt_manager
         self.args = args
         self.models = models
-        self.replay_from = replay_from
-        self.input_file_stem = input_file_stem
 
     def convert_file(
         self,
@@ -125,8 +123,6 @@ class MeghamalaConverter:
             use_upload_cache=not self.args.no_upload_cache,
             force_reanalysis=self.args.force_analysis,
             analysis_cache_dir=self.args.analysis_cache_dir,
-            replay_from=self.replay_from, # Pass the new argument
-            input_file_stem=input_path.stem, # Pass the new argument
         )
         print(f"📁 Analysis Cache Dir: {self.args.analysis_cache_dir}")
         try:

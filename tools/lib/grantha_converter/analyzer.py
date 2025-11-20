@@ -7,8 +7,7 @@ from typing import Optional
 
 # Local imports
 from gemini_processor.cache_manager import AnalysisCache
-from gemini_processor.client import GeminiClient
-from gemini_processor.replay_client import ReplayGeminiClient # New import
+from gemini_processor.base_client import BaseGeminiClient
 from gemini_processor.prompt_manager import PromptManager
 from gemini_processor.sampler import create_smart_sample
 
@@ -18,7 +17,7 @@ class Analyzer:
 
     def __init__(
         self,
-        client: GeminiClient,
+        client: BaseGeminiClient,
         prompt_manager: PromptManager,
         file_log_dir: Path,
         use_cache: bool = True,
@@ -26,10 +25,8 @@ class Analyzer:
         force_reanalysis: bool = False,
         verbose: bool = False,
         analysis_cache_dir: Optional[Path] = None,
-        replay_from: Optional[Path] = None, # New argument
-        input_file_stem: Optional[str] = None, # New argument
     ):
-        self._original_client = client # Store the original client
+        self.client = client
         self.prompt_manager = prompt_manager
         self.file_log_dir = file_log_dir
         self.use_cache = use_cache
@@ -37,14 +34,6 @@ class Analyzer:
         self.force_reanalysis = force_reanalysis
         self.verbose = verbose
         self.analysis_cache_dir = analysis_cache_dir
-        self.replay_from = replay_from
-        self.input_file_stem = input_file_stem
-
-        # Conditionally set the active client
-        if self.replay_from and self.input_file_stem:
-            self.client = ReplayGeminiClient(self.replay_from, self.input_file_stem)
-        else:
-            self.client = client
 
     def analyze(self, input_file: Path, model: str) -> dict | None:
         """
@@ -131,11 +120,7 @@ class Analyzer:
     def _upload_file_for_analysis(self, input_file: Path):
         """
         Uploads a file to the Gemini API for analysis, using a cache.
-        In replay mode, this is a no-op.
         """
-        if isinstance(self.client, ReplayGeminiClient):
-            return None # No file upload in replay mode
-
         uploaded_file = self.client.upload_file(
             file_path=input_file,
             use_upload_cache=self.use_upload_cache,
@@ -180,7 +165,8 @@ class Analyzer:
                 print(f"  📊 Sample size: {sample_size:,} bytes")
             else:
                 print("📄 Using text embedding for analysis")
-            analysis_prompt = template.format(input_text=analysis_text)
+            # Use .replace() instead of .format() to avoid issues with literal braces in template
+            analysis_prompt = template.replace("{input_text}", analysis_text)
 
         self._save_log_file("analysis/01_analysis_prompt.txt", analysis_prompt)
         return analysis_prompt

@@ -8,7 +8,7 @@ import re
 import yaml
 
 # Local imports
-from gemini_processor.client import GeminiClient
+from gemini_processor.base_client import BaseGeminiClient
 from gemini_processor.prompt_manager import PromptManager
 
 
@@ -17,7 +17,7 @@ class ChunkConverter:
 
     def __init__(
         self,
-        client: GeminiClient,
+        client: BaseGeminiClient,
         prompt_manager: PromptManager,
         file_log_dir: Path,
         use_upload_cache: bool = True,

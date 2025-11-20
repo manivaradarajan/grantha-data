@@ -188,7 +188,7 @@ Examples:
     )
     return parser.parse_args(argv)
 
-def _handle_directory_mode(args, client: GeminiClient, prompt_manager: PromptManager, output_dir: Path, models: dict):
+def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_dir: Path, models: dict):
     """Handles the logic for converting all files in a directory."""
     input_dir = Path(args.directory)
     parts = get_directory_parts(input_dir)
@@ -209,8 +209,6 @@ def _handle_directory_mode(args, client: GeminiClient, prompt_manager: PromptMan
             use_upload_cache=not args.no_upload_cache,
             force_reanalysis=args.force_analysis,
             analysis_cache_dir=args.analysis_cache_dir,
-            replay_from=args.replay_from,
-            input_file_stem=first_file_path.stem,
         )
         analysis = analyzer.analyze(first_file_path, models["analysis"])
         if not analysis:
@@ -230,9 +228,9 @@ def _handle_directory_mode(args, client: GeminiClient, prompt_manager: PromptMan
     failed_parts = []
     for file_path, _ in parts:
         file_log_dir = get_file_log_dir(file_path.stem)
-        # Create a new converter for each file to ensure correct replay client instantiation
+        # Create a new converter for each file
         file_converter = MeghamalaConverter(
-            client=client, # This will be the real client, Analyzer will handle replay
+            client=client,
             prompt_manager=prompt_manager,
             args=args,
             models=models,
@@ -271,15 +269,20 @@ def run_main(argv: Optional[List[str]] = None):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     try:
-        # Always instantiate the real GeminiClient here. The Analyzer will decide
-        # whether to use it or a ReplayGeminiClient based on args.replay_from.
-        client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
-        print(f"📁 Upload Cache File: {UPLOAD_CACHE_FILE}")
-            
+        # Instantiate the appropriate client based on replay_from argument
+        if args.replay_from:
+            input_file_stem = Path(args.input).stem if args.input else None
+            if not input_file_stem:
+                print("❌ Error: --replay-from requires a single input file (-i)", file=sys.stderr)
+                return 1
+            print(f"🔁 Replay mode: using logs from {args.replay_from}")
+            client = ReplayGeminiClient(args.replay_from, input_file_stem)
+        else:
+            client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
+            print(f"📁 Upload Cache File: {UPLOAD_CACHE_FILE}")
+
         prompt_manager = PromptManager(args.prompts_dir)
-        # Pass replay_from and input_file_stem to MeghamalaConverter, which will pass it to Analyzer
-        input_file_stem = Path(args.input).stem if args.input else None
-        converter = MeghamalaConverter(client, prompt_manager, args, models, replay_from=args.replay_from, input_file_stem=input_file_stem)
+        converter = MeghamalaConverter(client, prompt_manager, args, models)
 
         if args.input:
             input_path = Path(args.input)

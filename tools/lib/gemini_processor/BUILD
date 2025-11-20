@@ -14,14 +14,21 @@
 """A client for interacting with the Gemini API."""
 
 load("@grantha_pip//:requirements.bzl", "requirement")
-load("@grantha_pip//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "base_client",
+    srcs = ["base_client.py"],
+    visibility = ["//visibility:public"],
+)
 
 py_library(
     name = "client",
     srcs = ["client.py"],
+    imports = [".."],
     visibility = ["//visibility:public"],
     deps = [
+        "//tools/lib/gemini_processor:base_client",
         "//tools/lib/gemini_processor:file_manager",
         requirement("google-genai"),
     ],
@@ -31,6 +38,9 @@ py_library(
     name = "replay_client",
     srcs = ["replay_client.py"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//tools/lib/gemini_processor:base_client",
+    ],
 )
 
 py_library(

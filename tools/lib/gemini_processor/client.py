@@ -13,6 +13,7 @@ from google.genai.types import (
 )
 
 # Local imports
+from .base_client import BaseGeminiClient
 from .file_manager import (
     FileUploadCache,
     upload_file_with_cache,
@@ -41,7 +42,7 @@ GEMINI_CONTENT_CONFIG = GenerateContentConfig(
 )
 
 
-class GeminiClient:
+class GeminiClient(BaseGeminiClient):
     """A client for interacting with the Gemini API."""
 
     def __init__(self, api_key: Optional[str] = None, upload_cache_file: Optional[Path] = None):

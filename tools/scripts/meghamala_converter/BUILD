@@ -12,13 +12,14 @@ py_binary(
 py_library(
     name = "convert_meghamala_lib",
     srcs = ["convert_meghamala.py"],
+    imports = [".."],
     visibility = ["//visibility:public"],
     deps = [
         "//tools/lib/gemini_processor:client",
-        "//tools/lib/gemini_processor:replay_client",
         "//tools/lib/gemini_processor:prompt_manager",
+        "//tools/lib/gemini_processor:replay_client",
+        "//tools/lib/grantha_converter:analyzer",
         "//tools/lib/grantha_converter:meghamala_converter",
         "//tools/lib/grantha_converter:utils",
-        "//tools/lib/grantha_converter:analyzer",
     ],
 )
