@@ -22,7 +22,6 @@ classifiers = [
 packages = ["grantha_converter", "tools", "tools.scripts"]
 [tool.setuptools.package-dir]
 grantha_converter = "tools/lib/grantha_converter"
-tools = "tools"
 
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
