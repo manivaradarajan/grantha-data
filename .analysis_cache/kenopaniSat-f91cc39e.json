@@ -1,0 +1,74 @@
+{
+  "file_hash": "a9be1dd6e550c07f06c483e521e0ea54bf75997e3585517344da80813d985cf7",
+  "timestamp": "2025-11-19T23:45:31.487823",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "केनोपनिषत्",
+      "grantha_id": "kena-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "khanda"
+    },
+    "structural_analysis": {
+      "starting_id": "1.1",
+      "context_justification": "The primary structural division is the Khanda (section). The text starts with Prathama Khanda (1) and the first unit is Mantra 1. Thus, the coordinate is 1.1.",
+      "suggested_filename": "kena-upanishad-rangaramanuja-01-01",
+      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (01-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Khanda",
+        "scriptNames": {
+          "devanagari": "खण्डः",
+          "roman": "khaṇḍa"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Chunk Optimization",
+        "description": "The entire text is extremely short (under 20,000 characters). It is most efficient to process the entire document as a single chunk, well below the minimum target size.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "All prefatory material (Shanti Path, Preamble), Khandas 1 through 4, and concluding material (Colophon, Uttarashantipatha).",
+          "start_marker": "श्रीः ।।",
+          "end_marker": "केनोपनिषत् समाप्ता",
+          "estimated_character_count": 18500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Khanda",
+      "justification": "The Khanda is the major structural section and provides clear, consistent boundaries for parsing the text segments.",
+      "numbering_capture_strategy": "The Khanda number is expressed as a Sanskrit ordinal word (e.g., प्रथम, द्वितीय) preceding the word खण्डः in the bolded header.",
+      "start_pattern": {
+        "description": "A new Khanda begins with a bolded heading indicating its number.",
+        "examples": [
+          "**प्रथमखण्डः**",
+          "**द्वितीयखण्डः**"
+        ],
+        "regex": "\\*\\*([\\u0900-\\u097F]+)खण्डः\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The end of a Khanda is marked by the phrase 'X समाप्तः' where X is the Khanda name or number, optionally followed by commentary colophon.",
+        "examples": [
+          "प्रथमखण्डः समाप्तः",
+          "तृतीयखण्डःसमाप्तः"
+        ],
+        "regex": "[\\u0900-\\u097F]+खण्डः[\\s]*समाप्तः"
+      },
+      "pre_content_handling": "The initial text block containing the Samaveda Shanti Path, introductory shlokas, and the author's preamble should be treated as 'Prefatory Material' before the start of the First Khanda."
+    }
+  },
+  "version": "1.0"
+}

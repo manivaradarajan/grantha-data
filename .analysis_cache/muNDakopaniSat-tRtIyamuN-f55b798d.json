@@ -1,0 +1,80 @@
+{
+  "file_hash": "07c1f1fc944f0071ef403c00b0ec190914394c94c8f59277683990d6a90d30f3",
+  "timestamp": "2025-11-20T08:24:12.826046",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "मुण्डकोपनिषत्",
+      "grantha_id": "mundaka-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "khanda"
+    },
+    "structural_analysis": {
+      "starting_id": "3.1.1",
+      "context_justification": "The document starts within the Third Mundaka (Tṛtīya) and the First Khanda (Prathama). The first specific unit is Mantra 1. Hence, the starting coordinate is 3.1.1.",
+      "suggested_filename": "mundaka-upanishad-rangaramanuja-03-01-01",
+      "filename_justification": "Combines grantha ID, commentator slug (rangaramanuja), and zero-padded start ID (03-01-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Mundaka",
+        "scriptNames": {
+          "devanagari": "मुण्डकम्",
+          "roman": "muṇḍaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Group by Character Count",
+        "description": "The entire provided excerpt constitutes a single Khanda and is significantly below the minimum target size (50k characters). Therefore, it is processed as a single chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Complete content of Mundaka 3, Khanda 1 (Mantras 1-10).",
+          "start_marker": "**मुण्डकोपनिषत्**",
+          "end_marker": "॥ इति तृतीयमुण्डके प्रथमखण्डप्रकाशिका ।।",
+          "estimated_character_count": 10300
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The document is structured into numbered Mantras (verses), each followed by extensive commentary (bhāṣya), making the Mantra the optimal atomic unit for parsing.",
+      "numbering_capture_strategy": "The Mantra number is captured as a Devanagari numeral (e.g., 1, 2) enclosed by double-pipe punctuation at the end of the verse line (।। १ ।।).",
+      "start_pattern": {
+        "description": "The beginning of a new Mantra unit is defined by the end of the verse text, marked by the double-pipe followed by the Devanagari numeral anchor.",
+        "examples": [
+          "अनश्नन्नन्योऽभिचाकशीति ।। १ ।।",
+          "इति वीतशोकः ।।२।।"
+        ],
+        "regex": "\\s?।। ?([\\u0966-\\u097F]+) ?।।\\n"
+      },
+      "end_pattern": {
+        "description": "The end of a Mantra unit is defined by the start of the next Mantra's number anchor, or by the concluding colophon of the Khanda.",
+        "examples": [
+          "।। इति तृतीयमुण्डके प्रथमखण्डप्रकाशिका ।।"
+        ],
+        "regex": "(?=।। [\\u0966-\\u097F]+ ?।।\\n)|(॥ इति तृतीयमुण्डके प्रथमखण्डप्रकाशिका ।।)"
+      },
+      "pre_content_handling": "The initial document title, Mundaka/Khanda headers, and any opening bracketed thematic titles should be handled as contextual headers preceding Mantra 1."
+    }
+  },
+  "version": "1.0"
+}

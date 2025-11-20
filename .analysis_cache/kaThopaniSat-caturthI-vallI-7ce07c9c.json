@@ -1,0 +1,74 @@
+{
+  "file_hash": "eef8c116d06f1acf480b47e8f28785263a9f7fec4450df1012e19c1389809ad5",
+  "timestamp": "2025-11-19T22:49:33.130528",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कठोपनिषत्",
+      "grantha_id": "katha-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "valli"
+    },
+    "structural_analysis": {
+      "starting_id": "4.1",
+      "context_justification": "The provided text begins within the Fourth Valli ('चतुर्थी वल्ली'), and the first parsed unit is Mantra 1. Thus, the coordinate is 4.1.",
+      "suggested_filename": "katha-upanishad-rangaramanuja-04-01",
+      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (04-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Valli",
+        "scriptNames": {
+          "devanagari": "वल्ली",
+          "roman": "valli"
+        },
+        "children": {
+          "key": "Mantra",
+          "scriptNames": {
+            "devanagari": "मन्त्रः",
+            "roman": "mantra"
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Unit Strategy",
+        "description": "The provided document contains only a single major structural unit (Valli 4), which is significantly smaller than the safety character limit. It is processed as one chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entire Fourth Valli (Mantras 1-15) and accompanying Prakāśikā commentary.",
+          "start_marker": "******चतुर्थी** **वल्ली**",
+          "end_marker": "।। इति चतुर्थीवल्लीप्रकाशिका ।।",
+          "estimated_character_count": 8500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Valli is composed of discrete Mantras, each followed immediately by its corresponding commentary (Prakāśikā). The unit captures the verse and its full explanation.",
+      "numbering_capture_strategy": "Extract the Devanagari numeral enclosed in double pipes '।। N ।।' at the end of the bolded verse text.",
+      "start_pattern": {
+        "description": "A new Mantra starts with bolded verse text, typically ending with the Mantra number enclosed in double pipes '।। N ।।'.",
+        "examples": [
+          "**... अमृतत्वमिच्छन् ।। १ ।।**",
+          "**... न प्रार्थयन्ते ।। २ ।।**"
+        ],
+        "regex": "\\*\\*.*?\\s*\\|\\|\\s*([\\u0966-\\u096f]+)\\s*\\|\\|\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The unit ends immediately before the start of the next Mantra (matching the start pattern) or at the explicit conclusion of the Valli/Commentary section.",
+        "examples": [
+          "**पराच: कामान् अनुयन्ति बाला...",
+          "।। इति चतुर्थीवल्लीप्रकाशिका ।।"
+        ],
+        "regex": "(?=\\s*\\*\\*.*?\\s*\\|\\|\\s*[\\u0966-\\u096f]+\\s*\\|\\|\\*\\*)|(?=।। इति (?:कठोपनिषदि|चतुर्थीवल्लीप्रकाशिका) )"
+      },
+      "pre_content_handling": "Treat the initial Valli heading (******चतुर्थी** **वल्ली**) and the subsequent Commentary heading (**चतुर्थीवल्लीप्रकाशिका**) as contextual headers for the entire chunk, not as separate parseable units."
+    }
+  },
+  "version": "1.0"
+}

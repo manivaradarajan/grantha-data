@@ -1,0 +1,79 @@
+{
+  "file_hash": "f5b993795b1df18eafd2e6c3fb856717c2e2d4f3a727d642be9e97c54607c40c",
+  "timestamp": "2025-11-20T08:20:23.432675",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "मुण्डकोपनिषत्",
+      "grantha_id": "mundaka-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "khanda"
+    },
+    "structural_analysis": {
+      "starting_id": "2.1.1",
+      "context_justification": "The text begins within the 'Dvitiya Muṇḍaka' (2) and the 'Prathama Khaṇḍa' (1). The first parsed unit is Mantra 1. Thus, the start ID is 2.1.1.",
+      "suggested_filename": "mundaka-upanishad-rangaramanuja-02-01-01",
+      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (02-01-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Mundaka",
+        "scriptNames": {
+          "devanagari": "मुण्डकम्",
+          "roman": "muṇḍaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Validated Group by Character Count (Single Chunk)",
+        "description": "Since the provided document is a single, short segment (Khaṇḍa 2.1), it is contained entirely within one optimized chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entirety of the provided text, covering Muṇḍaka 2, Khaṇḍa 1.",
+          "start_marker": "**मुण्डकोपनिषत्**",
+          "end_marker": "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।",
+          "estimated_character_count": 10500
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Khanda",
+      "justification": "The Muṇḍaka is primarily divided into Khaṇḍas, which serve as the major semantic and structural units to be parsed first.",
+      "numbering_capture_strategy": "Extract the Sanskrit ordinal (e.g., 'प्रथमः') found in the bolded Khaṇḍa header and convert it to an integer (e.g., 1).",
+      "start_pattern": {
+        "description": "A new Khaṇḍa begins with a bolded heading indicating its Muṇḍaka and Khaṇḍa number, sometimes preceded by the Grantha title.",
+        "examples": [
+          "**द्वितीयमुण्डके** **प्रथमखण्डः**"
+        ],
+        "regex": "\\*\\*([\\u0900-\\u097F]+)मुण्डके\\*\\* \\*\\*([\\u0900-\\u097F]+)खण्डः\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The end of a Khaṇḍa is marked by a concluding line (colophon) mentioning the end of the section's commentary (Prakāśikā).",
+        "examples": [
+          "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।"
+        ],
+        "regex": "।। इति .*?खण्डप्रकाशिका ।।"
+      },
+      "pre_content_handling": "Ignore the top-level Grantha title (**मुण्डकोपनिषत्**). The line `[अक्षरात् जगत्सृष्टिः]` should be treated as a subtitle or thematic header for the following Khaṇḍa content."
+    }
+  },
+  "version": "1.0"
+}

@@ -1,0 +1,80 @@
+{
+  "file_hash": "ad9fce059cc2dbaf9525c5e9cda27b0356edb886787b90209beb15a9a57ded31",
+  "timestamp": "2025-11-20T08:20:45.104176",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "मुण्डकोपनिषत्",
+      "grantha_id": "mundaka-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "khanda"
+    },
+    "structural_analysis": {
+      "starting_id": "3.2.1",
+      "context_justification": "The document is titled 'तृतीयमुण्डके द्वितीयखण्डः', indicating Muṇḍaka 3, Khaṇḍa 2. The first verse is numbered 1. Therefore, the starting coordinate is 3.2.1.",
+      "suggested_filename": "mundaka-upanishad-rangaramanuja-03-02-01",
+      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (03-02-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Mundaka",
+        "scriptNames": {
+          "devanagari": "मुण्डकम्",
+          "roman": "muṇḍaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Section Agglomeration",
+        "description": "The provided document contains only one short structural section (3.2) which must be processed as a single, unified chunk, well below the safety limit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Entire Third Muṇḍaka, Second Khaṇḍa (Mantra 1 through 11) with commentary, including prefatory content and concluding colophons.",
+          "start_marker": "तृतीयमुण्डके द्वितीयखण्डः",
+          "end_marker": "॥ श्रीरङ्गरामानुजमुनिविरचिता मुण्डकोपनिषत्प्रकाशिका सम्पूर्णा ।।",
+          "estimated_character_count": 8400
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The document is structured as a single Khanda containing numbered Mantras, which should be the core unit of parsing for fine-grained retrieval.",
+      "numbering_capture_strategy": "Extract the numeral (Arabic or Devanagari) enclosed by double vertical bars immediately following the verse text.",
+      "start_pattern": {
+        "description": "A new Mantra unit starts immediately after the verse's identifying numeral marker (e.g., '।। 1 ।।'). The preceding text (before this marker) is the verse body.",
+        "examples": [
+          "।। १ ।।",
+          "।। १० ।।"
+        ],
+        "regex": "\\s*।।\\s*([०-९]+|\\d+)\\s*।."
+      },
+      "end_pattern": {
+        "description": "The end of the entire structural unit (Khanda) is marked by a clear colophon.",
+        "examples": [
+          "।। इति तृतीयमुण्डके द्वितीयः खण्डः ।।"
+        ],
+        "regex": "।। इति.*?खण्डः\\s*।."
+      },
+      "pre_content_handling": "The initial document title lines and descriptive bold heading (e.g., [आत्मतत्त्वज्ञानात् मोक्षप्राप्तिः]) should be captured as 'Prefatory' content before the first Mantra unit begins."
+    }
+  },
+  "version": "1.0"
+}

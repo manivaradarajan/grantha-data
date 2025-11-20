@@ -1,0 +1,82 @@
+{
+  "file_hash": "d8afbee102c2f69c3c6bd01337b979f9b85f27dabe8f33a929a38896f7b09b3e",
+  "timestamp": "2025-11-20T00:26:35.941430",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "बृहदारण्यकोपनिषत्",
+      "grantha_id": "brihadaranyaka-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "brahmana"
+    },
+    "structural_analysis": {
+      "starting_id": "8.1.1",
+      "context_justification": "The text starts within the Eighth Adhyāya (Aṣṭamo Adhyāya) and the First Brāhmaṇa (Prathamam Brāhmaṇam). The first parsed unit is Mantra 1, establishing the starting coordinate as 8.1.1.",
+      "suggested_filename": "brihadaranyaka-upanishad-rangaramanuja-08-01-01",
+      "filename_justification": "Combines grantha ID, commentary author slug, and zero-padded start ID (08-01-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Brahmana",
+          "scriptNames": {
+            "devanagari": "ब्राह्मणम्",
+            "roman": "brāhmaṇa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Comprehensive Chunk",
+        "description": "The total estimated length of the text is significantly below the safety limit, allowing the entire document (all five Brāhmaṇas of the Eighth Adhyaya) to be processed efficiently as a single unit.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entire text, covering Adhyāya 8, Brāhmaṇas 1 through 5, including introductory and concluding verses and colophons.",
+          "start_marker": "**बृहदारण्यकोपनिषत्**",
+          "end_marker": "पूर्णस्य पूर्णमादाय पूर्णमेवावशिष्यते ।।",
+          "estimated_character_count": 55000
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Brahmana",
+      "justification": "The Brāhmaṇa represents the primary semantic division within the Adhyāya and provides natural boundaries for structured data output.",
+      "numbering_capture_strategy": "Extract the Sanskrit ordinal (e.g., 'प्रथमं', 'द्वितीयं', 'पञ्चमं') found within the Brāhmaṇa heading.",
+      "start_pattern": {
+        "description": "A new Brāhmaṇa begins with a heading that includes its ordinal number and the word 'ब्राह्मणम्'. Formatting varies (bold, separators).",
+        "examples": [
+          "**प्रथमं ब्राह्मणम्**",
+          "।। द्वितीयं ब्राह्मणम् ।।",
+          "तृतीयं ब्राह्मणम्"
+        ],
+        "regex": "(?:।। ?)?\\*\\*?([\\u0900-\\u097F]+)[– ]ब्राह्मण(म्|\\*\\*)?"
+      },
+      "end_pattern": {
+        "description": "The end of a Brāhmaṇa is consistently marked by the commentary's concluding line, specifying the Adhyāya and Brāhmaṇa number.",
+        "examples": [
+          "।। इति अष्टमाध्याये प्रथमब्राह्मण प्रकाशिका ।।",
+          "।। अष्टमाध्याये पञ्चमं ब्राह्मणम् ।।"
+        ],
+        "regex": "।। इति अष्टमाध्याये .*? (?:ब्राहाणम्|ब्राह्मण प्रकाशिका) ?।{2}"
+      },
+      "pre_content_handling": "Treat the initial text (Grantha title, Adhyāya heading, and topic in brackets) preceding the first identified Brāhmaṇa heading as prefatory material belonging to the first Brāhmaṇa (8.1)."
+    }
+  },
+  "version": "1.0"
+}

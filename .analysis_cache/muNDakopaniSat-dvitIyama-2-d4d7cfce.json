@@ -1,0 +1,81 @@
+{
+  "file_hash": "14518adb80712cf9824d6b5449f78c57edba5322f22916207201aa785ff15304",
+  "timestamp": "2025-11-20T08:17:49.241748",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "मुण्डकोपनिषत्",
+      "grantha_id": "mundaka-upanishad",
+      "commentary_id": "rangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "mundaka"
+    },
+    "structural_analysis": {
+      "starting_id": "2.2.1",
+      "context_justification": "The document explicitly starts within the Second Muṇḍaka (द्वितीयमुण्डके) and the Second Khaṇḍa (द्वितीयखण्डः), beginning with the first verse (Mantra 1). Thus, the starting ID is 2.2.1.",
+      "suggested_filename": "mundaka-upanishad-rangaramanuja-02-02-01",
+      "filename_justification": "Combines the grantha ID, commentary author slug (rangaramanuja), and the zero-padded starting coordinate (02-02-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Mundaka",
+        "scriptNames": {
+          "devanagari": "मुण्डकम्",
+          "roman": "muṇḍaka"
+        },
+        "children": {
+          "key": "Khanda",
+          "scriptNames": {
+            "devanagari": "खण्डः",
+            "roman": "khaṇḍa"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Section Chunking",
+        "description": "The provided text contains only one structural unit (Mundaka 2, Khanda 2). Since the total character count is very small, it is processed as a single chunk.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "Contains the entirety of Mundaka 2, Khanda 2 (Mantras 1-12) with commentary.",
+          "start_marker": "**मुण्डकोपनिषत्**",
+          "end_marker": "।। इति द्वितीयमुण्डके द्वितीयखण्डप्रकाशिका ।।",
+          "estimated_character_count": 7592
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Khanda is too large for granular semantic parsing. The content should be parsed at the level of the individual Mantra block (Mantra + associated commentary).",
+      "numbering_capture_strategy": "Extract the Devanagari numeral found at the very end of the bolded Mantra text line, enclosed by double vertical bars (e.g., || 1 ||).",
+      "start_pattern": {
+        "description": "The start of a unit is the bolded primary verse text, which ends with the Devanagari numeral enclosed in double pipes.",
+        "examples": [
+          "**आवि: संनिहितं गुहाचरं नाम महत् पदम्... प्रजानाम् ।।१।।**",
+          "**यदर्चिमत् यदणुभ्योऽणु यस्मिन् लोका – निहिता... सोम्य विद्धि ॥२॥**"
+        ],
+        "regex": "\\*\\*[\\s\\S]*?॥([\\d]+)॥\\*\\*"
+      },
+      "end_pattern": {
+        "description": "The commentary for a Mantra ends immediately before the start of the next bolded Mantra or the final colophon of the Khaṇḍa/Prakāśikā.",
+        "examples": [
+          "**यदर्चिमत् यदणुभ्योऽणु...",
+          "।। इति द्वितीयमुण्डके द्वितीयखण्डप्रकाशिका ।।"
+        ],
+        "regex": "(?=\\s*\\*\\*)|(?=।। इति द्वितीयमुण्डके द्वितीयखण्डप्रकाशिका ।।)"
+      },
+      "pre_content_handling": "The initial document title, Mundaka and Khanda headers, and section headings (e.g., [सर्वाधारभूतं ब्रह्म]) should be treated as 'Prefatory' content for the chunk, existing before Mantra 1."
+    }
+  },
+  "version": "1.0"
+}

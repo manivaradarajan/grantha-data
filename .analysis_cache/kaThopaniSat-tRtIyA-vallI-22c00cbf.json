@@ -1,0 +1,81 @@
+{
+  "file_hash": "4a4f95419a756262d05d19a90ce8d9fa6d3664db4cd377cbc73985e6a214e057",
+  "timestamp": "2025-11-19T22:46:15.620168",
+  "analysis": {
+    "metadata": {
+      "canonical_title": "कठोपनिषत्",
+      "grantha_id": "katha-upanishad",
+      "commentary_id": "srirangaramanuja-muni-prakashika",
+      "commentary_title": "प्रकाशिका",
+      "commentator": "श्रीरङ्गरामानुजमुनिः",
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
+      "structure_type": "valli"
+    },
+    "structural_analysis": {
+      "starting_id": "1.3.1",
+      "context_justification": "The text corresponds to the Tṛtīyā Valli of the First Adhyaya of the Kathopanishad (based on standard organization, though Adhyaya is implicit). The first parsed unit is Mantra 1. Thus, start ID is 1.3.1.",
+      "suggested_filename": "katha-upanishad-srirangaramanuja-01-03-01",
+      "filename_justification": "Combines grantha ID, commentary author, and zero-padded start ID (01-03-01) for unique, sortable naming.",
+      "structure_levels": {
+        "key": "Adhyaya",
+        "scriptNames": {
+          "devanagari": "अध्यायः",
+          "roman": "adhyāya"
+        },
+        "children": {
+          "key": "Valli",
+          "scriptNames": {
+            "devanagari": "वल्ली",
+            "roman": "vallī"
+          },
+          "children": {
+            "key": "Mantra",
+            "scriptNames": {
+              "devanagari": "मन्त्रः",
+              "roman": "mantra"
+            }
+          }
+        }
+      }
+    },
+    "chunking_strategy": {
+      "proposed_strategy": {
+        "name": "Single Unit Chunking (Under Safety Limit)",
+        "description": "Since the provided text segment (Tritiya Valli and commentary) is extremely short (~10,900 characters), it is grouped into a single chunk, adhering to the principle of minimizing API calls.",
+        "safety_character_limit": 125000
+      },
+      "execution_plan": [
+        {
+          "chunk_id": 1,
+          "description": "The entire content of the Tritiya Valli and its Prakāśikā commentary.",
+          "start_marker": "******तृतीया****वल्ली",
+          "end_marker": "।। इति तृतीयवल्ली प्रकाशिका ।।",
+          "estimated_character_count": 10900
+        }
+      ]
+    },
+    "parsing_instructions": {
+      "recommended_unit": "Mantra",
+      "justification": "The Valli is the structural boundary of the chunk; Mantra is the smallest logical unit (verse plus associated commentary) to be parsed internally.",
+      "numbering_capture_strategy": "Extract the Devanagari numeral enclosed by double delimiters (।। N ।।) immediately following the bolded verse text.",
+      "start_pattern": {
+        "description": "A new Mantra unit starts with the bolded verse text, followed by the numerical delimiter. The regex captures the full bolded line(s) and the associated number.",
+        "examples": [
+          "**ऋतं पिबन्तौ सुकृतस्य लोके...**\\n\\n**...त्रिणाचिकेताः ।। १ ।।**",
+          "**यः सेतुरीजानानामक्षरं ब्रह्म यत् परम् ।**\\n\\n**अभयं तितीर्षतां पारं नाचिकेतं शकेमहि ।।२।।**"
+        ],
+        "regex": "(\\*\\*[^\\*]+\\.)[\\n\\r]*(\\*\\*\\s*।।\\s*([०-९]+)\\s*।।)"
+      },
+      "end_pattern": {
+        "description": "The unit ends immediately before the start pattern of the next Mantra, or at the concluding colophon of the Valli.",
+        "examples": [
+          "(Lookahead for next Mantra start)",
+          "।। इति तृतीयवल्ली प्रकाशिका ।।"
+        ],
+        "regex": "(?=\\s*\\*\\*[^\\*]+\\.\\*\\*\\s*।।\\s*[०-९]+\\s*।।)|(?=।। इति तृतीयवल्ली प्रकाशिका ।।)"
+      },
+      "pre_content_handling": "The initial Valli heading (******तृतीया****वल्ली) and the Valli commentary title (**तृतीयावल्लीप्रकाशिका**) should be treated as structural metadata for the Valli, and not included in the first Mantra unit's content."
+    }
+  },
+  "version": "1.0"
+}
