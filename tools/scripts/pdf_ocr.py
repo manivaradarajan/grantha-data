@@ -8,6 +8,8 @@ Features:
 - Intelligent PDF chunking with caching to avoid redundant splitting
 - Time-aware file upload caching to minimize API calls
 - Automatic cache cleanup for expired entries
+- Retry logic with exponential backoff for handling transient API errors
+- Automatic merging of chunk files into final combined output
 - Structured output with Mantra and Commentary sections
 
 Typical usage:
@@ -15,9 +17,11 @@ Typical usage:
 """
 
 import argparse
+from datetime import datetime
 import logging
 from pathlib import Path
 import sys
+import time
 from typing import Optional
 
 import pypdf
@@ -43,50 +47,107 @@ UPLOAD_CACHE_FILE: Path = Path.cwd() / ".file_upload_cache.json"
 # Gemini config for PDF OCR - disables thinking mode for faster processing
 PDF_OCR_CONFIG = GenerateContentConfig(thinking_config={"thinking_budget": 0})
 
-# OCR instruction prompt for Gemini
-OCR_INSTRUCTION_PROMPT: str = """
-Your job is to process a Devanagari PDF document (likely a commentary on a scripture) and output a perfectly accurate OCR transcription formatted using specific XML tags.
+# Retry configuration for API calls
+MAX_RETRY_ATTEMPTS: int = 3
+INITIAL_RETRY_DELAY_SECONDS: float = 2.0
+RETRY_BACKOFF_MULTIPLIER: float = 2.0
 
-The formatting rules are:
-1.  **Mantras (original verses):** `<mantra ref=[Number]> ... </mantra>`. Preserve bold text.
-2.  **Commentary:** `<commentary id=[Name/Identifier]> ... </commentary>`. Preserve bold text. Swallow the introductory identifier text (e.g., "प्र.दी. -" becomes `<commentary id=प्र.दी. >`).
-3.  **Editorial Headings (in brackets):** `<editorial> [text] </editorial>`.
-4.  **Section Headers:** `<section-header>header</section-header>`.
-5.  **General Rules:**
-    *   Strictly Devanagari script.
-    *   Maintain original sequential order.
-    *   Handle page breaks seamlessly.
-    *   Do not transcribe page headers/footers (e.g., "प्रथमः खण्डः" from the margin/header must be omitted).
-    *   Use '[[?]]' for uncertain transcriptions (though aiming for perfection).
+# Path to OCR instruction prompt file
+SCRIPT_DIR: Path = Path(__file__).parent
+PROMPT_FILE: Path = SCRIPT_DIR / "prompt_pdf_ocr.txt"
 
-**Optimized and Generalized Prompt:**
 
-You are an expert OCR engine specializing in Sanskrit Devanagari script, particularly for Hindu scriptures and commentaries. Your task is to produce an absolutely accurate transcription of the provided Devanagari input, adhering strictly to the output formatting rules below. You must not introduce any textual errors, innovations, or interpretations.
+def load_ocr_prompt() -> str:
+    """Load OCR instruction prompt from file.
 
-**Output Formatting Rules (Inviolable):**
+    Returns:
+        The OCR instruction prompt text.
 
-1.  **Identify and format each original Mantra (verse):**
-    *   Start with: `<mantra ref=[Number]>`
-    *   Follow with the full Devanagari text, preserving any bold formatting (`**text**`).
-    *   End with: `</mantra>`
+    Raises:
+        FileNotFoundError: If prompt file doesn't exist.
+        IOError: If prompt file cannot be read.
 
-2.  **Identify and format each distinct Commentary block:**
-    *   Start with: `<commentary id=[Name/Identifier]>`. The identifier (e.g., "आ.भा.", "सु.", "प्र.दी.") must be accurately extracted from the input. Swallow the introductory separator text (e.g., "प्र.दी. -" becomes `<commentary id=प्र.दी. >`).
-    *   Follow with the full Devanagari text, preserving any bold formatting (`**text**`).
-    *   End with: `</commentary>`
+    Example:
+        >>> prompt = load_ocr_prompt()
+        >>> "Sanskrit Devanagari" in prompt
+        True
+    """
+    if not PROMPT_FILE.exists():
+        raise FileNotFoundError(
+            f"Prompt file not found: {PROMPT_FILE}. "
+            "Please ensure 'prompt_pdf_ocr.txt' exists in the script directory."
+        )
 
-3.  **Identify and format Editorial Headings (enclosed in brackets `[ ]` in the input):**
-    *   Enclose these verbatim with: `<editorial> [text] </editorial>`.
+    try:
+        return PROMPT_FILE.read_text(encoding="utf-8")
+    except IOError as e:
+        raise IOError(f"Failed to read prompt file {PROMPT_FILE}: {e}")
 
-4.  **Identify and format Section Headers (major organizational titles):**
-    *   Enclose these with: `<section-header>header</section-header>`.
 
-5.  **Exclusions and Accuracy:**
-    *   Do not transcribe running page headers (e.g., "प्रथमः खण्डः") or page footers.
-    *   Ensure all transcribed text is in Devanagari script.
-    *   Maintain the exact sequential order of the original document.
-    *   If uncertain about any character, insert '[[?]]' immediately after the ambiguous character.
-"""
+def retry_with_exponential_backoff(
+    func,
+    max_attempts: int = MAX_RETRY_ATTEMPTS,
+    initial_delay: float = INITIAL_RETRY_DELAY_SECONDS,
+    backoff_multiplier: float = RETRY_BACKOFF_MULTIPLIER,
+):
+    """Retry a function with exponential backoff on failure.
+
+    Args:
+        func: Callable function to retry.
+        max_attempts: Maximum number of retry attempts. Defaults to MAX_RETRY_ATTEMPTS.
+        initial_delay: Initial delay in seconds before first retry. Defaults to
+            INITIAL_RETRY_DELAY_SECONDS.
+        backoff_multiplier: Multiplier for exponential backoff. Each retry waits
+            delay * (backoff_multiplier ** attempt). Defaults to RETRY_BACKOFF_MULTIPLIER.
+
+    Returns:
+        Result from the function if successful.
+
+    Raises:
+        The last exception encountered if all retry attempts fail.
+
+    Example:
+        >>> result = retry_with_exponential_backoff(
+        ...     lambda: client.generate_content(model, prompt),
+        ...     max_attempts=3
+        ... )
+    """
+    last_exception = None
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return func()
+        except Exception as e:
+            last_exception = e
+            error_msg = str(e)
+
+            # Check if it's a 500 error (retryable)
+            is_500_error = "500" in error_msg or "INTERNAL" in error_msg
+
+            if attempt < max_attempts and is_500_error:
+                delay = initial_delay * (backoff_multiplier ** (attempt - 1))
+                logger.warning(
+                    f"Attempt {attempt}/{max_attempts} failed with 500 error. "
+                    f"Retrying in {delay:.1f}s..."
+                )
+                time.sleep(delay)
+            elif attempt < max_attempts:
+                # Non-500 error, but still retry
+                delay = initial_delay * (backoff_multiplier ** (attempt - 1))
+                logger.warning(
+                    f"Attempt {attempt}/{max_attempts} failed: {error_msg}. "
+                    f"Retrying in {delay:.1f}s..."
+                )
+                time.sleep(delay)
+            else:
+                # Final attempt failed
+                logger.error(
+                    f"All {max_attempts} attempts failed. Last error: {error_msg}"
+                )
+                raise last_exception
+
+    # Should never reach here, but satisfy type checker
+    raise last_exception
 
 
 class PdfChunkManager:
@@ -364,6 +425,69 @@ def save_output(content: str, output_path: Path) -> None:
         raise
 
 
+def merge_chunk_files(
+    input_pdf: Path, output_dir: Path, num_chunks: int
+) -> Optional[Path]:
+    """Merge all chunk output files into a single final markdown file.
+
+    Reads all chunk files in order and concatenates them with double newline
+    separators between chunks. Creates a merged file named <pdf_name>_merged.md.
+
+    Args:
+        input_pdf: Path to the original PDF file (used for naming merged output).
+        output_dir: Directory containing chunk output files.
+        num_chunks: Number of chunks to merge.
+
+    Returns:
+        Path to the merged output file if successful, None if merge failed.
+
+    Raises:
+        IOError: If chunk files cannot be read or merged file cannot be written.
+
+    Example:
+        >>> merged_path = merge_chunk_files(
+        ...     Path("document.pdf"),
+        ...     Path("ocr_output"),
+        ...     num_chunks=5
+        ... )
+        INFO - Merging chunk files into final output...
+        INFO - ✓ Merged 5 chunks into: document_merged.md
+    """
+    logger.info(f"\n{'='*60}")
+    logger.info("Merging chunk files into final output...")
+    logger.info(f"{'='*60}")
+
+    # Collect all chunk files in order
+    chunk_files = []
+    for chunk_index in range(1, num_chunks + 1):
+        chunk_filename = f"{input_pdf.stem}_chunk_{chunk_index:03d}.md"
+        chunk_path = output_dir / chunk_filename
+        if not chunk_path.exists():
+            logger.error(f"Missing chunk file: {chunk_path}")
+            return None
+        chunk_files.append(chunk_path)
+
+    # Merge all chunks into single output
+    merged_content = []
+    for chunk_index, chunk_path in enumerate(chunk_files, start=1):
+        logger.info(f"  Reading chunk {chunk_index}/{num_chunks}: {chunk_path.name}")
+        content = chunk_path.read_text(encoding="utf-8")
+        merged_content.append(content)
+
+    # Join with double newline separator between chunks
+    final_content = "\n\n".join(merged_content)
+
+    # Save merged output
+    merged_filename = f"{input_pdf.stem}_merged.md"
+    merged_path = output_dir / merged_filename
+    merged_path.write_text(final_content, encoding="utf-8")
+
+    logger.info(f"✓ Merged {num_chunks} chunks into: {merged_path.name}")
+    logger.info(f"  Total size: {len(final_content):,} characters")
+
+    return merged_path
+
+
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments.
 
@@ -525,6 +649,20 @@ def process_pdf(
         logger.error(f"Input PDF not found: {input_pdf}")
         return 1
 
+    # Create timestamped subdirectory for this run
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamped_output_dir = output_dir / f"{input_pdf.stem}_{timestamp}"
+    timestamped_output_dir.mkdir(parents=True, exist_ok=True)
+    logger.info(f"📂 Output directory: {timestamped_output_dir}")
+
+    # Load OCR instruction prompt from file
+    try:
+        ocr_prompt = load_ocr_prompt()
+        logger.info(f"📄 Loaded OCR prompt from: {PROMPT_FILE.name}")
+    except (FileNotFoundError, IOError) as e:
+        logger.error(str(e))
+        return 1
+
     # Setup Gemini client with upload caching
     client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
     logger.info(f"📁 Upload cache: {UPLOAD_CACHE_FILE}")
@@ -576,13 +714,15 @@ def process_pdf(
             logger.error(f"Failed to upload chunk {chunk_path.name}")
             return 1
 
-        # Extract text using Gemini OCR (with thinking_budget=0 for faster processing)
+        # Extract text using Gemini OCR with retry logic
         try:
-            extracted_text = client.generate_content(
-                model=model,
-                prompt=OCR_INSTRUCTION_PROMPT,
-                uploaded_file=uploaded_file,
-                config=PDF_OCR_CONFIG,
+            extracted_text = retry_with_exponential_backoff(
+                lambda: client.generate_content(
+                    model=model,
+                    prompt=ocr_prompt,
+                    uploaded_file=uploaded_file,
+                    config=PDF_OCR_CONFIG,
+                )
             )
         except Exception as e:
             logger.error(f"Failed to extract text from {chunk_path.name}: {e}")
@@ -594,13 +734,22 @@ def process_pdf(
 
         # Save output with descriptive filename
         output_filename = f"{input_pdf.stem}_chunk_{chunk_index:03d}.md"
-        output_path = output_dir / output_filename
+        output_path = timestamped_output_dir / output_filename
         save_output(extracted_text, output_path)
 
     logger.info(f"\n{'='*60}")
     logger.info(f"✅ Successfully processed all {len(chunk_files)} chunks")
-    logger.info(f"📁 Output directory: {output_dir.absolute()}")
+    logger.info(f"📁 Output directory: {timestamped_output_dir.absolute()}")
     logger.info(f"{'='*60}")
+
+    # Merge all chunks into final output file
+    merged_path = merge_chunk_files(input_pdf, timestamped_output_dir, len(chunk_files))
+    if merged_path:
+        logger.info(f"\n{'='*60}")
+        logger.info(f"📄 Final merged output: {merged_path.absolute()}")
+        logger.info(f"{'='*60}")
+    else:
+        logger.warning("⚠️  Failed to merge chunk files")
 
     return 0
 
