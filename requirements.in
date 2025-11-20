@@ -2,6 +2,7 @@ aksharamukha
 colorama
 google-genai
 jsonschema
+pypdf
 pytest
 pyyaml
 

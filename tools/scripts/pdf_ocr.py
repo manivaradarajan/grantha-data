@@ -25,10 +25,10 @@ import time
 from typing import Optional
 
 import pypdf
-from google.genai.types import GenerateContentConfig
+from google import genai
 
 from gemini_processor.client import GeminiClient
-from gemini_processor.file_manager import FileUploadCache, get_file_hash
+from gemini_processor.file_manager import get_file_hash
 
 # Configure logging
 logging.basicConfig(
@@ -39,13 +39,16 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Default configuration
-DEFAULT_MODEL: str = "gemini-flash-latest"
+DEFAULT_MODEL: str = "gemini-2.5-pro"
 DEFAULT_PAGES_PER_CHUNK: int = 10
 DEFAULT_OUTPUT_DIR: Path = Path("ocr_output")
 UPLOAD_CACHE_FILE: Path = Path.cwd() / ".file_upload_cache.json"
 
 # Gemini config for PDF OCR - disables thinking mode for faster processing
-PDF_OCR_CONFIG = GenerateContentConfig(thinking_config={"thinking_budget": 0})
+#PDF_OCR_CONFIG = GenerateContentConfig(thinking_config={"thinking_budget": 0})
+PDF_OCR_CONFIG = genai.types.GenerateContentConfig(
+    media_resolution='MEDIA_RESOLUTION_MEDIUM',
+)
 
 # Retry configuration for API calls
 MAX_RETRY_ATTEMPTS: int = 3
@@ -294,6 +297,7 @@ class PdfChunkManager:
 
         pdf_reader = pypdf.PdfReader(self.pdf_path)
         total_pages = len(pdf_reader.pages)
+        print("XXX 1: ", num_pages)
 
         # Calculate actual page range to process
         start_idx = start_page - 1  # Convert to 0-indexed
@@ -304,6 +308,8 @@ class PdfChunkManager:
             end_idx = min(start_idx + num_pages, total_pages)
             actual_num_pages = end_idx - start_idx
 
+        print("XXX 2")
+
         if start_idx < 0 or start_idx >= total_pages:
             raise ValueError(
                 f"Invalid start_page {start_page}. PDF has {total_pages} pages."
@@ -311,7 +317,8 @@ class PdfChunkManager:
 
         chunk_paths = []
 
-        logger.info(
+        #logger.info(
+        print(
             f"Splitting pages {start_page}-{start_page + actual_num_pages - 1} "
             f"from '{self.pdf_path.name}' into chunks of {self.pages_per_chunk} pages..."
         )
@@ -595,8 +602,8 @@ Examples:
     parser.add_argument(
         "--num-pages",
         type=int,
-        default=10,
-        help="Number of pages to process from start-page (default: 10)",
+        default=None,
+        help="Number of pages to process from start-page (default: None [all])",
     )
 
     parser.add_argument(
@@ -708,8 +715,7 @@ def process_pdf(
 
     # Clean up expired cache entries if requested
     if clear_upload_cache:
-        cache = FileUploadCache(UPLOAD_CACHE_FILE)
-        removed_count = cache.cleanup_expired()
+        removed_count = client.cleanup_cache_expired()
         if removed_count > 0:
             logger.info(f"🧹 Cleaned up {removed_count} expired upload cache entries")
         else:
@@ -760,7 +766,7 @@ def process_pdf(
                     model=model,
                     prompt=ocr_prompt,
                     uploaded_file=uploaded_file,
-                    config=PDF_OCR_CONFIG,
+                    config=PDF_OCR_CONFIG
                 )
             )
         except Exception as e:

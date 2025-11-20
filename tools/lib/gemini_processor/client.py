@@ -128,3 +128,17 @@ class GeminiClient(BaseGeminiClient):
             raise ValueError("Empty response from Gemini API")
 
         return response.text
+
+    def cleanup_cache_expired(self, ttl_seconds: int = 48 * 60 * 60) -> int:
+        """Cleans up expired entries from the upload cache.
+
+        Args:
+            ttl_seconds: The time-to-live for cache entries in seconds.
+                         Defaults to 48 hours.
+
+        Returns:
+            The number of expired entries removed from the cache.
+        """
+        if self.upload_cache_manager:
+            return self.upload_cache_manager.cleanup_expired(ttl_seconds)
+        return 0

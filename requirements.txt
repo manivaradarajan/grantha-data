@@ -84,6 +84,8 @@ pygments==2.19.2
     # via pytest
 pykakasi==2.3.0
     # via aksharamukha
+pypdf==6.3.0
+    # via -r requirements.in
 pytest==9.0.1
     # via -r requirements.in
 pyyaml==6.0.3

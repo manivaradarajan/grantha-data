@@ -1,3 +1,5 @@
+# In pyproject.toml
+
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
@@ -5,9 +7,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "grantha_converter"
 version = "0.0.1"
-authors = [
-  { name="Your Name", email="you@example.com" },
-]
+# ... (rest of your project section is fine) ...
 description = "A tool to convert Grantha data"
 readme = "tools/lib/grantha_converter/README.md"
 requires-python = ">=3.7"
@@ -17,14 +17,21 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[tool.setuptools.packages.find]
-where = ["tools/lib"]
+# CORRECTED SECTION
+[tool.setuptools]
+packages = ["grantha_converter", "tools", "tools.scripts"]
+package_dir = {
+    "grantha_converter" = "tools/lib/grantha_converter",
+    "tools" = "tools"
+}
 
 [project.urls]
 "Homepage" = "https://github.com/pypa/sampleproject"
 "Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
 
 [project.scripts]
+# This script mapping is now correct because both packages will be installed
 grantha-converter = "grantha_converter.cli:main"
 vishvas-markup-to-structured-markdown = "grantha_converter.html_details_cli:main"
 grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
+pdf-ocr = "tools.scripts.pdf_ocr:main"
