@@ -6,9 +6,13 @@ build-backend = "setuptools.build_meta"
 name = "grantha-data-tools"
 version = "0.0.1"
 description = "A tool to convert Grantha data"
-# Recommended: Create a README.md in the root directory and set this to "README.md"
 readme = "tools/lib/grantha_converter/README.md"
 requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 dependencies = [
     "aksharamukha",
     "colorama",
@@ -20,13 +24,6 @@ dependencies = [
     "unicodedata2"
 ]
 
-[tool.setuptools]
-package-dir = {"" = "tools"}
-
-# Include all non-Python files that are part of your package
-[tool.setuptools.package-data]
-"grantha_data_tools" = ["**/*.txt", "**/*.json", "**/*.md", "**/BUILD", "**/*.sh"]
-
 [project.urls]
 "Homepage" = "https://github.com/manivaradarajan/grantha-data"
 "Bug Tracker" = "https://github.com/manivaradarajan/grantha-data/issues"
@@ -36,4 +33,3 @@ grantha-converter = "grantha_converter.cli:main"
 grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "scripts.pdf_ocr:main"
 convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
-
