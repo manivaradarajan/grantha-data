@@ -9,10 +9,15 @@ description = "A tool to convert Grantha data"
 # Recommended: Create a README.md in the root directory and set this to "README.md"
 readme = "tools/lib/grantha_converter/README.md"
 requires-python = ">=3.7"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+dependencies = [
+    "aksharamukha",
+    "colorama",
+    "fonttools[unicode]",
+    "google-genai",
+    "jsonschema",
+    "pypdf",
+    "pyyaml",
+    "unicodedata2"
 ]
 
 [tool.setuptools]
@@ -32,13 +37,3 @@ grantha-repair-devanagari = "lib.grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "scripts.pdf_ocr:main"
 convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
 
-dependencies = [
-    "aksharamukha",
-    "colorama",
-    "fonttools[unicode]",
-    "google-genai",
-    "jsonschema",
-    "pypdf",
-    "pyyaml",
-    "unicodedata2"
-]
