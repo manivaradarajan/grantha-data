@@ -60,32 +60,6 @@ SCRIPT_DIR: Path = Path(__file__).parent
 PROMPT_FILE: Path = SCRIPT_DIR / "prompt_pdf_ocr.txt"
 
 
-def load_ocr_prompt() -> str:
-    """Load OCR instruction prompt from file.
-
-    Returns:
-        The OCR instruction prompt text.
-
-    Raises:
-        FileNotFoundError: If prompt file doesn't exist.
-        IOError: If prompt file cannot be read.
-
-    Example:
-        >>> prompt = load_ocr_prompt()
-        >>> "Sanskrit Devanagari" in prompt
-        True
-    """
-    if not PROMPT_FILE.exists():
-        raise FileNotFoundError(
-            f"Prompt file not found: {PROMPT_FILE}. "
-            "Please ensure 'prompt_pdf_ocr.txt' exists in the script directory."
-        )
-
-    try:
-        return PROMPT_FILE.read_text(encoding="utf-8")
-    except IOError as e:
-        raise IOError(f"Failed to read prompt file {PROMPT_FILE}: {e}")
-
 
 def strip_markdown_fences(text: str) -> str:
     """Strip markdown code fences from Gemini response.
@@ -556,6 +530,12 @@ Examples:
   # Custom chunk size and output directory
   %(prog)s document.pdf --pages-per-chunk 15 --output-dir results/
 
+  # Custom prompt from a file
+  %(prog)s document.pdf --prompt-file my_prompt.txt
+
+  # Custom prompt as a string
+  %(prog)s document.pdf --prompt "Extract all text."
+
   # Process only first 3 chunks for testing
   %(prog)s document.pdf --max-chunks 3
 
@@ -577,6 +557,18 @@ Examples:
         "input_pdf",
         type=Path,
         help="Path to input PDF file",
+    )
+
+    prompt_group = parser.add_mutually_exclusive_group()
+    prompt_group.add_argument(
+        "--prompt",
+        type=str,
+        help="Prompt to use for OCR",
+    )
+    prompt_group.add_argument(
+        "--prompt-file",
+        type=Path,
+        help="Path to a file containing the prompt for OCR",
     )
 
     parser.add_argument(
@@ -662,6 +654,7 @@ def process_pdf(
     clear_upload_cache: bool,
     force_resplit: bool,
     verbose: bool,
+    ocr_prompt: str,
     max_chunks: Optional[int] = None,
     workdir: Optional[Path] = None,
     start_page: int = 1,
@@ -678,6 +671,7 @@ def process_pdf(
         clear_upload_cache: Whether to clean up expired cache entries.
         force_resplit: Force re-splitting PDF chunks.
         verbose: Enable verbose output.
+        ocr_prompt: The prompt to use for OCR.
         max_chunks: Maximum number of chunks to process. If None, processes all.
         workdir: Working directory for PDF chunks. If None, uses default.
         start_page: Starting page number (1-indexed).
@@ -700,14 +694,6 @@ def process_pdf(
     timestamped_output_dir = output_dir / f"{input_pdf.stem}_{timestamp}"
     timestamped_output_dir.mkdir(parents=True, exist_ok=True)
     logger.info(f"📂 Output directory: {timestamped_output_dir}")
-
-    # Load OCR instruction prompt from file
-    try:
-        ocr_prompt = load_ocr_prompt()
-        logger.info(f"📄 Loaded OCR prompt from: {PROMPT_FILE.name}")
-    except (FileNotFoundError, IOError) as e:
-        logger.error(str(e))
-        return 1
 
     # Setup Gemini client with upload caching
     client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
@@ -815,6 +801,26 @@ def main() -> int:
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
+    # Load OCR prompt
+    ocr_prompt = ""
+    if args.prompt:
+        ocr_prompt = args.prompt
+        logger.info("📄 Using prompt from command line.")
+    elif args.prompt_file:
+        try:
+            ocr_prompt = args.prompt_file.read_text(encoding="utf-8")
+            logger.info(f"📄 Loaded OCR prompt from: {args.prompt_file}")
+        except (FileNotFoundError, IOError) as e:
+            logger.error(f"Error reading prompt file {args.prompt_file}: {e}")
+            return 1
+    else:
+        try:
+            ocr_prompt = PROMPT_FILE.read_text(encoding="utf-8")
+            logger.info(f"📄 Loaded default OCR prompt from: {PROMPT_FILE.name}")
+        except (FileNotFoundError, IOError) as e:
+            logger.error(f"Error reading default prompt file {PROMPT_FILE}: {e}")
+            return 1
+
     try:
         return process_pdf(
             input_pdf=args.input_pdf,
@@ -829,6 +835,7 @@ def main() -> int:
             workdir=args.workdir,
             start_page=args.start_page,
             num_pages=args.num_pages,
+            ocr_prompt=ocr_prompt,
         )
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
