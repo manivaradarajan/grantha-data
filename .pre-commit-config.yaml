@@ -18,3 +18,10 @@ repos:
         files: '^structured_md/.*\.md$'
         # The exclude pattern ensures README.md is never passed to the script
         exclude: 'README\.md$'
+
+  # 3. Keep requirements.txt and pyproject.toml in sync.
+  - repo: https://github.com/jazzband/pip-tools
+    rev: 7.4.1
+    hooks:
+      - id: pip-compile
+        args: ["-o", "requirements.txt", "pyproject.toml"]
