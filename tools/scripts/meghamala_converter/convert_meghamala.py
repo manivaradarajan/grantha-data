@@ -36,42 +36,39 @@ LOGS_DIR = Path("logs")
 UPLOAD_CACHE_FILE = Path.cwd() / ".file_upload_cache.json"
 
 # Global log directory for current run
-_run_log_dir: Path | None = None
+# _run_log_dir: Path | None = None
 
 
-class Tee:
-    """A file-like object that tees output to a file and another stream."""
+# class Tee:
+#     """A file-like object that tees output to a file and another stream."""
 
-    def __init__(self, stream, log_path: Path):
-        self.stream = stream
-        self.log_file = open(log_path, "w", encoding="utf-8")
+#     def __init__(self, stream, log_path: Path):
+#         self.stream = stream
+#         self.log_file = open(log_path, "w", encoding="utf-8")
 
-    def write(self, data):
-        self.stream.write(data)
-        self.log_file.write(data)
-        self.flush()
+#     def write(self, data):
+#         self.stream.write(data)
+#         self.log_file.write(data)
+#         self.flush()
 
-    def flush(self):
-        self.stream.flush()
-        self.log_file.flush()
+#     def flush(self):
+#         self.stream.flush()
+#         self.log_file.flush()
 
-    def __getattr__(self, name):
-        return getattr(self.stream, name)
+#     def __getattr__(self, name):
+#         return getattr(self.stream, name)
 
 
-def get_run_log_dir() -> Path:
-    """Gets or creates the main log directory for the current run."""
-    global _run_log_dir
-    if _run_log_dir is None:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        _run_log_dir = LOGS_DIR / f"run_{timestamp}"
-        _run_log_dir.mkdir(parents=True, exist_ok=True)
-    return _run_log_dir
+def get_run_timestamp_dir() -> Path:
+    """Generates a timestamped directory path for the current run without creating it."""
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return LOGS_DIR / f"run_{timestamp}"
 
 
 def get_file_log_dir(input_file_stem: str) -> Path:
     """Gets or creates the log directory for a specific file within the current run."""
-    run_log_dir = get_run_log_dir()
+    # The run_log_dir is now just a path, not necessarily created yet.
+    run_log_dir = get_run_timestamp_dir()
     file_log_dir = run_log_dir / input_file_stem
     file_log_dir.mkdir(parents=True, exist_ok=True)
     return file_log_dir
@@ -258,11 +255,11 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
 def main(argv: Optional[List[str]] = None):
     """Main execution logic, designed to be callable for tests."""
     colorama_init(autoreset=True)
-    run_log_dir = get_run_log_dir()
-    sys.stdout = Tee(sys.stdout, run_log_dir / "stdout.log")
-    sys.stderr = Tee(sys.stderr, run_log_dir / "stderr.log")
-    print(f"📁 Logging to: {run_log_dir}")
-
+    # run_log_dir = get_run_log_dir()
+    # sys.stdout = Tee(sys.stdout, run_log_dir / "stdout.log")
+    # sys.stderr = Tee(sys.stderr, run_log_dir / "stderr.log")
+    # print(f"📁 Logging to: {run_log_dir}")
+    
     args = _parse_args(argv)
 
     models = {
@@ -303,6 +300,7 @@ def main(argv: Optional[List[str]] = None):
         if args.input:
             input_path = Path(args.input)
             file_log_dir = get_file_log_dir(input_path.stem)
+            print(f"📁 Logging for this file to: {file_log_dir}")
             success = converter.convert_file(
                 input_path, output_dir, file_log_dir, filename_override=args.output
             )

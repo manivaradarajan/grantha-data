@@ -33,6 +33,8 @@ colorama==0.4.6
     # via grantha-data-tools (pyproject.toml)
 deprecated==1.3.1
     # via pykakasi
+diff-match-patch==20241021
+    # via grantha-data-tools (pyproject.toml)
 fonttools[unicode]==4.60.1
     # via
     #   aksharamukha
@@ -70,6 +72,10 @@ lxml==6.0.2
     # via aksharamukha
 marisa-trie==1.3.1
     # via language-data
+markdown-it-py==4.0.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
 packaging==25.0
     # via
     #   build
@@ -89,7 +95,9 @@ pydantic==2.12.4
 pydantic-core==2.41.5
     # via pydantic
 pygments==2.19.2
-    # via pytest
+    # via
+    #   pytest
+    #   rich
 pykakasi==2.3.0
     # via aksharamukha
 pypdf==6.3.0
@@ -114,6 +122,8 @@ requests==2.32.5
     # via
     #   aksharamukha
     #   google-genai
+rich==14.2.0
+    # via grantha-data-tools (pyproject.toml)
 rpds-py==0.29.0
     # via
     #   jsonschema

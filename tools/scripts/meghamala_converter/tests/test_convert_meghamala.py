@@ -7,7 +7,7 @@ import contextlib
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-from meghamala_converter.convert_meghamala import run_main as convert_meghamala_main
+from meghamala_converter.convert_meghamala import main as convert_meghamala_main
 
 # Mock data for analysis responses
 FAKE_ANALYSIS_JSON = {
@@ -64,20 +64,6 @@ class TestMeghamalaConverter(unittest.TestCase):
             "--prompts-dir",
             str(prompts_dir),
         ]
-
-        # Mock get_run_log_dir to prevent FileNotFoundError
-        self.run_log_dir_patcher = patch(
-            "tools.scripts.meghamala_converter.convert_meghamala.get_run_log_dir"
-        )
-        self.mock_get_run_log_dir = self.run_log_dir_patcher.start()
-        self.mock_get_run_log_dir.return_value = self.temp_dir / "logs"
-        (self.temp_dir / "logs").mkdir()
-
-    def tearDown(self):
-        self.run_log_dir_patcher.stop()
-        import shutil
-
-        shutil.rmtree(self.temp_dir)
 
     def _create_file(self, filename, content):
         file_path = self.input_dir / filename

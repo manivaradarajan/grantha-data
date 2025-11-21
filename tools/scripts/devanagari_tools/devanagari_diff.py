@@ -22,7 +22,7 @@ from pathlib import Path
 
 import yaml
 from grantha_converter.devanagari_extractor import extract_devanagari
-from grantha_converter.diff_utils import show_inline_char_diff
+from grantha_converter.visual_diff import print_visual_diff
 
 
 def _remove_yaml_header(input: str) -> str:
@@ -120,10 +120,9 @@ def main():
     print(f"   {file2_path.name}: {len(devanagari2)} characters")
 
     # Show colored diff with transliteration
-    show_inline_char_diff(
+    print_visual_diff(
         devanagari1,
         devanagari2,
-        title=f"Devanagari Diff: {file1_path.name} vs {file2_path.name}",
         context_chars=args.context,
         max_diffs=args.max_diffs,
     )

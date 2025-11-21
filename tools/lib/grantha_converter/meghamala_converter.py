@@ -1,3 +1,5 @@
+import json
+import re
 # Standard library imports
 import tempfile
 from pathlib import Path
@@ -69,6 +71,7 @@ class MeghamalaConverter:
             self._display_analysis_summary(analysis, input_path)
 
             input_text = input_path.read_text(encoding="utf-8")
+            input_text = self._preprocess_text(input_text)
 
             # Phase 2: Chunking
             chunks = self._run_chunking_phase(input_text, analysis)
@@ -126,7 +129,9 @@ class MeghamalaConverter:
         )
         print(f"📁 Analysis Cache Dir: {self.args.analysis_cache_dir}")
         try:
-            return analyzer.analyze(input_path, self.models["analysis"])
+            analysis = analyzer.analyze(input_path, self.models["analysis"])
+            self._save_log_file(file_log_dir / "00_analysis_result.json", json.dumps(analysis, indent=2, ensure_ascii=False))
+            return analysis
         except Exception as e:
             print(f"❌ File analysis failed for {input_path.name}: {e}", file=sys.stderr)
             return None
@@ -145,6 +150,9 @@ class MeghamalaConverter:
             suggestion = analysis.get("structural_analysis", {}).get("suggested_filename")
             final_filename = f"{suggestion}.md" if suggestion else f"{input_path.stem}_converted.md"
         
+        if not final_filename or final_filename == ".":
+            final_filename = f"{input_path.stem}_converted.md"
+
         output_path = output_dir / final_filename
         print(f"🎯 Target Output: {output_path}")
         return output_path
@@ -158,7 +166,7 @@ class MeghamalaConverter:
         if not execution_plan:
             print("❌ No execution plan found in analysis result.", file=sys.stderr)
             return None
-        
+
         print(f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks)...")
         return split_by_execution_plan(input_text, execution_plan, verbose=False)
 
@@ -183,6 +191,7 @@ class MeghamalaConverter:
         if not success or merged_content is None:
             print(f"❌ Merging failed: {message}", file=sys.stderr)
             return None
+        self._save_log_file(file_log_dir / "05_merged_content.md", merged_content)
         print(f"✓ Merging complete: {len(merged_content)} characters")
         return merged_content
 
@@ -197,7 +206,7 @@ class MeghamalaConverter:
         """Validates the final merged content and attempts to repair it if necessary."""
         if self.args.skip_validation:
             return merged_content
-        
+
         print(f"\n{'='*60}")
         print("📋 PHASE 5: FINAL VALIDATION AND REPAIR")
         print(f"{ '='*60}\n")
@@ -221,9 +230,9 @@ class MeghamalaConverter:
     ) -> tuple[list[str], list[dict]] | tuple[None, None]:
         """
         Initializes converters and validators, then processes each chunk in a loop.
-        
+
         Returns:
-            A tuple containing a list of temporary file paths and a list of 
+            A tuple containing a list of temporary file paths and a list of
             validation dictionaries. Returns (None, None) if any chunk fails.
         """
         temp_dir = Path(tempfile.mkdtemp(prefix="grantha_chunks_"))
@@ -271,7 +280,7 @@ class MeghamalaConverter:
     ) -> tuple[Path, dict]:
         """
         Converts, saves, and validates a single chunk of text.
-        
+
         Returns:
             A tuple containing the path to the temporary file and the validation result.
         """
@@ -297,7 +306,7 @@ class MeghamalaConverter:
         validation_result = validator.validate_chunk(
             chunk_text, converted_body, chunk_metadata
         )
-        
+
         return temp_file, validation_result
 
 
@@ -355,7 +364,7 @@ class MeghamalaConverter:
 
         if "metadata" not in analysis:
             analysis["metadata"] = {}
-            
+
         analysis_metadata = analysis.get("metadata", {})
         if self.args.grantha_id:
             analysis_metadata["grantha_id"] = self.args.grantha_id
@@ -365,7 +374,7 @@ class MeghamalaConverter:
             analysis_metadata["commentary_id"] = self.args.commentary_id
         if self.args.commentator:
             analysis_metadata["commentator"] = self.args.commentator
-        
+
         from grantha_converter.utils import extract_part_number_from_filename
         analysis_metadata["part_num"] = extract_part_number_from_filename(input_path.name)
         analysis["metadata"] = analysis_metadata
@@ -412,7 +421,7 @@ class MeghamalaConverter:
         # Header
         header = f"| {'Chunk':<5} | {'Status':<8} | {'Input':>7} | {'Output':>7} | {'Diff':>5} | {'Description':<{max_desc_len}} |"
         separator = f"|{'-'*7}|{'-'*10}|{'-'*9}|{'-'*9}|{'-'*7}|{'-'*(max_desc_len+2)}|"
-        
+
         rows = [header, separator]
         total_diff = 0
 
@@ -440,3 +449,40 @@ class MeghamalaConverter:
 
         rows.append(separator)
         return "\n".join(rows), total_diff
+
+    def _save_log_file(self, log_path: Path, content: str):
+        """Saves content to a specified path in the log directory."""
+        try:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            log_path.write_text(content, encoding="utf-8")
+            try:
+                relative_path = log_path.relative_to(Path.cwd())
+            except ValueError:
+                relative_path = log_path
+            print(f"  💾 Saved: {relative_path}")
+        except Exception as e:
+            print(f"  ⚠️  Warning: Could not save log file {log_path}: {e}")
+
+    def _preprocess_text(self, raw_text: str) -> str:
+        """Applies deterministic regex replacements to normalize noisy input text."""
+        import re
+
+        # Sanitize Headers: Convert noisy headers like **[उपक्रमशान्तिपाठः]** or **तृतीयोऽध्यायः**
+        # into a standard format without brackets or excessive noise.
+        # Find: **[?(.*?)]?** (Find bold text, optionally inside brackets)
+        # Replace: **$1** (Keep just the bold text).
+        # Refinement: If the text inside is metadata like (****...****), remove the inner asterisks.
+        processed_text = re.sub(r"\*\*\[?(.*?)\]?\*\*", r"**\1**", raw_text)
+        processed_text = re.sub(r"\*\*\*\*(.*?)\*\*\*\*", r"**\1**", processed_text)
+
+        # Normalize Asterisks: Fix inconsistent bolding like **word ** or ** word**.
+        processed_text = re.sub(r"\*\*\s+", r"**", processed_text)
+        processed_text = re.sub(r"\s+\*\*", r"**", processed_text)
+
+        # Fix Broken Separators: Ensure separators are standard.
+        processed_text = re.sub(r"^\*{3,}$", r"******", processed_text, flags=re.MULTILINE)
+
+        # Standardize Verse Numbers: Ensure verse numbers are detectable at the end of lines.
+        processed_text = re.sub(r"(।।\s*[\u0966-\u096F]+\s*।।)\s*$", r"\1", processed_text, flags=re.MULTILINE)
+
+        return processed_text
