@@ -1,14 +1,12 @@
-# In pyproject.toml
-
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "grantha_converter"
+name = "grantha-data-tools"
 version = "0.0.1"
-# ... (rest of your project section is fine) ...
 description = "A tool to convert Grantha data"
+# Recommended: Create a README.md in the root directory and set this to "README.md"
 readme = "tools/lib/grantha_converter/README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -18,14 +16,20 @@ classifiers = [
 ]
 
 [tool.setuptools]
-packages = ["find:"]
+package-dir = {"" = "tools"}
+
+# Include all non-Python files that are part of your package (e.g., BUILD, JSON, MD, TXT, SH files)
+[tool.setuptools.package-data]
+"grantha_data_tools" = ["**/*.txt", "**/*.json", "**/*.md", "**/BUILD", "**/*.sh"]
 
 [project.urls]
-"Homepage" = "https://github.com/pypa/sampleproject"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Homepage" = "https://github.com/manivaradarajan/grantha-data"
+"Bug Tracker" = "https://github.com/manivaradarajan/grantha-data/issues"
 
 [project.scripts]
-grantha-converter = "tools.lib.grantha_converter.cli:main"
-vishvas-markup-to-structured-markdown = "tools.lib.grantha_converter.html_details_cli:main"
-grantha-repair-devanagari = "tools.lib.grantha_converter.devanagari_repair_cli:main"
-pdf-ocr = "tools.scripts.pdf_ocr:main"
+# IMPORTANT: All entries must be prefixed with the project name ("grantha_data_tools")
+# The path is now the correct full Python import path.
+grantha-converter = "grantha_data_tools.lib.grantha_converter.cli:main"
+grantha-repair-devanagari = "grantha_data_tools.lib.grantha_converter.devanagari_repair_cli:main"
+pdf-ocr = "grantha_data_tools.scripts.pdf_ocr:main"
+convert-meghamala = "grantha_data_tools.scripts.meghamala_converter.convert_meghamala:main"
