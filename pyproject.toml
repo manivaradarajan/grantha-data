@@ -31,3 +31,14 @@ grantha-converter = "lib.grantha_converter.cli:main"
 grantha-repair-devanagari = "lib.grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "scripts.pdf_ocr:main"
 convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
+
+dependencies = [
+    "aksharamukha",
+    "colorama",
+    "fonttools[unicode]",
+    "google-genai",
+    "jsonschema",
+    "pypdf",
+    "pyyaml",
+    "unicodedata2"
+]
