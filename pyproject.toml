@@ -24,6 +24,12 @@ dependencies = [
     "unicodedata2"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pip-tools",
+ ]
+
 [project.urls]
 "Homepage" = "https://github.com/manivaradarajan/grantha-data"
 "Bug Tracker" = "https://github.com/manivaradarajan/grantha-data/issues"

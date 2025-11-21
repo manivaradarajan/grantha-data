@@ -24,4 +24,4 @@ repos:
     rev: 7.4.1
     hooks:
       - id: pip-compile
-        args: ["-o", "requirements.txt", "pyproject.toml"]
+        args: ["--extra", "dev", "-o", "requirements.txt", "pyproject.toml"]
