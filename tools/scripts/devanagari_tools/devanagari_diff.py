@@ -80,6 +80,19 @@ def main():
         default=10,
         help="Maximum number of differences to show (default: 10)",
     )
+    parser.add_argument(
+        "--output-style",
+        type=str,
+        choices=["rich", "colorama"],
+        default="colorama",
+        help="Output style for the diff (default: colorama)",
+    )
+    parser.add_argument(
+        "--transliteration-scheme",
+        type=str,
+        default="HK",
+        help="Transliteration scheme to use (default: HK)",
+    )
 
     args = parser.parse_args()
 
@@ -125,8 +138,9 @@ def main():
         devanagari2,
         context_chars=args.context,
         max_diffs=args.max_diffs,
+        output_style=args.output_style,
+        transliteration_scheme=args.transliteration_scheme,
     )
-
 
 if __name__ == "__main__":
     main()

@@ -13,6 +13,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+# In general. only unpinned dependencies go here.
 dependencies = [
     "aksharamukha",
     "colorama",
@@ -22,8 +24,9 @@ dependencies = [
     "jsonschema",
     "pypdf",
     "pyyaml",
+    "rapidfuzz",
     "rich",
-    "unicodedata2"
+    "unicodedata2",
 ]
 
 [project.optional-dependencies]
@@ -42,3 +45,4 @@ grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "scripts.pdf_ocr:main"
 convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
 devanagari-diff = "scripts.devanagari_tools.devanagari_diff:main"
+devanagari-repair = "scripts.devanagari_tools.devanagari_repair:main"

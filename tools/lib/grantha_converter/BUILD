@@ -36,6 +36,7 @@ py_library(
         ":meghamala_stitcher",
         ":utils",
         ":validator",
+        ":visual_diff", # Added visual_diff dependency
         "//tools/lib/gemini_processor:client",
         "//tools/lib/gemini_processor:prompt_manager",
         requirement("colorama"),
@@ -68,7 +69,7 @@ py_library(
     name = "diff_utils",
     srcs = ["diff_utils.py"],
     visibility = ["//visibility:public"],
-    deps = [requirement("aksharamukha"), requirement("colorama"), ":devanagari_repair"],
+    deps = [requirement("aksharamukha"), requirement("colorama"), ":devanagari_extractor"], # Corrected dependency
 )
 
 py_library(
@@ -103,5 +104,17 @@ py_library(
     deps = [
         requirement("pyyaml"),
         ":devanagari_repair",
+    ],
+)
+
+py_library(
+    name = "visual_diff", # New py_library rule for visual_diff
+    srcs = ["visual_diff.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("diff_match_patch"),
+        requirement("aksharamukha"),
+        requirement("colorama"),
+        requirement("rich"),
     ],
 )

@@ -25,11 +25,11 @@ except ImportError:
     USE_RICH = False
 
 
-def get_transliterated_diffs(diffs: List[Tuple[int, str]]) -> List[Tuple[int, str]]:
+def get_transliterated_diffs(diffs: List[Tuple[int, str]], scheme: str = "HK") -> List[Tuple[int, str]]:
     """
-    Transliterates the text in a diff list from Devanagari to Harvard-Kyoto.
+    Transliterates the text in a diff list from Devanagari to the specified scheme.
     """
-    return [(op, transliterate.process('Devanagari', 'HK', text)) for op, text in diffs]
+    return [(op, transliterate.process('Devanagari', scheme, text)) for op, text in diffs]
 
 
 def print_visual_diff(
@@ -37,12 +37,36 @@ def print_visual_diff(
     target_text: str,
     context_chars: int = 40,
     max_diffs: int = 10,
+    output_style: str = "colorama", # Added parameter
+    transliteration_scheme: str = "HK", # Added parameter
 ):
     """
     Computes and prints a visual, contextual diff between two texts,
-    including Harvard-Kyoto transliteration.
+    with configurable output style and transliteration scheme.
     """
     start_time = time.perf_counter()
+
+    # Determine which rendering library to use based on output_style preference
+    use_rich_renderer = False
+    if output_style == "rich":
+        try:
+            from rich.console import Console
+            from rich.table import Table
+            from rich.text import Text
+            use_rich_renderer = True
+        except ImportError:
+            print("Warning: 'rich' library not found. Falling back to colorama.", file=sys.stderr)
+    
+    if not use_rich_renderer:
+        try:
+            from colorama import Fore, Back, Style, init
+            init()
+        except ImportError:
+            class DummyColor:
+                def __getattr__(self, name):
+                    return ""
+            Fore = Back = Style = DummyColor()
+            print("Warning: 'colorama' library not found. Output will not be colored.", file=sys.stderr)
 
     dmp = diff_match_patch.diff_match_patch()
     diffs = dmp.diff_main(source_text, target_text)
@@ -50,7 +74,10 @@ def print_visual_diff(
 
     num_diffs = sum(1 for op, _ in diffs if op != dmp.DIFF_EQUAL)
     if num_diffs == 0:
-        print(f"{Fore.GREEN}✓ No differences found.{Style.RESET_ALL}")
+        if use_rich_renderer:
+            Console().print(Text("✓ No differences found.", style="green"))
+        else:
+            print(f"{Fore.GREEN}✓ No differences found.{Style.RESET_ALL}")
         return
 
     print(f"Found {num_diffs} difference(s), showing first {min(num_diffs, max_diffs)}:")
@@ -93,10 +120,10 @@ def print_visual_diff(
             post_context_text = ""
             
         dev_snippet = [(dmp.DIFF_EQUAL, pre_context_text)] + diff_snippet + [(dmp.DIFF_EQUAL, post_context_text)]
-        hk_snippet = get_transliterated_diffs(dev_snippet)
+        hk_snippet = get_transliterated_diffs(dev_snippet, transliteration_scheme)
 
         # --- RENDER SNIPPET ---
-        if USE_RICH:
+        if use_rich_renderer:
             table = Table(show_header=False, show_edge=False, box=None, padding=0, title=f"\n--- Diff {diff_count} ---")
             table.add_column()
             
@@ -117,15 +144,15 @@ def print_visual_diff(
             print(f"\n--- Diff {diff_count} ---")
             dev_parts = []
             for op, text in dev_snippet:
-                if op == dmp.DIFF_INSERT: dev_parts.append(f"{Fore.GREEN}{text}{Style.RESET_ALL}")
-                elif op == dmp.DIFF_DELETE: dev_parts.append(f"{Fore.RED}{text}{Style.RESET_ALL}")
+                if op == dmp.DIFF_INSERT: dev_parts.append(f"{Back.GREEN}{Fore.WHITE}{text}{Style.RESET_ALL}")
+                elif op == dmp.DIFF_DELETE: dev_parts.append(f"{Back.RED}{Fore.WHITE}{text}{Style.RESET_ALL}")
                 else: dev_parts.append(f"{Style.DIM}{text}{Style.RESET_ALL}")
             print("".join(dev_parts))
 
             hk_parts = []
             for op, text in hk_snippet:
-                if op == dmp.DIFF_INSERT: hk_parts.append(f"{Fore.GREEN}{text}{Style.RESET_ALL}")
-                elif op == dmp.DIFF_DELETE: hk_parts.append(f"{Fore.RED}{text}{Style.RESET_ALL}")
+                if op == dmp.DIFF_INSERT: hk_parts.append(f"{Back.GREEN}{Fore.WHITE}{text}{Style.RESET_ALL}")
+                elif op == dmp.DIFF_DELETE: hk_parts.append(f"{Back.RED}{Fore.WHITE}{text}{Style.RESET_ALL}")
                 else: hk_parts.append(f"{Style.DIM}{text}{Style.RESET_ALL}")
             print("".join(hk_parts))
 

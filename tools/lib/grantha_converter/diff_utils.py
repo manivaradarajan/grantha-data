@@ -10,7 +10,7 @@ from colorama import init as colorama_init
 
 colorama_init(autoreset=True)
 
-from grantha_converter.devanagari_repair import extract_devanagari
+from grantha_converter.devanagari_extractor import extract_devanagari
 
 
 def normalize_devanagari_for_comparison(text: str) -> str:

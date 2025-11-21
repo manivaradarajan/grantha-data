@@ -6,6 +6,8 @@ from pathlib import Path
 import sys
 import traceback
 from typing import Optional
+import diff_match_patch
+import os
 
 # Third-party imports
 from colorama import Fore, Style
@@ -25,6 +27,8 @@ from grantha_converter.meghamala_stitcher import (
     validate_merged_output,
 )
 from grantha_converter.devanagari_repair import repair_file
+from grantha_converter.devanagari_extractor import extract_devanagari
+from grantha_converter.visual_diff import print_visual_diff
 
 
 class MeghamalaConverter:
@@ -87,7 +91,7 @@ class MeghamalaConverter:
             self._display_validation_summary(validations)
 
             # Phase 4: Stitching
-            merged_content = self._run_stitching_phase(temp_files)
+            merged_content = self._run_stitching_phase(temp_files, file_log_dir)
             if merged_content is None:
                 cleanup_temp_chunks(temp_files, verbose=True)
                 return False
@@ -182,7 +186,7 @@ class MeghamalaConverter:
         print(f"{ '='*60}\n")
         return self._convert_and_validate_chunks(chunks, analysis, file_log_dir)
 
-    def _run_stitching_phase(self, temp_files: list[str]) -> str | None:
+    def _run_stitching_phase(self, temp_files: list[str], file_log_dir: Path) -> str | None:
         """Merges the converted temporary chunk files into a single string."""
         print(f"\n{'='*60}")
         print("📋 PHASE 4: MERGING AND WRITING OUTPUT")
@@ -203,16 +207,75 @@ class MeghamalaConverter:
         output_file: str,
         file_log_dir: Path,
     ) -> str | None:
-        """Validates the final merged content and attempts to repair it if necessary."""
+        """Validates, diffs, and optionally repairs the final merged content."""
         if self.args.skip_validation:
             return merged_content
 
         print(f"\n{'='*60}")
-        print("📋 PHASE 5: FINAL VALIDATION AND REPAIR")
+        print("📋 PHASE 5: FINAL VALIDATION, DIFF, AND REPAIR")
         print(f"{ '='*60}\n")
-        return self._validate_and_repair_final(
-            input_text, merged_content, input_file, output_file, file_log_dir
+
+        # 1. Extract Devanagari for comparison
+        source_devanagari = extract_devanagari(input_text)
+        converted_devanagari = extract_devanagari(merged_content)
+
+        # 2. Calculate initial diffs
+        dmp = diff_match_patch.diff_match_patch()
+        diffs_before = dmp.diff_main(source_devanagari, converted_devanagari)
+        dmp.diff_cleanupSemantic(diffs_before)
+        diff_count_before = sum(1 for op, _ in diffs_before if op != dmp.DIFF_EQUAL)
+
+        # 3. Show visual diff
+        print("🔎 Displaying Devanagari diff between source and converted text:")
+        print_visual_diff(source_devanagari, converted_devanagari)
+
+        if diff_count_before == 0:
+            print("✓ No Devanagari discrepancies found. Skipping repair.")
+            return merged_content
+
+        print(f"\n⚠️  Found {diff_count_before} Devanagari discrepancies. Attempting repair...")
+
+        # 4. Attempt repair
+        # repair_file works on files, so we write the merged content to a temporary file
+        temp_output_path = Path(output_file).with_suffix(".tmp_for_repair")
+        temp_output_path.write_text(merged_content, encoding="utf-8")
+
+        repair_successful, repair_message = repair_file(
+            input_file=input_file,
+            output_file=str(temp_output_path),
+            verbose=False,
+            dry_run=False,
+            create_backup=False, # We handle our own temp files
         )
+
+        if not repair_successful:
+            print(f"❌ Repair failed: {repair_message}", file=sys.stderr)
+            os.remove(temp_output_path)
+            return merged_content # Return original merged content on failure
+
+        # 5. Compare diffs and decide
+        repaired_content = temp_output_path.read_text(encoding="utf-8")
+        repaired_devanagari = extract_devanagari(repaired_content)
+        diffs_after = dmp.diff_main(source_devanagari, repaired_devanagari)
+        dmp.diff_cleanupSemantic(diffs_after)
+        diff_count_after = sum(1 for op, _ in diffs_after if op != dmp.DIFF_EQUAL)
+
+        print(f"📊 Repair analysis: Diffs before: {diff_count_before}, Diffs after: {diff_count_after}")
+
+        if diff_count_after < diff_count_before:
+            print(f"✅ Repair improved the output. Using repaired version.")
+            final_content = repaired_content
+        else:
+            print(f"⚠️  Repair did not improve the output. Using original conversion.")
+            final_content = merged_content
+
+        # 6. Cleanup
+        os.remove(temp_output_path)
+        repaired_backup = Path(str(temp_output_path) + ".repaired")
+        if repaired_backup.exists():
+            os.remove(repaired_backup)
+
+        return final_content
 
     def _write_output(self, output_path: Path, content: str):
         """Writes the final content to the output file."""

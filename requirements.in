@@ -6,6 +6,7 @@ jsonschema
 pypdf
 pytest
 pyyaml
+rapidfuzz
 
 # Promote transitive dependencies of aksharamukha to fix the Bazel build.
 # This is required because aksharamukha uses the [unicode] extra.
