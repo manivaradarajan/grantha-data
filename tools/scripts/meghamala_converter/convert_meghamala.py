@@ -255,7 +255,7 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
     print(f"Output directory: {output_dir}")
     return 0
 
-def run_main(argv: Optional[List[str]] = None):
+def main(argv: Optional[List[str]] = None):
     """Main execution logic, designed to be callable for tests."""
     colorama_init(autoreset=True)
     run_log_dir = get_run_log_dir()
@@ -316,4 +316,4 @@ def run_main(argv: Optional[List[str]] = None):
 
 
 if __name__ == "__main__":
-    sys.exit(run_main())
+    sys.exit(main())
