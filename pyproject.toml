@@ -18,7 +18,7 @@ classifiers = [
 [tool.setuptools]
 package-dir = {"" = "tools"}
 
-# Include all non-Python files that are part of your package (e.g., BUILD, JSON, MD, TXT, SH files)
+# Include all non-Python files that are part of your package
 [tool.setuptools.package-data]
 "grantha_data_tools" = ["**/*.txt", "**/*.json", "**/*.md", "**/BUILD", "**/*.sh"]
 
@@ -27,9 +27,7 @@ package-dir = {"" = "tools"}
 "Bug Tracker" = "https://github.com/manivaradarajan/grantha-data/issues"
 
 [project.scripts]
-# IMPORTANT: All entries must be prefixed with the project name ("grantha_data_tools")
-# The path is now the correct full Python import path.
-grantha-converter = "grantha_data_tools.lib.grantha_converter.cli:main"
-grantha-repair-devanagari = "grantha_data_tools.lib.grantha_converter.devanagari_repair_cli:main"
-pdf-ocr = "grantha_data_tools.scripts.pdf_ocr:main"
-convert-meghamala = "grantha_data_tools.scripts.meghamala_converter.convert_meghamala:main"
+grantha-converter = "lib.grantha_converter.cli:main"
+grantha-repair-devanagari = "lib.grantha_converter.devanagari_repair_cli:main"
+pdf-ocr = "scripts.pdf_ocr:main"
+convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
