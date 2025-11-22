@@ -373,6 +373,36 @@ def _add_required_field_defaults(frontmatter: Dict) -> None:
     if 'language' not in frontmatter:
         frontmatter['language'] = 'sanskrit'
 
+    # Ensure structure_levels is always a list, not a dict
+    if 'structure_levels' in frontmatter:
+        frontmatter['structure_levels'] = _ensure_structure_levels_is_list(
+            frontmatter['structure_levels']
+        )
+
+
+def _ensure_structure_levels_is_list(structure_levels) -> list:
+    """Ensures structure_levels is always a list.
+
+    The frontmatter may have structure_levels as a dict (from older format
+    or single-level structures) or list. This normalizes it to always be
+    a list for consistent YAML formatting.
+
+    Args:
+        structure_levels: Either a dict, list, or None.
+
+    Returns:
+        A list containing the structure level(s), or empty list if None.
+    """
+    if structure_levels is None:
+        return []
+    if isinstance(structure_levels, list):
+        return structure_levels
+    if isinstance(structure_levels, dict):
+        # Single structure level as dict - wrap it in a list
+        return [structure_levels]
+    # Unexpected type - return empty list
+    return []
+
 
 def validate_merged_output(
     original_input: str,

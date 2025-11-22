@@ -6,22 +6,22 @@ text_type: upanishad
 language: sanskrit
 structure_type: valli
 commentaries_metadata:
-  - commentary_id: rangaramanuja-muni-prakashika
-    commentary_title: प्रकाशिका
-    commentator:
-      devanagari: श्रीरङ्गरामानुजमुनिः
-      roman: śrīraṅgarāmānujamuniḥ
-    authored_colophon: श्रीरङ्गरामानुजमुनिभिः विरचिता
+- commentary_id: rangaramanuja-muni-prakashika
+  commentary_title: प्रकाशिका
+  commentator:
+    devanagari: श्रीरङ्गरामानुजमुनिः
+    roman: śrīraṅgarāmānujamuniḥ
+  authored_colophon: श्रीरङ्गरामानुजमुनिभिः विरचिता
 structure_levels:
-  - key: Valli
-    scriptNames:
-      devanagari: वल्ली
-      roman: vallī
-  - key: Mantra
-    scriptNames:
-      devanagari: मन्त्रः
-      roman: mantra
-hash_version: 2
+- key: Valli
+  scriptNames:
+    devanagari: वल्ली
+    roman: vallī
+- key: Mantra
+  scriptNames:
+    devanagari: मन्त्रः
+    roman: mantra
+hash_version: 3
 validation_hash: 0b16b5424236867011b31dd86821400d30f5a6fa3736c589113a1d731243c2a1
 ---
 

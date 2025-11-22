@@ -21,7 +21,7 @@ structure_levels:
   scriptNames:
     devanagari: मन्त्रः
     roman: mantra
-hash_version: 2
+hash_version: 3
 validation_hash: 4c7743cc9b97020cc1f50576843996b5f63febeee50495da56fea450eef502ff
 ---
 

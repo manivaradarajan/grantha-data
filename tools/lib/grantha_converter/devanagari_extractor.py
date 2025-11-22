@@ -16,9 +16,12 @@ Increment this when making changes that would produce different hashes
 for the same input text.
 
 Version History:
-- v1 (current): Word-boundary-preserving extraction. Devanagari word sequences
+- v3 (current): Added markdown heading removal to cleaning function.
+  Headings (lines starting with #) are now excluded from extraction, so
+  structural metadata like "# Mantra 1" doesn't affect content hash.
+- v2: Word-boundary-preserving extraction. Devanagari word sequences
   are joined with single spaces, normalizing gaps from non-Devanagari content.
-- v0 (legacy): No-space extraction. All Devanagari characters concatenated
+- v1 (legacy): No-space extraction. All Devanagari characters concatenated
   without spaces. (Pre-versioning era)
 """
 
@@ -27,30 +30,48 @@ from typing import List, Tuple
 
 # IMPORTANT: Increment this version number when making breaking changes
 # to the extraction or hashing algorithm.
-HASH_VERSION = 2
+HASH_VERSION = 3
 
 
-def clean_text_for_devanagari_comparison(text: str) -> str:
-    """
-    Cleans text by removing frontmatter, HTML comments, and markdown bold markers
-    to prepare it for Devanagari word extraction and comparison.
+def clean_text_for_devanagari_comparison(
+    text: str,
+    skip_headings: bool = True
+) -> str:
+    """Cleans text by removing structural elements for Devanagari comparison.
 
     This is the canonical cleaning function used across the codebase for:
     - Devanagari diff comparison (devanagari_diff.py)
-    - Text repair operations (devanagari_repair.py)
-    - Any other operation requiring consistent Devanagari comparison
+    - Validation hash computation (hasher.py)
+    - Text repair operations (devanagari_repair.py) when skip_headings=False
+
+    Removes:
+        - YAML frontmatter (enclosed in ---)
+        - HTML comments (<!-- ... -->)
+        - Markdown headings (lines starting with #) - only if skip_headings=True
+        - Markdown bold markers (**)
+
+    Preserves:
+        - All body content (Sanskrit text, commentary, etc.)
+        - Devanagari characters for extraction
+        - Markdown headings when skip_headings=False (for repair operations)
 
     Args:
         text: Input text that may contain YAML frontmatter, HTML comments,
-              markdown bold markers, and other non-Devanagari content
+              markdown headings, bold markers, and other non-Devanagari content.
+        skip_headings: If True (default), remove markdown headings from output.
+                      Set to False for repair operations that need to preserve
+                      heading Devanagari.
 
     Returns:
-        Cleaned text with frontmatter, HTML comments, and bold markers removed
+        Cleaned text with structural elements removed, ready for Devanagari
+        extraction. Whitespace is normalized to single spaces.
 
     Examples:
-        >>> text = "---\\ntitle: Test\\n---\\n**अग्निमीळे** <!-- comment --> पुरोहितं"
+        >>> text = "---\\ntitle: Test\\n---\\n# मन्त्रः 1\\n**अग्निमीळे** <!-- comment --> पुरोहितं"
         >>> clean_text_for_devanagari_comparison(text)
         'अग्निमीळे पुरोहितं'
+        >>> clean_text_for_devanagari_comparison(text, skip_headings=False)
+        '# मन्त्रः 1 अग्निमीळे पुरोहितं'
     """
     # 1. Remove YAML frontmatter
     if text.strip().startswith("---"):
@@ -58,13 +79,20 @@ def clean_text_for_devanagari_comparison(text: str) -> str:
         if len(parts) == 3:
             text = parts[2]
 
-    # 2. Replace HTML comments with a space to avoid merging words
+    # 2. Remove markdown headings (lines starting with #)
+    # This removes structural headings like "# Mantra 1" or "## Commentary: 1"
+    # so that heading text doesn't affect the content hash.
+    # Skip this step for repair operations where headings need to be preserved.
+    if skip_headings:
+        text = re.sub(r'^#+\s+.*$', '', text, flags=re.MULTILINE)
+
+    # 3. Replace HTML comments with a space to avoid merging words
     text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
 
-    # 3. Remove markdown bold markers
+    # 4. Remove markdown bold markers
     text = re.sub(r"\*\*", "", text)
 
-    # 4. Normalize whitespace to a single space
+    # 5. Normalize whitespace to a single space
     text = re.sub(r'\s+', ' ', text).strip()
 
     return text

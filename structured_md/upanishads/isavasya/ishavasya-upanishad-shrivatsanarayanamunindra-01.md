@@ -6,35 +6,34 @@ text_type: upanishad
 language: sanskrit
 structure_type: mantra
 commentaries_metadata:
-  - commentary_id: shrivatsanarayanamunindra-prakashika
-    commentary_title: प्रकाशिका
-    commentator:
-      devanagari: श्रीवत्सनारायणमुनीन्द्रः
-      roman: śrīvatsanārāyaṇamunīndraḥ
-    authored_colophon: श्रीवत्सनारायणमुनीन्द्रैः विरचिता
+- commentary_id: shrivatsanarayanamunindra-prakashika
+  commentary_title: प्रकाशिका
+  commentator:
+    devanagari: श्रीवत्सनारायणमुनीन्द्रः
+    roman: śrīvatsanārāyaṇamunīndraḥ
+  authored_colophon: श्रीवत्सनारायणमुनीन्द्रैः विरचिता
 structure_levels:
-  - key: Anuvaka
-    scriptNames:
-      devanagari: अनुवाकः
-      roman: anuvāka
-  - key: Mantra
-    scriptNames:
-      devanagari: मन्त्रः
-      roman: mantra
-hash_version: 2
-validation_hash: ea052b388a17caa0b8a20c48c08b7aaf258056202e1944223ab09674d8122e22
+- key: Anuvaka
+  scriptNames:
+    devanagari: अनुवाकः
+    roman: anuvāka
+- key: Mantra
+  scriptNames:
+    devanagari: मन्त्रः
+    roman: mantra
+hash_version: 3
+validation_hash: 1b0aa1f8c5a6fc2b52d875edea5647fa52287f582604eaf3c49d5a6050cf8021
 ---
 
-# Prefatory: 0.0
+# Prefatory: 0.0 (devanagari: "शान्तिमन्त्रः")
 
 <!-- commentary: {"commentary_id": "shrivatsanarayanamunindra-prakashika"} -->
 
 श्रीः
 श्रीमते रामानुजाय नमः
 
-<!-- hide type:document-title --> ####**ईशावास्योपनिषत्** <!-- /hide -->
+<!-- hide -->शान्तिपाठः<!-- /hide -->
 
-शान्तिपाठः
 **ओम् पूर्णमदः पूर्णमिदं पूर्णात्पूर्णमुदच्यते | पूर्णस्य पूर्णमादाय पूर्णमेवावशिष्यते ||**
 **ओ शान्तिः शान्तिः शान्तिः ||**
 शुक्लयजुर्वेदीयानां एष शान्तिपाठमन्त्रः | परब्रह्मणः समग्रस्वरूपस्यभावप्रतिपादक इति यथासिद्धान्त विपुलविशदं विवरणं अर्हति। तथा हि-पूरी-आप्यायने इत्यस्मात् चौरादिकत्वेनस्वार्थणिजन्तात् धातोः क्तप्रत्यये सति “या दान्त-शान्त-पूर्ण-दस्त-स्पष्ट-छन्न-ज्ञप्ताः” इति (7-2-27) पाणिनिसूत्रेण पूर्णशब्दोऽयं निपात्यते | इडागमाभाव: निपातस्य फलम् | णिलोप:, रात् परत्वात् प्रत्ययतकारस्य नत्वं, तस्य णत्वं चेति पूर्णशब्दसिद्धै प्रक्रिया | क्तप्रत्ययश्च इह कर्तरि कर्मणि येति उभयथापि भाव्यम् | तत्र कर्तरि • ब्रहम स्वरूपेण पूरयतिव्याप्नोति इत्यर्थः| कर्मणि तु – ब्रहम कल्याणगुणैः संभृतमित्यर्थः | असंकुचितवृत्तिनानेन पूर्णशब्देन सर्वत्र सर्वदा सर्वथा च पूर्णत्वं ब्रह्मणः प्रतिपाद्यते ||

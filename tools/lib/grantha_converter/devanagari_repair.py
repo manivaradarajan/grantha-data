@@ -24,14 +24,15 @@ def repair_devanagari_simple(
     to match the input file, while preserving all markdown structure, comments, and formatting.
 
     The algorithm:
-    1. Clean both texts using the same logic as devanagari_diff tool
+    1. Clean both texts (remove frontmatter, comments, bold markers but KEEP headings)
     2. Extract Devanagari words from cleaned texts for comparison
     3. Extract Devanagari words with positions from ORIGINAL output text
     4. Map changes from cleaned space to original space and apply surgically
     """
-    # 1. Clean both texts using the SAME logic as the diff tool
-    input_cleaned = clean_text_for_devanagari_comparison(input_text)
-    output_cleaned = clean_text_for_devanagari_comparison(output_text)
+    # 1. Clean both texts (remove frontmatter, comments, bold but NOT headings)
+    # We keep headings because we need to repair Devanagari in headings too!
+    input_cleaned = clean_text_for_devanagari_comparison(input_text, skip_headings=False)
+    output_cleaned = clean_text_for_devanagari_comparison(output_text, skip_headings=False)
 
     # 2. Extract Devanagari words from CLEANED texts for comparison
     input_words = extract_devanagari_words(input_cleaned)

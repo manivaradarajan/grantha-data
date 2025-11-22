@@ -6,30 +6,34 @@ text_type: upanishad
 language: sanskrit
 structure_type: mantra
 commentaries_metadata:
-  - commentary_id: vedanta-desika-bhashyam
-    commentary_title: ईशावास्योपनिषद्भाष्यम्
-    commentator:
-      devanagari: श्रीमद्वेदान्ताचार्यः
-      roman: śrīmadvēdāntācāryaḥ
-    authored_colophon: श्रीमद्वेदान्ताचार्यैः विरचितम्
+- commentary_id: vedanta-desika-bhashyam
+  commentary_title: ईशावास्योपनिषद्भाष्यम्
+  commentator:
+    devanagari: श्रीमद्वेदान्ताचार्यः
+    roman: śrīmadvēdāntācāryaḥ
+  authored_colophon: श्रीमद्वेदान्ताचार्यैः विरचितम्
 structure_levels:
-  - key: Mantra
-    scriptNames:
-      devanagari: मन्त्रः
-      roman: mantra
-hash_version: 2
-validation_hash: e40b73d8421cac0b0cba68d8380990eaf7f797a7f58746b3029c0d77920e022f
+- key: Mantra
+  scriptNames:
+    devanagari: मन्त्रः
+    roman: mantra
+hash_version: 3
+validation_hash: 7aab3af454ec122b4ce5a3ea011fec1e4e1bf1d1d9564fc6afbb4731da21ce64
 ---
 
 <!-- hide type:document-title -->
 
-श्रीः श्रीमते रामानुजाय नमः ईशावास्योपनिषत्
+श्रीः श्रीमते रामानुजाय नमः
+
+ईशावास्योपनिषत्
 
 <!-- /hide -->
 
 # Prefatory: 0.0 (devanagari: "शान्तिपाठः")
 
 <!-- sanskrit:devanagari -->
+
+<!-- hide -->शान्तिपाठः<!-- /hide -->
 
 ओम् पूर्णमदः पूर्णमिदं पूर्णात्पूर्णमुदच्यते|पूर्णस्य पूर्णमादाय पूर्णमेवावशिष्यते ओम्शान्तिः शान्तिः शान्तिः||
 

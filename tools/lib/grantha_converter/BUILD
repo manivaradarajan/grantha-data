@@ -165,3 +165,14 @@ py_test(
     # Note: Integration tests will be skipped in Bazel sandbox due to @pytest.mark.skipif
     # decorators. This is expected - smoke tests still verify CLI wiring without data files.
 )
+
+py_test(
+    name = "test_extraction_consistency",
+    srcs = ["test_extraction_consistency.py"],
+    imports = [".."],
+    deps = [
+        ":devanagari_extractor",
+        ":hasher",
+        requirement("pytest"),
+    ],
+)

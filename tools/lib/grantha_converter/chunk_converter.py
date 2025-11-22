@@ -362,6 +362,12 @@ class ChunkConverter:
             Complete frontmatter dict with all required fields, excluding
             any None values.
         """
+        # Get structure_levels and ensure it's always a list
+        structure_levels = analysis_result.get("structural_analysis", {}).get(
+            "structure_levels", []
+        )
+        structure_levels = self._ensure_structure_levels_is_list(structure_levels)
+
         frontmatter = {
             "grantha_id": metadata.get("grantha_id"),
             "part_num": metadata.get("part_num", 1),
@@ -370,15 +376,36 @@ class ChunkConverter:
             "language": metadata.get("language", "sanskrit"),
             "structure_type": metadata.get("structure_type"),
             "commentaries_metadata": commentaries if commentaries else None,
-            "structure_levels": analysis_result.get("structural_analysis", {}).get(
-                "structure_levels", []
-            ),
+            "structure_levels": structure_levels,
             "hash_version": HASH_VERSION,
             "validation_hash": validation_hash,
         }
 
         # Remove None values for cleaner output
         return {k: v for k, v in frontmatter.items() if v is not None}
+
+    def _ensure_structure_levels_is_list(self, structure_levels) -> list:
+        """Ensures structure_levels is always a list.
+
+        The analysis may return structure_levels as a dict (single level)
+        or list (multiple levels). This method normalizes it to always be
+        a list for consistent YAML formatting.
+
+        Args:
+            structure_levels: Either a dict, list, or None from analysis.
+
+        Returns:
+            A list containing the structure level(s), or empty list if None.
+        """
+        if structure_levels is None:
+            return []
+        if isinstance(structure_levels, list):
+            return structure_levels
+        if isinstance(structure_levels, dict):
+            # Single structure level as dict - wrap it in a list
+            return [structure_levels]
+        # Unexpected type - return empty list
+        return []
 
     def _save_log_file(self, log_path: Path, content: str) -> None:
         """Saves content to a log file for debugging.

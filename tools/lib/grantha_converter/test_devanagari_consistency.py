@@ -358,11 +358,11 @@ author: लेखकः
 
 # Heading देवनागरी में
 
-**अग्निमीळे** पुरोहितं
+**अग्निमीळे** पुरोहितं यज्ञस्य देवमृत्विजम् । होतारं रत्नधातमम् ॥
 """
 
-        # Modified with Devanagari typo
-        modified = original.replace("पुरोहितं", "पुरोहितम्")
+        # Modified with small Devanagari typo
+        modified = original.replace("यज्ञस्य", "यज्ञस्या")
 
         success, repaired, msg = repair_devanagari_simple(original, modified, verbose=False)
 
