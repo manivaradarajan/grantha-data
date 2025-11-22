@@ -154,3 +154,14 @@ py_test(
         requirement("pytest"),
     ],
 )
+
+py_test(
+    name = "test_cli_smoke",
+    srcs = ["test_cli_smoke.py"],
+    imports = [".."],
+    deps = [
+        requirement("pytest"),
+    ],
+    # Note: Integration tests will be skipped in Bazel sandbox due to @pytest.mark.skipif
+    # decorators. This is expected - smoke tests still verify CLI wiring without data files.
+)
