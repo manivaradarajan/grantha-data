@@ -18,6 +18,8 @@ py_library(
     srcs = ["chunk_converter.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":devanagari_extractor",
+        ":hasher",
         "//tools/lib/gemini_processor:client",
         "//tools/lib/gemini_processor:prompt_manager",
         requirement("pyyaml"),
@@ -110,8 +112,9 @@ py_library(
     srcs = ["meghamala_stitcher.py"],
     visibility = ["//visibility:public"],
     deps = [
+        ":devanagari_extractor",
+        ":hasher",
         requirement("pyyaml"),
-        ":devanagari_repair",
     ],
 )
 
