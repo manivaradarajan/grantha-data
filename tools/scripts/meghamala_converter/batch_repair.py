@@ -38,7 +38,10 @@ from rapidfuzz import fuzz, process
 script_dir = Path(__file__).parent.parent.parent
 sys.path.append(str(script_dir / "lib"))
 
-from grantha_converter.devanagari_extractor import extract_devanagari_words
+from grantha_converter.devanagari_extractor import (
+    extract_devanagari_words,
+    clean_text_for_devanagari_comparison,
+)
 from grantha_converter.devanagari_repair import repair_file
 from grantha_converter.devanagari_validator import (
     extract_devanagari,
@@ -67,7 +70,7 @@ def setup_logging(log_dir: Path) -> Tuple[logging.Logger, Path]:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_log_dir = log_dir / timestamp
     run_log_dir.mkdir(exist_ok=True, parents=True)
-    
+
     log_filename = run_log_dir / "batch_repair.log"
 
     logger = logging.getLogger("batch_repair")
@@ -91,23 +94,9 @@ def setup_logging(log_dir: Path) -> Tuple[logging.Logger, Path]:
     return logger, run_log_dir
 
 
-def _clean_text_for_comparison(text: str) -> str:
-    """Prepares text for comparison by removing non-content elements.
-
-    Args:
-        text: The raw text content of a file.
-
-    Returns:
-        Cleaned text with frontmatter, comments, and bold markers removed.
-    """
-    if text.strip().startswith("---"):
-        parts = text.split("---", 2)
-        if len(parts) == 3:
-            text = parts[2]
-    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
-    text = re.sub(r"\*\*", "", text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
+# NOTE: _clean_text_for_comparison has been replaced with the centralized
+# clean_text_for_devanagari_comparison from devanagari_extractor.py
+# This ensures consistency across all tools (diff, repair, batch_repair)
 
 
 def _clean_filename(filename: str) -> str:
@@ -125,6 +114,8 @@ def _clean_filename(filename: str) -> str:
 def get_devanagari_diff_count(text1: str, text2: str) -> int:
     """Calculates the number of differing Devanagari characters between two texts.
 
+    Uses the centralized cleaning function to ensure consistency with diff and repair tools.
+
     Args:
         text1: The first string for comparison.
         text2: The second string for comparison.
@@ -132,8 +123,14 @@ def get_devanagari_diff_count(text1: str, text2: str) -> int:
     Returns:
         The total number of differing Devanagari characters.
     """
-    devanagari1 = extract_devanagari(text1)
-    devanagari2 = extract_devanagari(text2)
+    # Clean text first (remove YAML, HTML comments, bold markers)
+    cleaned1 = clean_text_for_devanagari_comparison(text1)
+    cleaned2 = clean_text_for_devanagari_comparison(text2)
+
+    # Extract Devanagari from cleaned text
+    devanagari1 = extract_devanagari(cleaned1)
+    devanagari2 = extract_devanagari(cleaned2)
+
     dmp = diff_match_patch.diff_match_patch()
     diffs = dmp.diff_main(devanagari1, devanagari2)
     dmp.diff_cleanupSemantic(diffs)
@@ -212,7 +209,7 @@ def find_best_match_file(
 
     logger.info(f"    - Comparing against {len(candidate_files)} candidate(s) in '{dest_dir.name}'.")
 
-    source_text_cleaned = _clean_text_for_comparison(source_text)
+    source_text_cleaned = clean_text_for_devanagari_comparison(source_text)
     source_words = extract_devanagari_words(source_text_cleaned)
     source_words_joined = " ".join(source_words)
 
@@ -226,7 +223,7 @@ def find_best_match_file(
             logger.warning(f"      - Could not read candidate file '{dest_file}': {e}")
             continue
 
-        dest_text_cleaned = _clean_text_for_comparison(dest_text)
+        dest_text_cleaned = clean_text_for_devanagari_comparison(dest_text)
         dest_words = extract_devanagari_words(dest_text_cleaned)
         content_similarity = fuzz.ratio(source_words_joined, " ".join(dest_words)) if dest_words else 0
 
@@ -262,7 +259,7 @@ def attempt_repair_and_update(
         logger: The logger instance for reporting.
         zero_diff_threshold: Max diffs to be considered a "zero-diff" match.
         dry_run: If True, performs a dry run without writing changes.
-    
+
     Returns:
         A tuple of (success_boolean, message_string).
     """
@@ -280,7 +277,7 @@ def attempt_repair_and_update(
     if success:
         logger.info(f"    - ✅ Repair successful: {message}")
         backup_path = dest_file.with_suffix(dest_file.suffix + '.backup')
-        
+
         # Update hash if diffs are within the "effective zero" threshold
         if diffs <= zero_diff_threshold:
             logger.info(f"   - Diffs ({diffs}) <= threshold ({zero_diff_threshold}). Checking and updating hash...")
@@ -292,7 +289,7 @@ def attempt_repair_and_update(
                     logger.info(f"   - ✅ Successfully updated hash in '{dest_file.name}'.")
             except (IOError, OSError) as e:
                 logger.error(f"   - ❌ Failed to update hash for '{dest_file.name}': {e}")
-        
+
         # Clean up backup file
         if backup_path.exists():
             try:
@@ -302,7 +299,7 @@ def attempt_repair_and_update(
                 logger.error(f"   - ❌ Failed to delete backup file '{backup_path.name}': {e}")
     else:
         logger.error(f"    - ❌ Repair failed: {message}")
-    
+
     return success, message
 
 
@@ -331,7 +328,7 @@ def run_batch_repair(args: argparse.Namespace):
         unmatched_dest_files.update(
             f for f in directory.glob("*.md") if not f.name.endswith(".repaired.md")
         )
-    
+
     unmatched_source_files: set[Path] = set()
     unrepairable_files: List[Tuple[Path, Path, str]] = []
     zero_diff_pairs: List[Tuple[Path, Path]] = []
@@ -367,7 +364,7 @@ def run_batch_repair(args: argparse.Namespace):
                 logger.warning(f"    - No matching destination file found.")
                 unmatched_source_files.add(source_file)
                 continue
-            
+
             # A match was found, so remove the destination file from the unmatched set.
             if best_match in unmatched_dest_files:
                 unmatched_dest_files.remove(best_match)
