@@ -434,5 +434,64 @@ canonical_title: परीक्षा
         assert "Commentary" not in extracted
 
 
+class TestDiffHeadingExclusion:
+    """Tests that diff tool excludes Devanagari from headings."""
+
+    def test_diff_excludes_heading_labels(self):
+        """Verify that Devanagari in heading labels is excluded from diff."""
+        # File with Devanagari in heading label
+        text_with_heading_label = """---
+grantha_id: test
+---
+
+# Prefatory: 0.0 (devanagari: "शान्तिमन्त्रः")
+
+अग्निमीळे पुरोहितं"""
+
+        # File without that heading
+        text_without_heading = """---
+grantha_id: test
+---
+
+अग्निमीळे पुरोहितं"""
+
+        # Clean both (this is what diff does)
+        cleaned1 = clean_text_for_devanagari_comparison(text_with_heading_label)
+        cleaned2 = clean_text_for_devanagari_comparison(text_without_heading)
+
+        # Extract Devanagari
+        dev1 = extract_devanagari(cleaned1)
+        dev2 = extract_devanagari(cleaned2)
+
+        # They should match - heading label excluded
+        assert dev1 == dev2
+        assert dev1 == "अग्निमीळे पुरोहितं"
+        # Heading label "शान्तिमन्त्रः" should NOT be in either
+        assert "शान्तिमन्त्रः" not in dev1
+        assert "शान्तिमन्त्रः" not in dev2
+
+    def test_diff_excludes_all_heading_devanagari(self):
+        """Verify that all heading Devanagari is excluded, not just labels."""
+        text1 = """# मन्त्रः 1
+
+अग्निमीळे"""
+
+        text2 = """# Different heading
+
+अग्निमीळे"""
+
+        cleaned1 = clean_text_for_devanagari_comparison(text1)
+        cleaned2 = clean_text_for_devanagari_comparison(text2)
+
+        dev1 = extract_devanagari(cleaned1)
+        dev2 = extract_devanagari(cleaned2)
+
+        # Should match - only body content compared
+        assert dev1 == dev2
+        assert dev1 == "अग्निमीळे"
+        # Heading text should be excluded
+        assert "मन्त्रः" not in dev1
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

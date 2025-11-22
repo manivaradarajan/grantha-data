@@ -27,7 +27,10 @@ from grantha_converter.meghamala_stitcher import (
     validate_merged_output,
 )
 from grantha_converter.devanagari_repair import repair_file
-from grantha_converter.devanagari_extractor import extract_devanagari
+from grantha_converter.devanagari_extractor import (
+    extract_devanagari,
+    clean_text_for_devanagari_comparison,
+)
 from grantha_converter.visual_diff import print_visual_diff
 
 
@@ -154,7 +157,7 @@ class MeghamalaConverter:
         else:
             suggestion = analysis.get("structural_analysis", {}).get("suggested_filename")
             final_filename = f"{suggestion}.md" if suggestion else f"{input_path.stem}_converted.md"
-        
+
         if not final_filename or final_filename == ".":
             final_filename = f"{input_path.stem}_converted.md"
 
@@ -217,8 +220,11 @@ class MeghamalaConverter:
         print(f"{ '='*60}\n")
 
         # 1. Extract Devanagari for comparison
-        source_devanagari = extract_devanagari(input_text)
-        converted_devanagari = extract_devanagari(merged_content)
+        # Clean texts first to remove headings (v3 behavior - exclude structural metadata)
+        source_cleaned = clean_text_for_devanagari_comparison(input_text)
+        converted_cleaned = clean_text_for_devanagari_comparison(merged_content)
+        source_devanagari = extract_devanagari(source_cleaned)
+        converted_devanagari = extract_devanagari(converted_cleaned)
 
         # 2. Calculate initial diffs
         dmp = diff_match_patch.diff_match_patch()
@@ -389,7 +395,7 @@ class MeghamalaConverter:
             return merged_content
 
         print(f"⚠️  {validation_message}", file=sys.stderr)
-        
+
         repair_log_dir = file_log_dir / "repair"
         (repair_log_dir).mkdir(parents=True, exist_ok=True)
         with open(repair_log_dir / "01_pre_repair_output.md", "w", encoding="utf-8") as f:
@@ -415,7 +421,7 @@ class MeghamalaConverter:
             repaired_content = Path(output_file).read_text(encoding="utf-8")
             with open(repair_log_dir / "02_post_repair_output.md", "w", encoding="utf-8") as f:
                 f.write(repaired_content)
-            
+
             print("✓ Repair successful.")
             return repaired_content
         else:

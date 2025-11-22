@@ -6,9 +6,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple
 
 from grantha_converter.devanagari_extractor import (
-    extract_devanagari_words,
     extract_devanagari_words_with_positions,
-    clean_text_for_devanagari_comparison,
 )
 
 def repair_devanagari_simple(
@@ -24,25 +22,21 @@ def repair_devanagari_simple(
     to match the input file, while preserving all markdown structure, comments, and formatting.
 
     The algorithm:
-    1. Clean both texts (remove frontmatter, comments, bold markers but KEEP headings)
-    2. Extract Devanagari words from cleaned texts for comparison
-    3. Extract Devanagari words with positions from ORIGINAL output text
-    4. Map changes from cleaned space to original space and apply surgically
+    1. Extract Devanagari words with positions from BOTH input and output (original texts)
+    2. Skip frontmatter and comments, but KEEP headings (we repair those too)
+    3. Compare word sequences and identify differences
+    4. Apply surgical edits to output text at the identified positions
     """
-    # 1. Clean both texts (remove frontmatter, comments, bold but NOT headings)
-    # We keep headings because we need to repair Devanagari in headings too!
-    input_cleaned = clean_text_for_devanagari_comparison(input_text, skip_headings=False)
-    output_cleaned = clean_text_for_devanagari_comparison(output_text, skip_headings=False)
+    # 1. Extract Devanagari words WITH POSITIONS from BOTH texts
+    #    Use same filtering for both: skip frontmatter/comments, keep headings
+    input_words_with_pos = extract_devanagari_words_with_positions(
+        input_text,
+        skip_frontmatter=True,
+        skip_comments=True,
+        skip_headings=False
+    )
+    input_words = [w for w, _, _ in input_words_with_pos]
 
-    # 2. Extract Devanagari words from CLEANED texts for comparison
-    input_words = extract_devanagari_words(input_cleaned)
-    output_words_cleaned = extract_devanagari_words(output_cleaned)
-
-    if input_words == output_words_cleaned:
-        return True, output_text, "No repair needed - Devanagari already matches."
-
-    # 3. Extract Devanagari words WITH POSITIONS from ORIGINAL output text
-    #    (we need original positions for surgical edits)
     output_words_with_pos = extract_devanagari_words_with_positions(
         output_text,
         skip_frontmatter=True,
@@ -51,11 +45,8 @@ def repair_devanagari_simple(
     )
     output_words = [w for w, _, _ in output_words_with_pos]
 
-    # 4. Sanity check: cleaned extraction should match position-based extraction
-    if output_words != output_words_cleaned:
-        if verbose:
-            print(f"   ⚠ WARNING: Cleaned words ({len(output_words_cleaned)}) != Position words ({len(output_words)})")
-            print(f"      This suggests a bug in extraction logic consistency")
+    if input_words == output_words:
+        return True, output_text, "No repair needed - Devanagari already matches."
 
     # 2. Safety Check: Similarity
     similarity = fuzz.ratio(" ".join(input_words), " ".join(output_words)) / 100.0
@@ -86,16 +77,18 @@ def repair_devanagari_simple(
             # Insert at the position where j1 would be
             if j1 < len(output_words_with_pos):
                 insert_pos = output_words_with_pos[j1][1]
+                # Add space after insertion to separate from following word
+                text_to_insert = " ".join(input_words[i1:i2]) + " "
             elif j1 > 0 and len(output_words_with_pos) > 0:
-                # Insert after the last word
+                # Insert after the last word - add space before
                 insert_pos = output_words_with_pos[-1][2]
+                text_to_insert = " " + " ".join(input_words[i1:i2])
             else:
                 # No words in output, can't determine position
                 if verbose:
                     print(f"   ⚠ Cannot determine insertion position for missing words: {' '.join(input_words[i1:i2])}")
                 continue
-            text_to_insert = " ".join(input_words[i1:i2])
-            changes.append((insert_pos, insert_pos, text_to_insert, f"insert '{text_to_insert}'"))
+            changes.append((insert_pos, insert_pos, text_to_insert, f"insert '{text_to_insert.strip()}'"))
         elif tag == 'insert': # Words in output but not input -> Delete from output
             # Delete each word individually to handle spacing correctly
             for j in range(j1, j2):
