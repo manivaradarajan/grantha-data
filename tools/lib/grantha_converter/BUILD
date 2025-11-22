@@ -118,3 +118,9 @@ py_library(
         requirement("rich"),
     ],
 )
+
+py_library(
+    name = "devanagari_validator",
+    srcs = ["devanagari_validator.py"],
+    visibility = ["//visibility:public"],
+)

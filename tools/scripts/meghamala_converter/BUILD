@@ -23,3 +23,23 @@ py_library(
         "//tools/lib/grantha_converter:utils",
     ],
 )
+
+py_binary(
+    name = "batch_repair",
+    srcs = ["batch_repair.py"],
+    main = "batch_repair.py",
+    deps = [":batch_repair_lib"],
+)
+
+py_library(
+    name = "batch_repair_lib",
+    srcs = ["batch_repair.py"],
+    imports = [".."],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//tools/lib/grantha_converter:devanagari_extractor",
+        "//tools/lib/grantha_converter:devanagari_repair",
+        "//tools/lib/grantha_converter:devanagari_validator",
+        "//tools/lib/grantha_converter:hasher",
+    ],
+)

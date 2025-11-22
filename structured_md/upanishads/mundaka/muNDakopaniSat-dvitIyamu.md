@@ -21,6 +21,7 @@ structure_levels:
       scriptNames:
         devanagari: मन्त्रः
         roman: mantra
+grantha_hash: 685d74e93fd5dcbba50875b0c70efaa61e268eaaf15db53e5f7640937349e38a
 ---
 
 <!-- hide type:document-title --> मुण्डकोपनिषत् <!-- /hide -->

@@ -50,22 +50,25 @@ DEFAULT_SOURCE_DIR = Path("sources/upanishads/meghamala")
 DEFAULT_DEST_DIR = Path("structured_md/upanishads")
 DEFAULT_LOGS_DIR = Path("logs")
 DIFF_THRESHOLD = 300
-FILENAME_SIMILARITY_WEIGHT = 0.7
-CONTENT_SIMILARITY_WEIGHT = 0.3
+CONTENT_SIMILARITY_WEIGHT = 1.0  # Now the only factor
 
 
-def setup_logging(log_dir: Path) -> logging.Logger:
-    """Configures a logger to write to a timestamped file and the console.
+
+def setup_logging(log_dir: Path) -> Tuple[logging.Logger, Path]:
+    """Configures a logger to write to a timestamped directory and the console.
 
     Args:
-        log_dir: The directory where the log file will be saved.
+        log_dir: The base directory where the timestamped log folder will be created.
 
     Returns:
-        A configured logging.Logger instance.
+        A tuple containing a configured logging.Logger instance and the Path
+        to the newly created timestamped log directory.
     """
-    log_dir.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = log_dir / f"batch_repair_{timestamp}.log"
+    run_log_dir = log_dir / timestamp
+    run_log_dir.mkdir(exist_ok=True, parents=True)
+    
+    log_filename = run_log_dir / "batch_repair.log"
 
     logger = logging.getLogger("batch_repair")
     logger.setLevel(logging.INFO)
@@ -85,7 +88,7 @@ def setup_logging(log_dir: Path) -> logging.Logger:
     console_handler.setFormatter(logging.Formatter("%(message)s"))
     logger.addHandler(console_handler)
 
-    return logger
+    return logger, run_log_dir
 
 
 def _clean_text_for_comparison(text: str) -> str:
@@ -120,7 +123,7 @@ def _clean_filename(filename: str) -> str:
 
 
 def get_devanagari_diff_count(text1: str, text2: str) -> int:
-    """Calculates the number of Devanagari differences between two texts.
+    """Calculates the number of differing Devanagari characters between two texts.
 
     Args:
         text1: The first string for comparison.
@@ -134,7 +137,8 @@ def get_devanagari_diff_count(text1: str, text2: str) -> int:
     dmp = diff_match_patch.diff_match_patch()
     diffs = dmp.diff_main(devanagari1, devanagari2)
     dmp.diff_cleanupSemantic(diffs)
-    return sum(1 for op, _ in diffs if op != dmp.DIFF_EQUAL)
+    # Sum the length of the text in all non-equal diff segments
+    return sum(len(text) for op, text in diffs if op != dmp.DIFF_EQUAL)
 
 
 def update_hash_in_frontmatter(content: str, logger: logging.Logger) -> Optional[str]:
@@ -184,7 +188,7 @@ def update_hash_in_frontmatter(content: str, logger: logging.Logger) -> Optional
 def find_best_match_file(
     source_file: Path, dest_dir: Path, logger: logging.Logger
 ) -> Tuple[Optional[Path], int]:
-    """Finds the best file match based on filename and content similarity.
+    """Finds the best file match based purely on Devanagari content similarity.
 
     Args:
         source_file: The source markdown file.
@@ -211,10 +215,9 @@ def find_best_match_file(
     source_text_cleaned = _clean_text_for_comparison(source_text)
     source_words = extract_devanagari_words(source_text_cleaned)
     source_words_joined = " ".join(source_words)
-    source_filename_cleaned = _clean_filename(source_file.name)
 
     best_match_file: Optional[Path] = None
-    max_combined_score = -1.0
+    max_content_score = -1.0
 
     for dest_file in candidate_files:
         try:
@@ -223,20 +226,15 @@ def find_best_match_file(
             logger.warning(f"      - Could not read candidate file '{dest_file}': {e}")
             continue
 
-        dest_filename_cleaned = _clean_filename(dest_file.name)
-        filename_similarity = fuzz.ratio(source_filename_cleaned, dest_filename_cleaned)
-
         dest_text_cleaned = _clean_text_for_comparison(dest_text)
         dest_words = extract_devanagari_words(dest_text_cleaned)
         content_similarity = fuzz.ratio(source_words_joined, " ".join(dest_words)) if dest_words else 0
 
-        combined_score = (filename_similarity * FILENAME_SIMILARITY_WEIGHT) + (content_similarity * CONTENT_SIMILARITY_WEIGHT)
-
-        log_msg = f"      - Candidate '{dest_file.name}': Filename Sim: {filename_similarity:.1f}%%, Content Sim: {content_similarity:.1f}%%, Combined: {combined_score:.1f}%%"
+        log_msg = f"      - Candidate '{dest_file.name}': Content Sim: {content_similarity:.1f}%%"
         logger.info(log_msg)
 
-        if combined_score > max_combined_score:
-            max_combined_score = combined_score
+        if content_similarity > max_content_score:
+            max_content_score = content_similarity
             best_match_file = dest_file
 
     if not best_match_file:
@@ -252,6 +250,7 @@ def attempt_repair_and_update(
     dest_file: Path,
     diffs: int,
     logger: logging.Logger,
+    zero_diff_threshold: int,
     dry_run: bool = False,
 ) -> Tuple[bool, str]:
     """Attempts to repair a file and update its hash if successful.
@@ -261,6 +260,7 @@ def attempt_repair_and_update(
         dest_file: The destination file to be repaired.
         diffs: The pre-calculated number of Devanagari differences.
         logger: The logger instance for reporting.
+        zero_diff_threshold: Max diffs to be considered a "zero-diff" match.
         dry_run: If True, performs a dry run without writing changes.
     
     Returns:
@@ -281,9 +281,9 @@ def attempt_repair_and_update(
         logger.info(f"    - ✅ Repair successful: {message}")
         backup_path = dest_file.with_suffix(dest_file.suffix + '.backup')
         
-        # Update hash if diffs are zero
-        if diffs == 0:
-            logger.info("   - Zero diffs found, checking and updating hash...")
+        # Update hash if diffs are within the "effective zero" threshold
+        if diffs <= zero_diff_threshold:
+            logger.info(f"   - Diffs ({diffs}) <= threshold ({zero_diff_threshold}). Checking and updating hash...")
             try:
                 dest_content = dest_file.read_text(encoding="utf-8")
                 updated_content = update_hash_in_frontmatter(dest_content, logger)
@@ -312,8 +312,9 @@ def run_batch_repair(args: argparse.Namespace):
     Args:
         args: Command-line arguments parsed by argparse.
     """
-    logger = setup_logging(args.log_dir)
+    logger, run_log_dir = setup_logging(args.log_dir)
     logger.info("--- Starting Batch Devanagari Repair ---")
+    logger.info(f"--- Log directory for this run: {run_log_dir} ---")
     if args.dry_run:
         logger.info("*** DRY RUN MODE ENABLED: No files will be modified. ***")
 
@@ -330,7 +331,11 @@ def run_batch_repair(args: argparse.Namespace):
         unmatched_dest_files.update(
             f for f in directory.glob("*.md") if not f.name.endswith(".repaired.md")
         )
+    
+    unmatched_source_files: set[Path] = set()
     unrepairable_files: List[Tuple[Path, Path, str]] = []
+    zero_diff_pairs: List[Tuple[Path, Path]] = []
+    non_zero_diff_pairs: List[Tuple[Path, Path, int]] = []
     # ---
 
     dest_dir_names = [d.name for d in dest_dirs]
@@ -339,72 +344,125 @@ def run_batch_repair(args: argparse.Namespace):
         logger.info(f"\nProcessing source directory: '{source_dir.name}'")
         match_result = process.extractOne(source_dir.name, dest_dir_names, scorer=fuzz.ratio)
 
+        source_files_in_dir = [f for f in source_dir.glob("*.md") if not f.name.endswith(".repaired.md")]
+        if not source_files_in_dir:
+            logger.info("  - No markdown files found in this source directory.")
+            continue
+
         if not match_result or match_result[1] < 70:
-            score_str = f"{match_result[1]:.1f}%" if match_result else "N/A"
-            logger.warning(f"  - No suitable destination directory found (best match score: {score_str}).")
+            score_str = f"{match_result[1]:.1f}%%" if match_result else "N/A"
+            logger.warning(f"  - No suitable destination directory found (best match score: {score_str}). Adding all source files to unmatched log.")
+            unmatched_source_files.update(source_files_in_dir)
             continue
 
         match_dir_name = match_result[0]
         match_dir = args.dest_dir / match_dir_name
-        logger.info(f"  - Matched with '{match_dir.name}' (score: {match_result[1]:.1f}%).")
+        logger.info(f"  - Matched with '{match_dir.name}' (score: {match_result[1]:.1f}%%).")
 
-        source_files = list(source_dir.glob("*.md"))
-        if not source_files:
-            logger.info("  - No markdown files found in this source directory.")
-            continue
-
-        for source_file in source_files:
+        for source_file in source_files_in_dir:
             logger.info(f"  - Processing source file: '{source_file.name}'")
             best_match, diffs = find_best_match_file(source_file, match_dir, logger)
 
             if best_match is None:
                 logger.warning(f"    - No matching destination file found.")
+                unmatched_source_files.add(source_file)
                 continue
             
+            # A match was found, so remove the destination file from the unmatched set.
             if best_match in unmatched_dest_files:
                 unmatched_dest_files.remove(best_match)
 
             logger.info(f"    - Best match found: '{best_match.name}' with {diffs} diffs.")
 
+            # Categorize the match based on the zero-diff-threshold
+            if diffs <= args.zero_diff_threshold:
+                zero_diff_pairs.append((source_file, best_match, diffs))
+            else:
+                non_zero_diff_pairs.append((source_file, best_match, diffs))
+                unmatched_source_files.add(source_file) # Not a "perfect" match
+
             if diffs < args.diff_threshold:
-                success, message = attempt_repair_and_update(source_file, best_match, diffs, logger, args.dry_run)
+                success, message = attempt_repair_and_update(
+                    source_file, best_match, diffs, logger, args.zero_diff_threshold, args.dry_run
+                )
                 if not success:
                     unrepairable_files.append((source_file, best_match, message))
             else:
-                logger.warning(f"    - Diffs ({diffs}) exceed threshold ({args.diff_threshold}). Skipping repair.")
+                warning_message = f"Diffs ({diffs}) exceed threshold ({args.diff_threshold}). Skipping repair."
+                logger.warning(f"    - {warning_message} Source file will be logged as unrepairable.")
+                unrepairable_files.append((source_file, best_match, warning_message))
 
-    # --- Log any remaining unmatched files ---
-    if unmatched_dest_files:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unmatched_log_path = args.log_dir / f"unmatched_dest_files_{timestamp}.log"
-        logger.info(f"\nFound {len(unmatched_dest_files)} unmatched destination files. Logging to {unmatched_log_path}")
-        try:
-            with open(unmatched_log_path, "w", encoding="utf-8") as f:
-                for file_path in sorted(list(unmatched_dest_files)):
-                    f.write(f"{file_path}\n")
-        except IOError as e:
-            logger.error(f"Error writing unmatched files log: {e}")
-    else:
-        logger.info("\nNo unmatched destination files found.")
-    
-    # --- Log any unrepairable files ---
-    if unrepairable_files:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        unrepairable_log_path = args.log_dir / f"unrepairable_files_{timestamp}.log"
-        logger.info(f"\nFound {len(unrepairable_files)} unrepairable files. Logging to {unrepairable_log_path}")
-        try:
-            with open(unrepairable_log_path, "w", encoding="utf-8") as f:
-                f.write("The following files were matched but could not be repaired:\n\n")
-                for source, dest, msg in unrepairable_files:
-                    f.write(f"Source: {source}\n")
-                    f.write(f"Destination: {dest}\n")
-                    f.write(f"Reason: {msg}\n\n")
-        except IOError as e:
-            logger.error(f"Error writing unrepairable files log: {e}")
-    else:
-        logger.info("\nNo unrepairable files were found.")
+    # --- Log all collected data ---
+    save_log_file(
+        run_log_dir,
+        "unmatched_dest_files",
+        "The following destination files had no corresponding source file:",
+        [str(p) for p in sorted(list(unmatched_dest_files))],
+        logger,
+    )
+    save_log_file(
+        run_log_dir,
+        "unmatched_source_files",
+        f"The following source files had no match with <= {args.zero_diff_threshold} diffs:",
+        [str(p) for p in sorted(list(unmatched_source_files))],
+        logger,
+    )
+    save_log_file(
+        run_log_dir,
+        "zero_diff_pairs",
+        f"The following pairs have <= {args.zero_diff_threshold} Devanagari differences (effective zero-diff):",
+        [f"{s} -> {d} [{c}]" for s, d, c in sorted(zero_diff_pairs, key=lambda x: x[0])],
+        logger,
+    )
+    save_log_file(
+        run_log_dir,
+        "non_zero_diff_pairs",
+        f"The following matched pairs have > {args.zero_diff_threshold} Devanagari differences:",
+        [f"{s} -> {d} [{c}]" for s, d, c in sorted(non_zero_diff_pairs, key=lambda x: x[0])],
+        logger,
+    )
+    save_log_file(
+        run_log_dir,
+        "unrepairable_files",
+        "The following files were matched but could not be repaired:",
+        [f"Source: {s}\nDestination: {d}\nReason: {m}\n" for s, d, m in unrepairable_files],
+        logger,
+    )
 
     logger.info("\n--- Batch Repair Complete ---")
+
+
+def save_log_file(
+    log_dir: Path,
+    base_filename: str,
+    title: str,
+    lines: List[str],
+    logger: logging.Logger,
+):
+    """Creates and writes a log file.
+
+    Args:
+        log_dir: The directory to save the log file in (already timestamped).
+        base_filename: The base name for the log file (e.g., "unmatched_files").
+        title: The header text to write at the top of the file.
+        lines: A list of strings to write to the file.
+        logger: The main logger instance for reporting.
+    """
+    if not lines:
+        logger.info(f"\nNo items to log for {base_filename}.")
+        return
+
+    log_path = log_dir / f"{base_filename}.log"
+    logger.info(f"\nFound {len(lines)} items to log. Writing to {log_path}")
+    try:
+        with open(log_path, "w", encoding="utf-8") as f:
+            if title:
+                f.write(f"{title}\n\n")
+            for line in lines:
+                f.write(f"{line}\n")
+    except IOError as e:
+        logger.error(f"Error writing log file {log_path}: {e}")
+
 
 
 def main():
@@ -436,6 +494,12 @@ def main():
         type=int,
         default=DIFF_THRESHOLD,
         help="Maximum number of Devanagari diffs to attempt a repair.",
+    )
+    parser.add_argument(
+        "--zero-diff-threshold",
+        type=int,
+        default=5,
+        help="Maximum diffs to be considered an 'effective' zero-diff match for hashing.",
     )
     parser.add_argument(
         "--dry-run",
