@@ -2,17 +2,17 @@
 grantha_id: ishavasya-upanishad
 part_num: 1
 canonical_title: ईशावास्योपनिषत्
-text_type: upanishad # 👈 FIX 1: Added text_type (example value)
-language: sanskrit # 👈 FIX 1: Added language (example value)
-structure_type: mantra # 👈 FIX 4: Added structure_type (example value)
+text_type: upanishad
+language: sanskrit
+structure_type: mantra
 commentaries_metadata:
   - commentary_id: vedanta-desika-bhashyam
     commentary_title: ईशावास्योपनिषद्भाष्यम्
-    commentator: # 👈 FIX 3: Changed to an object
+    commentator:
       devanagari: श्रीमद्वेदान्ताचार्यः
-      roman: śrīmadvēdāntācāryaḥ # Added roman transliteration
+      roman: śrīmadvēdāntācāryaḥ
     authored_colophon: श्रीमद्वेदान्ताचार्यैः विरचितम्
-structure_levels: # 👈 FIX 2: Changed from an object to an array/list
+structure_levels:
   - key: Mantra
     scriptNames:
       devanagari: मन्त्रः
