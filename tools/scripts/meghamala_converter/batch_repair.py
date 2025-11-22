@@ -279,6 +279,9 @@ def attempt_repair_and_update(
 
     if success:
         logger.info(f"    - ✅ Repair successful: {message}")
+        backup_path = dest_file.with_suffix(dest_file.suffix + '.backup')
+        
+        # Update hash if diffs are zero
         if diffs == 0:
             logger.info("   - Zero diffs found, checking and updating hash...")
             try:
@@ -289,6 +292,14 @@ def attempt_repair_and_update(
                     logger.info(f"   - ✅ Successfully updated hash in '{dest_file.name}'.")
             except (IOError, OSError) as e:
                 logger.error(f"   - ❌ Failed to update hash for '{dest_file.name}': {e}")
+        
+        # Clean up backup file
+        if backup_path.exists():
+            try:
+                backup_path.unlink()
+                logger.info(f"   - Cleaned up backup file: '{backup_path.name}'.")
+            except (IOError, OSError) as e:
+                logger.error(f"   - ❌ Failed to delete backup file '{backup_path.name}': {e}")
     else:
         logger.error(f"    - ❌ Repair failed: {message}")
     
