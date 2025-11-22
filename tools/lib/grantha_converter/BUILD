@@ -1,5 +1,5 @@
 load("@grantha_pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 py_library(
     name = "analyzer",
@@ -76,6 +76,10 @@ py_library(
     name = "devanagari_repair",
     srcs = ["devanagari_repair.py"],
     visibility = ["//visibility:public"],
+    deps = [
+        ":devanagari_extractor",
+        requirement("rapidfuzz"),
+    ],
 )
 
 py_library(
@@ -123,4 +127,26 @@ py_library(
     name = "devanagari_validator",
     srcs = ["devanagari_validator.py"],
     visibility = ["//visibility:public"],
+)
+
+# Tests
+py_test(
+    name = "test_devanagari_extractor",
+    srcs = ["test_devanagari_extractor.py"],
+    imports = [".."],
+    deps = [
+        ":devanagari_extractor",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_devanagari_consistency",
+    srcs = ["test_devanagari_consistency.py"],
+    imports = [".."],
+    deps = [
+        ":devanagari_extractor",
+        ":devanagari_repair",
+        requirement("pytest"),
+    ],
 )

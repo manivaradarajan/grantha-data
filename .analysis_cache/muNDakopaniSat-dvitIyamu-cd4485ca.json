@@ -1,6 +1,6 @@
 {
   "file_hash": "f5b993795b1df18eafd2e6c3fb856717c2e2d4f3a727d642be9e97c54607c40c",
-  "timestamp": "2025-11-20T08:20:23.432675",
+  "timestamp": "2025-11-21T11:56:59.369102",
   "analysis": {
     "metadata": {
       "canonical_title": "मुण्डकोपनिषत्",
@@ -13,9 +13,9 @@
     },
     "structural_analysis": {
       "starting_id": "2.1.1",
-      "context_justification": "The text begins within the 'Dvitiya Muṇḍaka' (2) and the 'Prathama Khaṇḍa' (1). The first parsed unit is Mantra 1. Thus, the start ID is 2.1.1.",
+      "context_justification": "The document contains the header 'द्वितीयमुण्डके' (Second Mundaka) and 'प्रथमखण्डः' (First Khanda). The first numbered unit is Mantra 1 (।।१।।). Therefore, the starting coordinate is 2.1.1.",
       "suggested_filename": "mundaka-upanishad-rangaramanuja-02-01-01",
-      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (02-01-01) for unique, sortable naming.",
+      "filename_justification": "Combines the grantha ID ('mundaka-upanishad'), a slug for the commentator ('rangaramanuja'), and the zero-padded, hyphen-separated starting ID ('02-01-01') for a unique, sortable filename.",
       "structure_levels": {
         "key": "Mundaka",
         "scriptNames": {
@@ -40,39 +40,39 @@
     },
     "chunking_strategy": {
       "proposed_strategy": {
-        "name": "Validated Group by Character Count (Single Chunk)",
-        "description": "Since the provided document is a single, short segment (Khaṇḍa 2.1), it is contained entirely within one optimized chunk.",
+        "name": "Validated Group by Character Count",
+        "description": "This strategy combines consecutive Khandas, strictly ensuring no chunk exceeds the safety character limit of 125,000 characters. Since the provided text contains only a single Khanda and is well below the limit, it constitutes a single chunk.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "The entirety of the provided text, covering Muṇḍaka 2, Khaṇḍa 1.",
+          "description": "The entire provided text, which constitutes the first Khanda of the second Mundaka, including its commentary.",
           "start_marker": "**मुण्डकोपनिषत्**",
           "end_marker": "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।",
-          "estimated_character_count": 10500
+          "estimated_character_count": 11539
         }
       ]
     },
     "parsing_instructions": {
       "recommended_unit": "Khanda",
-      "justification": "The Muṇḍaka is primarily divided into Khaṇḍas, which serve as the major semantic and structural units to be parsed first.",
-      "numbering_capture_strategy": "Extract the Sanskrit ordinal (e.g., 'प्रथमः') found in the bolded Khaṇḍa header and convert it to an integer (e.g., 1).",
+      "justification": "The Mundaka is primarily divided into Khandas, which are the main semantic and structural sections containing a group of mantras and their corresponding commentary.",
+      "numbering_capture_strategy": "Capture the Devanagari numeral(s) from the mantra lines, which are enclosed in double dandas, e.g., '।।१।।' or '।। १० ।।'.",
       "start_pattern": {
-        "description": "A new Khaṇḍa begins with a bolded heading indicating its Muṇḍaka and Khaṇḍa number, sometimes preceded by the Grantha title.",
+        "description": "A new Khanda begins with a bolded heading indicating the Mundaka number and the Khanda number.",
         "examples": [
           "**द्वितीयमुण्डके** **प्रथमखण्डः**"
         ],
-        "regex": "\\*\\*([\\u0900-\\u097F]+)मुण्डके\\*\\* \\*\\*([\\u0900-\\u097F]+)खण्डः\\*\\*"
+        "regex": "\\*\\*([\\u0900-\\u097F]+मुण्डके)\\*\\*\\s*\\*\\*([\\u0900-\\u097F]+खण्डः)\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of a Khaṇḍa is marked by a concluding line (colophon) mentioning the end of the section's commentary (Prakāśikā).",
+        "description": "The end of a Khanda's commentary is marked by a specific colophon line.",
         "examples": [
           "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।"
         ],
-        "regex": "।। इति .*?खण्डप्रकाशिका ।।"
+        "regex": "।।\\s*इति\\s*[\\u0900-\\u097F]+मुण्डके\\s*[\\u0900-\\u097F]+खण्डप्रकाशिका\\s*।।"
       },
-      "pre_content_handling": "Ignore the top-level Grantha title (**मुण्डकोपनिषत्**). The line `[अक्षरात् जगत्सृष्टिः]` should be treated as a subtitle or thematic header for the following Khaṇḍa content."
+      "pre_content_handling": "The initial text 'मुण्डकोपनिषत्' should be treated as global document metadata. Thematic sub-headings within square brackets, such as '[अक्षरात् जगत्सृष्टिः]', should be parsed as topic markers associated with the subsequent group of mantras."
     }
   },
   "version": "1.0"

@@ -8,30 +8,8 @@ from typing import List, Optional, Tuple
 from grantha_converter.devanagari_extractor import (
     extract_devanagari_words,
     extract_devanagari_words_with_positions,
+    clean_text_for_devanagari_comparison,
 )
-
-
-def _clean_text_for_comparison(text: str) -> str:
-    """
-    Cleans text by removing frontmatter, HTML comments, and markdown bold markers
-    to prepare it for Devanagari word extraction and comparison.
-    """
-    # 1. Remove YAML frontmatter
-    if text.strip().startswith("---"):
-        parts = text.split("---", 2)
-        if len(parts) == 3:
-            text = parts[2]
-
-    # 2. Replace HTML comments with a space to avoid merging words
-    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
-
-    # 3. Remove markdown bold markers
-    text = re.sub(r"\*\*", "", text)
-    
-    # 4. (Optional but good practice) Normalize whitespace to a single space
-    text = re.sub(r'\s+', ' ', text).strip()
-
-    return text
 
 def repair_devanagari_simple(
     input_text: str,
@@ -53,14 +31,14 @@ def repair_devanagari_simple(
             frontmatter_prefix = f"---{output_parts[1]}---"
 
     # 2. Create consistently cleaned versions of both texts for all operations
-    input_body_cleaned = _clean_text_for_comparison(input_text)
-    output_body_cleaned = _clean_text_for_comparison(output_text)
+    input_body_cleaned = clean_text_for_devanagari_comparison(input_text)
+    output_body_cleaned = clean_text_for_devanagari_comparison(output_text)
 
     # 3. Extract words AND positions from the CLEANED texts.
     #    Positions are now relative to the cleaned bodies, ensuring consistency.
     input_words_with_pos = extract_devanagari_words_with_positions(input_body_cleaned)
     output_words_with_pos = extract_devanagari_words_with_positions(output_body_cleaned)
-    
+
     input_words = [w for w, _, _ in input_words_with_pos]
     output_words = [w for w, _, _ in output_words_with_pos]
 
@@ -106,7 +84,7 @@ def repair_devanagari_simple(
     # 6. Apply changes in reverse to the CLEANED output body
     changes.sort(key=lambda x: x[0], reverse=True)
     repaired_body = output_body_cleaned
-    
+
     if verbose:
         print(f"\n📋 Found {len(changes)} changes to apply:")
 
@@ -117,7 +95,7 @@ def repair_devanagari_simple(
 
     # 7. Final validation against the CLEANED input body
     final_repaired_words = extract_devanagari_words(repaired_body)
-    
+
     if final_repaired_words == input_words:
         # Success! Re-attach the original frontmatter to the repaired clean body.
         final_content = frontmatter_prefix + "\n" + repaired_body if frontmatter_prefix else repaired_body
@@ -161,7 +139,7 @@ def repair_file(
 
     if not success:
         return False, f"Repair pre-check failed: {message}"
-    
+
     if dry_run:
         return True, f"Dry run successful: {message}"
 

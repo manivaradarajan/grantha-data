@@ -1,6 +1,6 @@
 {
   "file_hash": "d52609305805745e89eb8f7758b5827b3ab9b64f0fa228f687aa68da5510ab68",
-  "timestamp": "2025-11-20T08:12:52.816434",
+  "timestamp": "2025-11-21T11:45:32.037266",
   "analysis": {
     "metadata": {
       "canonical_title": "मुण्डकोपनिषत्",
@@ -13,9 +13,9 @@
     },
     "structural_analysis": {
       "starting_id": "1.1.1",
-      "context_justification": "The text begins within the 'Prathama Muṇḍaka' (1) and 'Prathama Khaṇḍa' (1). The first verse is numbered '1'. Thus, the starting coordinate is 1.1.1.",
+      "context_justification": "The document headers specify 'प्रथममुण्डके' (First Mundaka) and 'प्रथमः खण्डः' (First Khanda). The first numbered mantra within this section is '।।१।।'. Therefore, the starting coordinate is 1.1.1.",
       "suggested_filename": "mundaka-upanishad-rangaramanuja-01-01-01",
-      "filename_justification": "Combines grantha ID, commentary author slug (rangaramanuja), and zero-padded start ID (01-01-01) for unique, sortable naming.",
+      "filename_justification": "Combines the grantha_id ('mundaka-upanishad'), a slug for the commentator ('rangaramanuja'), and the zero-padded, hyphenated starting_id ('01-01-01') for unique, sortable file naming.",
       "structure_levels": {
         "key": "Mundaka",
         "scriptNames": {
@@ -41,38 +41,38 @@
     "chunking_strategy": {
       "proposed_strategy": {
         "name": "Validated Group by Character Count",
-        "description": "This document contains only the Śāntipāṭha and Muṇḍaka 1, Khaṇḍa 1. The entire content forms a single chunk, which is well below the safety character limit.",
+        "description": "This strategy combines consecutive major sections (Khandas) into a single chunk, starting a new chunk only when adding the next section would exceed the safety character limit. The provided text contains only one Khanda, which fits entirely within a single chunk.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "Prefatory Śāntipāṭha, Muṇḍaka 1, and Khaṇḍa 1, including the Prakāśikā commentary.",
-          "start_marker": "(अथर्ववेदीयोपनिषच्छान्तिपाठः)",
+          "description": "The prefatory Shanti Patha and the complete First Khanda of the First Mundaka.",
+          "start_marker": "**(अथर्ववेदीयोपनिषच्छान्तिपाठः)**",
           "end_marker": "।। इति प्रथममुण्डके प्रथमखण्डप्रकाशिका ।।",
-          "estimated_character_count": 20000
+          "estimated_character_count": 26220
         }
       ]
     },
     "parsing_instructions": {
       "recommended_unit": "Khanda",
-      "justification": "The Muṇḍaka is divided into Khaṇḍas, which serve as the primary organizational unit for segmentation and processing.",
-      "numbering_capture_strategy": "Extract the Sanskrit ordinal (e.g., 'प्रथमः') found immediately following the Muṇḍaka designation within the header.",
+      "justification": "The text is hierarchically organized into Mundakas, which are then subdivided into Khandas. The Khanda represents the primary, self-contained unit of commentary and analysis within a Mundaka.",
+      "numbering_capture_strategy": "The Khanda number is a Sanskrit ordinal (e.g., 'प्रथमः') found within the bolded start pattern header.",
       "start_pattern": {
-        "description": "A new Khaṇḍa begins with a bolded header specifying the Muṇḍaka and Khaṇḍa number.",
+        "description": "A new Khanda begins with a bolded heading indicating the Mundaka (in locative case) and the Khanda (in nominative case).",
         "examples": [
-          "**प्रथममुण्डके****प्रथमः****खण्डः**"
+          "**प्रथममुण्डके प्रथमः खण्डः**"
         ],
-        "regex": "\\*\\*([\\u0900-\\u097F]+ मुण्डके)\\*\\*([\\u0900-\\u097F]+)\\*\\*खण्डः\\*\\*"
+        "regex": "\\*\\*([\\u0900-\\u097F]+)मुण्डके\\s*([\\u0900-\\u097F]+)\\s*खण्डः\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of a Khaṇḍa's commentary is marked by a concluding line mentioning the Khaṇḍa and Muṇḍaka in the colophon.",
+        "description": "The end of a Khanda's commentary is explicitly marked with a concluding phrase that names the Mundaka, Khanda, and commentary.",
         "examples": [
           "।। इति प्रथममुण्डके प्रथमखण्डप्रकाशिका ।।"
         ],
-        "regex": "।। इति [\\u0900-\\u097F]+मुण्डके [\\u0900-\\u097F]+खण्डप्रकाशिका ।।"
+        "regex": "।।\\s*इति\\s*[\\u0900-\\u097F]+मुण्डके\\s*[\\u0900-\\u097F]+खण्डप्रकाशिका\\s*।।"
       },
-      "pre_content_handling": "The initial 'अथर्ववेदीयोपनिषच्छान्तिपाठः' should be segregated as a 'Prefatory' section before the content of Muṇḍaka 1, Khaṇḍa 1 begins."
+      "pre_content_handling": "The initial text under the heading '**(अथर्ववेदीयोपनिषच्छान्तिपाठः)**' is a prefatory Shanti Patha and should be processed as a standalone 'Prefatory' section before parsing the first Khanda."
     }
   },
   "version": "1.0"

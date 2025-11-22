@@ -30,6 +30,46 @@ from typing import List, Tuple
 HASH_VERSION = 2
 
 
+def clean_text_for_devanagari_comparison(text: str) -> str:
+    """
+    Cleans text by removing frontmatter, HTML comments, and markdown bold markers
+    to prepare it for Devanagari word extraction and comparison.
+
+    This is the canonical cleaning function used across the codebase for:
+    - Devanagari diff comparison (devanagari_diff.py)
+    - Text repair operations (devanagari_repair.py)
+    - Any other operation requiring consistent Devanagari comparison
+
+    Args:
+        text: Input text that may contain YAML frontmatter, HTML comments,
+              markdown bold markers, and other non-Devanagari content
+
+    Returns:
+        Cleaned text with frontmatter, HTML comments, and bold markers removed
+
+    Examples:
+        >>> text = "---\\ntitle: Test\\n---\\n**अग्निमीळे** <!-- comment --> पुरोहितं"
+        >>> clean_text_for_devanagari_comparison(text)
+        'अग्निमीळे पुरोहितं'
+    """
+    # 1. Remove YAML frontmatter
+    if text.strip().startswith("---"):
+        parts = text.split("---", 2)
+        if len(parts) == 3:
+            text = parts[2]
+
+    # 2. Replace HTML comments with a space to avoid merging words
+    text = re.sub(r"<!--.*?-->", " ", text, flags=re.DOTALL)
+
+    # 3. Remove markdown bold markers
+    text = re.sub(r"\*\*", "", text)
+
+    # 4. Normalize whitespace to a single space
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text
+
+
 def extract_devanagari(text: str) -> str:
     """Extracts all Devanagari characters from a string, preserving word boundaries.
 

@@ -20,44 +20,11 @@ import argparse
 import sys
 from pathlib import Path
 
-import yaml
-from grantha_converter.devanagari_extractor import extract_devanagari
+from grantha_converter.devanagari_extractor import (
+    extract_devanagari,
+    clean_text_for_devanagari_comparison,
+)
 from grantha_converter.visual_diff import print_visual_diff
-
-
-def _remove_yaml_header(input: str) -> str:
-    """
-    Parses the YAML header using the yaml library and returns
-    the cleaned body content (as a string).
-    """
-    # Split the string by the '---' delimiter. This is a simple, effective
-    # way to separate the components, though it's less robust than pure parsing.
-    parts = input.split("---", 2)
-
-    # Check for the expected structure: ['\n', yaml_header, body_content]
-    if len(parts) < 3 or parts[0].strip() != "":
-        # If no standard YAML front matter is found, assume no header.
-        return input
-
-    # 1. Extract the header string (the middle part)
-    header_string = parts[1].strip()
-
-    # 2. Extract the body content (the last part)
-    body_content = parts[2].lstrip("\n")  # lstrip to clean up initial newlines
-
-    # 3. Use yaml.safe_load to parse the header data
-    try:
-        header_data = yaml.safe_load(header_string)
-        # Ensure header_data is a dictionary, as expected for a front matter
-        if isinstance(header_data, dict):
-            return body_content
-        else:
-            # Handle cases where the header is empty or malformed but still delimited
-            return input  # Return original content if header isn't a dict
-
-    except yaml.YAMLError as e:
-        print(f"Error parsing YAML header: {e}")
-        return input
 
 
 def main():
@@ -123,9 +90,12 @@ def main():
         print(f"Error reading {args.file2}: {e}", file=sys.stderr)
         sys.exit(1)
 
-    # Extract ONLY Devanagari characters (ignoring markdown, YAML, etc.)
-    devanagari1 = extract_devanagari(_remove_yaml_header(full_text1))
-    devanagari2 = extract_devanagari(_remove_yaml_header(full_text2))
+    # Clean text first (remove YAML, HTML comments, bold markers)
+    # Then extract ONLY Devanagari characters
+    cleaned_text1 = clean_text_for_devanagari_comparison(full_text1)
+    cleaned_text2 = clean_text_for_devanagari_comparison(full_text2)
+    devanagari1 = extract_devanagari(cleaned_text1)
+    devanagari2 = extract_devanagari(cleaned_text2)
 
     # Show info about extraction
     print(f"\n📊 Extracted Devanagari characters:")
