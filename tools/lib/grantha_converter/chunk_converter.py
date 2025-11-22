@@ -21,11 +21,13 @@ class ChunkConverter:
         prompt_manager: PromptManager,
         file_log_dir: Path,
         use_upload_cache: bool = True,
+        custom_conversion_prompt: Path | None = None,
     ):
         self.client = client
         self.prompt_manager = prompt_manager
         self.file_log_dir = file_log_dir
         self.use_upload_cache = use_upload_cache
+        self.custom_conversion_prompt = custom_conversion_prompt
 
     def convert(
         self,
@@ -112,10 +114,14 @@ class ChunkConverter:
 
     def _create_chunk_conversion_prompt(self, analysis_result: dict) -> str:
         """Creates the prompt for chunk conversion."""
-        continuation_template = self.prompt_manager.load_template(
-            "chunk_continuation_prompt.txt"
-        )
-        print(f"  📄 Using prompt: chunk_continuation_prompt.txt")
+        if self.custom_conversion_prompt:
+            continuation_template = self.custom_conversion_prompt.read_text(encoding="utf-8")
+            print(f"  📄 Using custom prompt: {self.custom_conversion_prompt}")
+        else:
+            continuation_template = self.prompt_manager.load_template(
+                "chunk_continuation_prompt.txt"
+            )
+            print(f"  📄 Using prompt: chunk_continuation_prompt.txt")
 
         metadata = analysis_result.get("metadata", {})
         commentary_id = metadata.get("commentary_id", "prakasika")

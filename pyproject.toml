@@ -41,7 +41,6 @@ dev = [
 
 [project.scripts]
 grantha-converter = "grantha_converter.cli:main"
-grantha-repair-devanagari = "grantha_converter.devanagari_repair_cli:main"
 pdf-ocr = "scripts.pdf_ocr:main"
 convert-meghamala = "scripts.meghamala_converter.convert_meghamala:main"
 devanagari-diff = "scripts.devanagari_tools.devanagari_diff:main"

@@ -80,31 +80,33 @@ def _parse_args(argv: Optional[List[str]] = None):
         description="Convert meghamala markdown to Grantha structured markdown using Gemini API.",
         epilog="""
 Examples:
-  # Single file, auto-named output
-  %(prog)s -i input.md --output-dir ./out
+  # Single file, auto-named output in current directory
+  %(prog)s -i input.md
 
-  # Single file, explicit output name
-  %(prog)s -i input.md -o my_custom_name.md
+  # Single file, explicit output file
+  %(prog)s -i input.md -o output.md
+
+  # Single file, output to specific directory
+  %(prog)s -i input.md -o ./output/
 
   # Directory mode - converts all files, requires ID and title
-  %(prog)s -d sources/upanishads/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्"
+  %(prog)s -i sources/upanishads/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्"
+
+  # Using custom prompts
+  %(prog)s -i input.md -o output.md --analysis-prompt my_analysis.txt --conversion-prompt my_conversion.txt
         """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
-    input_group = parser.add_mutually_exclusive_group(required=True)
-    input_group.add_argument("-i", "--input", help="Input meghamala markdown file")
-    input_group.add_argument(
-        "-d", "--directory", help="Input directory containing multiple parts"
+    parser.add_argument(
+        "-i", "--input",
+        required=True,
+        help="Input file or directory containing meghamala markdown files"
     )
 
     parser.add_argument(
-        "-o", "--output", help="Explicit output filename (overrides auto-naming)"
-    )
-    parser.add_argument(
-        "--output-dir",
-        default=".",
-        help="Directory to save output files (default: current dir)",
+        "-o", "--output",
+        help="Output file or directory (required if input is directory, optional for single file)"
     )
 
     parser.add_argument(
@@ -173,6 +175,16 @@ Examples:
         help=f"Directory containing prompt templates (default: {PROMPTS_DIR})",
     )
     parser.add_argument(
+        "--analysis-prompt",
+        type=Path,
+        help="Custom analysis prompt file (overrides default template)",
+    )
+    parser.add_argument(
+        "--conversion-prompt",
+        type=Path,
+        help="Custom conversion prompt file (overrides default template)",
+    )
+    parser.add_argument(
         "--analysis-cache-dir",
         type=Path,
         default=Path.cwd() / ".analysis_cache",
@@ -192,7 +204,7 @@ Examples:
 
 def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_dir: Path, models: dict):
     """Handles the logic for converting all files in a directory."""
-    input_dir = Path(args.directory)
+    input_dir = Path(args.input)
     parts = get_directory_parts(input_dir)
     if not parts:
         print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
@@ -211,6 +223,7 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
             use_upload_cache=not args.no_upload_cache,
             force_reanalysis=args.force_analysis,
             analysis_cache_dir=args.analysis_cache_dir,
+            custom_analysis_prompt=args.analysis_prompt,
         )
         analysis = analyzer.analyze(first_file_path, models["analysis"])
         if not analysis:
@@ -259,26 +272,52 @@ def main(argv: Optional[List[str]] = None):
     # sys.stdout = Tee(sys.stdout, run_log_dir / "stdout.log")
     # sys.stderr = Tee(sys.stderr, run_log_dir / "stderr.log")
     # print(f"📁 Logging to: {run_log_dir}")
-    
+
     args = _parse_args(argv)
+
+    # Validate input exists
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"❌ Error: Input path does not exist: {input_path}", file=sys.stderr)
+        return 1
+
+    # Determine if we're in file or directory mode
+    is_directory_mode = input_path.is_dir()
+
+    # Validate output argument based on mode
+    if is_directory_mode:
+        if not args.output:
+            print("❌ Error: --output is required when input is a directory", file=sys.stderr)
+            return 1
+        output_path = Path(args.output)
+    else:
+        # Single file mode
+        if args.output:
+            output_path = Path(args.output)
+            # If output ends with /, treat it as a directory
+            if str(args.output).endswith('/') or output_path.is_dir():
+                output_dir = output_path
+                filename_override = None
+            else:
+                output_dir = output_path.parent if output_path.parent != Path('.') else Path.cwd()
+                filename_override = output_path.name
+        else:
+            output_dir = Path.cwd()
+            filename_override = None
 
     models = {
         "analysis": args.analysis_model or args.model,
         "conversion": args.conversion_model or args.model,
     }
 
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     try:
         # Instantiate the appropriate client based on replay_from argument
         if args.replay_from:
-            input_file_stem = Path(args.input).stem if args.input else None
-            if not input_file_stem:
-                print("❌ Error: --replay-from requires a single input file (-i)", file=sys.stderr)
+            if is_directory_mode:
+                print("❌ Error: --replay-from is not supported in directory mode", file=sys.stderr)
                 return 1
             print(f"🔁 Replay mode: using logs from {args.replay_from}")
-            client = ReplayGeminiClient(args.replay_from, input_file_stem)
+            client = ReplayGeminiClient(args.replay_from, input_path.stem)
         else:
             client = GeminiClient(upload_cache_file=UPLOAD_CACHE_FILE)
             print(f"📁 Upload Cache File: {UPLOAD_CACHE_FILE}")
@@ -297,16 +336,20 @@ def main(argv: Optional[List[str]] = None):
         prompt_manager = PromptManager(args.prompts_dir)
         converter = MeghamalaConverter(client, prompt_manager, args, models)
 
-        if args.input:
-            input_path = Path(args.input)
+        if is_directory_mode:
+            # Directory mode
+            output_dir = output_path
+            output_dir.mkdir(parents=True, exist_ok=True)
+            return _handle_directory_mode(args, client, prompt_manager, output_dir, models)
+        else:
+            # Single file mode
+            output_dir.mkdir(parents=True, exist_ok=True)
             file_log_dir = get_file_log_dir(input_path.stem)
             print(f"📁 Logging for this file to: {file_log_dir}")
             success = converter.convert_file(
-                input_path, output_dir, file_log_dir, filename_override=args.output
+                input_path, output_dir, file_log_dir, filename_override=filename_override
             )
             return 0 if success else 1
-        else:
-            return _handle_directory_mode(args, client, prompt_manager, output_dir, models)
 
     except Exception as e:
         print(f"An unexpected error occurred: {e}", file=sys.stderr)

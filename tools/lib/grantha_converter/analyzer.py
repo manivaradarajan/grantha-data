@@ -25,6 +25,7 @@ class Analyzer:
         force_reanalysis: bool = False,
         verbose: bool = False,
         analysis_cache_dir: Optional[Path] = None,
+        custom_analysis_prompt: Optional[Path] = None,
     ):
         self.client = client
         self.prompt_manager = prompt_manager
@@ -34,6 +35,7 @@ class Analyzer:
         self.force_reanalysis = force_reanalysis
         self.verbose = verbose
         self.analysis_cache_dir = analysis_cache_dir
+        self.custom_analysis_prompt = custom_analysis_prompt
 
     def analyze(self, input_file: Path, model: str) -> dict | None:
         """
@@ -148,8 +150,12 @@ class Analyzer:
         uploaded_file
     ):
         """Prepares the analysis prompt, using file API or text embedding."""
-        template = self.prompt_manager.load_template(template_name)
-        print(f"  📄 Using prompt: {template_name}")
+        if self.custom_analysis_prompt:
+            template = self.custom_analysis_prompt.read_text(encoding="utf-8")
+            print(f"  📄 Using custom prompt: {self.custom_analysis_prompt}")
+        else:
+            template = self.prompt_manager.load_template(template_name)
+            print(f"  📄 Using prompt: {template_name}")
 
         if uploaded_file:
             analysis_prompt = template.replace(

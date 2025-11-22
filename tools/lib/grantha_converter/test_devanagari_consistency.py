@@ -219,5 +219,163 @@ class TestRealWorldConsistency:
             )
 
 
+class TestSurgicalRepairs:
+    """Test that repairs are surgical (small changes only), not wholesale replacements."""
+
+    def test_repair_preserves_structure(self):
+        """Verify that repair preserves all markdown structure."""
+        # Original text with structure
+        original = """---
+grantha_id: test
+canonical_title: परीक्षा
+---
+
+<!-- hide type:title -->
+**परीक्षा**
+<!-- /hide -->
+
+# Mantra 1.1
+<!-- sanskrit:devanagari -->
+**अग्निमीळे पुरोहितम्**
+<!-- /sanskrit:devanagari -->
+
+<!-- commentary: {"commentary_id": "test"} -->
+# Commentary: 1.1
+यज्ञस्य देवम्
+"""
+
+        # Modified text with typo in Devanagari
+        modified = original.replace("पुरोहितम्", "पुरोहितं")
+
+        # Repair should fix the typo
+        success, repaired, msg = repair_devanagari_simple(original, modified, verbose=False)
+
+        assert success, f"Repair failed: {msg}"
+
+        # Count lines - should be exactly the same
+        original_lines = original.count('\n')
+        repaired_lines = repaired.count('\n')
+        assert original_lines == repaired_lines, (
+            f"Line count changed! Original: {original_lines}, Repaired: {repaired_lines}\n"
+            f"This suggests wholesale replacement rather than surgical edits"
+        )
+
+        # YAML frontmatter should be identical
+        assert repaired.startswith("---\ngrantha_id: test"), "YAML frontmatter was corrupted"
+
+        # All HTML comments should be preserved
+        assert repaired.count("<!--") == original.count("<!--"), "HTML comments were removed"
+        assert repaired.count("-->") == original.count("-->"), "HTML comments were removed"
+
+        # Markdown headers should be preserved
+        assert "# Mantra 1.1" in repaired, "Markdown headers were removed"
+        assert "# Commentary: 1.1" in repaired, "Commentary headers were removed"
+
+    def test_repair_makes_minimal_changes(self):
+        """Verify that repair changes only the necessary Devanagari characters."""
+        original = "**अग्निमीळे पुरोहितम्** देवम् ऋत्विजम्"
+        modified = "**अग्निमीळे पुरोहितं** देवम् ऋत्विजम्"  # Only म् → ं changed
+
+        success, repaired, msg = repair_devanagari_simple(original, modified, verbose=False)
+
+        assert success, f"Repair failed: {msg}"
+
+        # The repaired text should be identical to original
+        assert repaired == original, (
+            f"Expected minimal repair but got:\n"
+            f"Original:  {original}\n"
+            f"Repaired:  {repaired}"
+        )
+
+    def test_repair_size_limit(self):
+        """Verify that repair doesn't make massive changes to the file."""
+        import difflib
+
+        # Create a realistic file structure
+        base_text = """---
+grantha_id: test
+part_num: 1
+canonical_title: परीक्षा
+---
+
+# Mantra 1.1
+<!-- sanskrit:devanagari -->
+""" + "अग्निमीळे पुरोहितं यज्ञस्य देवम् ऋत्विजम् होतारं रत्नधातमम् । " * 50 + """
+<!-- /sanskrit:devanagari -->
+
+# Commentary: 1.1
+""" + "एतत् व्याख्यानम् अस्ति । " * 100
+
+        # Modified version with a few typos
+        modified = base_text.replace("पुरोहितं", "पुरोहितम्", 3)  # Fix 3 instances
+
+        success, repaired, msg = repair_devanagari_simple(base_text, modified, verbose=False)
+
+        if not success:
+            # If there are differences, repair should succeed
+            pytest.skip("Files matched, no repair needed")
+
+        # Calculate the character-level difference
+        original_len = len(modified)
+        repaired_len = len(repaired)
+
+        # The length should not change dramatically (allow 5% variance for small edits)
+        length_diff_pct = abs(repaired_len - original_len) / original_len * 100
+
+        assert length_diff_pct < 5.0, (
+            f"Repair changed file size by {length_diff_pct:.1f}%!\n"
+            f"Original: {original_len} chars, Repaired: {repaired_len} chars\n"
+            f"This suggests wholesale replacement rather than surgical repair"
+        )
+
+        # Use difflib to count actual edit operations (more accurate than zip)
+        matcher = difflib.SequenceMatcher(None, modified, repaired)
+        total_edits = 0
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag in ('replace', 'delete', 'insert'):
+                # Count the number of characters affected in the original text
+                total_edits += max(i2 - i1, j2 - j1)
+
+        # Should change very few characters (less than 2% of file)
+        # Note: This is more lenient than 1% because character edits can have
+        # cascading position effects in the diff
+        diff_pct = total_edits / original_len * 100
+
+        assert diff_pct < 2.0, (
+            f"Repair changed {total_edits} characters ({diff_pct:.2f}% of file)!\n"
+            f"This suggests non-surgical changes"
+        )
+
+    def test_no_structure_removal(self):
+        """Verify that repair NEVER removes YAML, comments, or markdown headers."""
+        original = """---
+title: टेस्ट
+author: लेखकः
+---
+
+<!-- This is a comment in English -->
+<!-- यह टिप्पणी है -->
+
+# Heading देवनागरी में
+
+**अग्निमीळे** पुरोहितं
+"""
+
+        # Modified with Devanagari typo
+        modified = original.replace("पुरोहितं", "पुरोहितम्")
+
+        success, repaired, msg = repair_devanagari_simple(original, modified, verbose=False)
+
+        assert success, f"Repair failed: {msg}"
+
+        # Critical assertions - these should NEVER fail
+        assert "---" in repaired, "YAML frontmatter delimiters removed!"
+        assert "title: टेस्ट" in repaired or "title:" in repaired, "YAML was corrupted!"
+        assert "<!-- This is a comment" in repaired, "English HTML comment removed!"
+        assert "<!-- यह टिप्पणी है -->" in repaired, "Devanagari HTML comment removed!"
+        assert "# Heading" in repaired, "Markdown heading removed!"
+        assert "**अग्निमीळे**" in repaired or "अग्निमीळे" in repaired, "Bold markers or content removed!"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

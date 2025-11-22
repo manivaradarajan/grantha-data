@@ -258,3 +258,49 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
             commentaries_with_passages[cid] = comm_data
     data['commentaries'] = commentaries_with_passages
     return data
+
+
+def markdown_file_to_json_file(
+    markdown_file: str,
+    json_file: str,
+    format: str = 'single',
+    validate_schema: bool = True
+) -> None:
+    """Convert a Grantha Markdown file to JSON format.
+
+    Args:
+        markdown_file: Path to the input Markdown file
+        json_file: Path to the output JSON file
+        format: Output format - 'single' for complete grantha, 'multipart' for grantha parts
+        validate_schema: Whether to validate against JSON schema (default: True)
+
+    Raises:
+        ValueError: If validation fails or file operations fail
+        FileNotFoundError: If input file doesn't exist
+    """
+    import json
+    from pathlib import Path
+
+    # Read the markdown file
+    markdown_path = Path(markdown_file)
+    if not markdown_path.exists():
+        raise FileNotFoundError(f"Markdown file not found: {markdown_file}")
+
+    markdown_text = markdown_path.read_text(encoding='utf-8')
+
+    # Convert to JSON
+    json_data = convert_to_json(markdown_text)
+
+    # Validate schema if requested
+    if validate_schema:
+        from .schema_validator import validate_grantha_json
+        schema_name = 'grantha-part.schema.json' if format == 'multipart' else 'grantha.schema.json'
+        validate_grantha_json(json_data, schema_name)
+
+    # Write the JSON file
+    json_path = Path(json_file)
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with json_path.open('w', encoding='utf-8') as f:
+        json.dump(json_data, f, ensure_ascii=False, indent=2)
+        f.write('\n')  # Add trailing newline

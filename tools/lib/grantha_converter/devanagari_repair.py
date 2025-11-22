@@ -20,40 +20,53 @@ def repair_devanagari_simple(
     min_similarity: float = 0.85,
 ) -> Tuple[bool, Optional[str], str]:
     """
-    Repairs Devanagari text by aligning word lists from cleaned text and
-    applying changes back to a similarly cleaned version of the original text.
+    Repairs Devanagari text by surgically replacing Devanagari words in the output file
+    to match the input file, while preserving all markdown structure, comments, and formatting.
+
+    The algorithm:
+    1. Clean both texts using the same logic as devanagari_diff tool
+    2. Extract Devanagari words from cleaned texts for comparison
+    3. Extract Devanagari words with positions from ORIGINAL output text
+    4. Map changes from cleaned space to original space and apply surgically
     """
-    # 1. Preserve original frontmatter from the output file if requested
-    frontmatter_prefix = ""
-    if skip_frontmatter:
-        output_parts = output_text.split('---', 2)
-        if len(output_parts) > 2 and output_text.startswith('---'):
-            frontmatter_prefix = f"---{output_parts[1]}---"
+    # 1. Clean both texts using the SAME logic as the diff tool
+    input_cleaned = clean_text_for_devanagari_comparison(input_text)
+    output_cleaned = clean_text_for_devanagari_comparison(output_text)
 
-    # 2. Create consistently cleaned versions of both texts for all operations
-    input_body_cleaned = clean_text_for_devanagari_comparison(input_text)
-    output_body_cleaned = clean_text_for_devanagari_comparison(output_text)
+    # 2. Extract Devanagari words from CLEANED texts for comparison
+    input_words = extract_devanagari_words(input_cleaned)
+    output_words_cleaned = extract_devanagari_words(output_cleaned)
 
-    # 3. Extract words AND positions from the CLEANED texts.
-    #    Positions are now relative to the cleaned bodies, ensuring consistency.
-    input_words_with_pos = extract_devanagari_words_with_positions(input_body_cleaned)
-    output_words_with_pos = extract_devanagari_words_with_positions(output_body_cleaned)
-
-    input_words = [w for w, _, _ in input_words_with_pos]
-    output_words = [w for w, _, _ in output_words_with_pos]
-
-    if input_words == output_words:
+    if input_words == output_words_cleaned:
         return True, output_text, "No repair needed - Devanagari already matches."
 
-    # 4. Safety Check: Similarity
+    # 3. Extract Devanagari words WITH POSITIONS from ORIGINAL output text
+    #    (we need original positions for surgical edits)
+    output_words_with_pos = extract_devanagari_words_with_positions(
+        output_text,
+        skip_frontmatter=True,
+        skip_comments=True,
+        skip_headings=False
+    )
+    output_words = [w for w, _, _ in output_words_with_pos]
+
+    # 4. Sanity check: cleaned extraction should match position-based extraction
+    if output_words != output_words_cleaned:
+        if verbose:
+            print(f"   ⚠ WARNING: Cleaned words ({len(output_words_cleaned)}) != Position words ({len(output_words)})")
+            print(f"      This suggests a bug in extraction logic consistency")
+
+    # 2. Safety Check: Similarity
     similarity = fuzz.ratio(" ".join(input_words), " ".join(output_words)) / 100.0
     if similarity < min_similarity:
         return False, None, f"Sequences too different for safe repair (similarity: {similarity:.2%}, minimum: {min_similarity:.2%})."
 
     if verbose:
         print(f"   ✓ Similarity ratio: {similarity:.2%} (threshold: {min_similarity:.2%})")
+        print(f"   ✓ Input has {len(input_words)} Devanagari words")
+        print(f"   ✓ Output has {len(output_words)} Devanagari words")
 
-    # 5. Align word sequences to find differences
+    # 3. Align word sequences to find differences
     matcher = SequenceMatcher(None, input_words, output_words, autojunk=False)
     changes = []
 
@@ -61,29 +74,42 @@ def repair_devanagari_simple(
         if tag == 'equal':
             continue
         elif tag == 'replace':
-            # Join all the words from the input that should replace the output block
+            # Replace words in output[j1:j2] with words from input[i1:i2]
             replacement_text = " ".join(input_words[i1:i2])
-            # Get the start position of the first word to be replaced and the end of the last
+            # Get positions in ORIGINAL output text
             start = output_words_with_pos[j1][1]
             end = output_words_with_pos[j2 - 1][2]
             old_block_text = " ".join(output_words[j1:j2])
             changes.append((start, end, replacement_text, f"replace '{old_block_text}' with '{replacement_text}'"))
         elif tag == 'delete': # Words in input but not output -> Insert into output
-            # Get position from the word before or after the insertion point
-            insert_pos = output_words_with_pos[j1][1] if j1 < len(output_words_with_pos) else len(output_body_cleaned)
-            text_to_insert = " ".join(input_words[i1:i2]) + " "
-            changes.append((insert_pos, insert_pos, text_to_insert, f"insert '{text_to_insert.strip()}'"))
+            # Insert at the position where j1 would be
+            if j1 < len(output_words_with_pos):
+                insert_pos = output_words_with_pos[j1][1]
+            elif j1 > 0 and len(output_words_with_pos) > 0:
+                # Insert after the last word
+                insert_pos = output_words_with_pos[-1][2]
+            else:
+                # No words in output, can't determine position
+                if verbose:
+                    print(f"   ⚠ Cannot determine insertion position for missing words: {' '.join(input_words[i1:i2])}")
+                continue
+            text_to_insert = " ".join(input_words[i1:i2])
+            changes.append((insert_pos, insert_pos, text_to_insert, f"insert '{text_to_insert}'"))
         elif tag == 'insert': # Words in output but not input -> Delete from output
+            # Delete each word individually to handle spacing correctly
             for j in range(j1, j2):
                 old_word, start, end = output_words_with_pos[j]
+                # Also delete trailing space if present
+                if end < len(output_text) and output_text[end] == ' ':
+                    end += 1
                 changes.append((start, end, "", f"delete '{old_word}'"))
 
     if not changes:
         return False, None, "Repair failed: No actionable changes found."
 
-    # 6. Apply changes in reverse to the CLEANED output body
+    # 4. Apply changes in reverse order to the ORIGINAL output text
     changes.sort(key=lambda x: x[0], reverse=True)
-    repaired_body = output_body_cleaned
+    repaired_text = output_text
 
     if verbose:
         print(f"\n📋 Found {len(changes)} changes to apply:")
@@ -91,20 +117,25 @@ def repair_devanagari_simple(
     for start, end, new_text, desc in changes:
         if verbose:
             print(f"   ✓ Applying change at {start}-{end}: {desc}")
-        repaired_body = repaired_body[:start] + new_text + repaired_body[end:]
+        repaired_text = repaired_text[:start] + new_text + repaired_text[end:]
 
-    # 7. Final validation against the CLEANED input body
-    final_repaired_words = extract_devanagari_words(repaired_body)
+    # 5. Final validation: extract Devanagari from repaired text using SAME filtering as input
+    final_repaired_words_with_pos = extract_devanagari_words_with_positions(
+        repaired_text,
+        skip_frontmatter=True,
+        skip_comments=True,
+        skip_headings=False
+    )
+    final_repaired_words = [w for w, _, _ in final_repaired_words_with_pos]
 
     if final_repaired_words == input_words:
-        # Success! Re-attach the original frontmatter to the repaired clean body.
-        final_content = frontmatter_prefix + "\n" + repaired_body if frontmatter_prefix else repaired_body
-        return True, final_content, f"Successfully applied {len(changes)} corrections."
+        return True, repaired_text, f"Successfully applied {len(changes)} corrections."
     else:
         if verbose:
             Path("/tmp/final_repaired_words.txt").write_text("\n".join(final_repaired_words), encoding="utf-8")
             Path("/tmp/final_input_words.txt").write_text("\n".join(input_words), encoding="utf-8")
             print("   - Final validation failed. Word lists saved to /tmp/ for diffing.")
+            print(f"   - Expected {len(input_words)} words, got {len(final_repaired_words)} words")
         return False, None, "Repair validation failed: Repaired text does not match source."
 
 

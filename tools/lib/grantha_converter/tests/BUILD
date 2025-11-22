@@ -15,8 +15,8 @@ py_test(
     srcs = ["test_chunk_converter.py"],
     imports = ["../.."],
     deps = [
-        "//tools/lib/grantha_converter:chunk_converter",
         "//tools/lib/gemini_processor:client",
+        "//tools/lib/grantha_converter:chunk_converter",
     ],
 )
 

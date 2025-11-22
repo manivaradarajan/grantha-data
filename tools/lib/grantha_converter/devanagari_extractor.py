@@ -128,71 +128,86 @@ def extract_devanagari_words(text: str) -> List[str]:
     return [word for word in words if word]
 
 
-def extract_devanagari_words_with_positions(text: str) -> List[Tuple[str, int, int]]:
-    """Extracts Devanagari words with their positions in the text.
+def extract_devanagari_words_with_positions(
+    text: str,
+    skip_frontmatter: bool = True,
+    skip_comments: bool = True,
+    skip_headings: bool = False,
+) -> List[Tuple[str, int, int]]:
+    """Extracts Devanagari words with their positions in the ORIGINAL text.
 
-    Useful for repair operations where the original positions need to be
-    preserved when making replacements.
+    This function is designed for surgical repair operations. It extracts
+    Devanagari character sequences and their exact positions in the input text,
+    with optional filtering to skip Devanagari content in frontmatter, HTML
+    comments, and markdown headings.
 
     Args:
-        text: Input text
+        text: Input text (completely unmodified)
+        skip_frontmatter: If True, skip Devanagari in YAML frontmatter (default: True)
+        skip_comments: If True, skip Devanagari in HTML comments (default: True)
+        skip_headings: If True, skip Devanagari in markdown heading lines (default: False)
 
     Returns:
         List of tuples (word, start_pos, end_pos) where:
         - word: The Devanagari text sequence
-        - start_pos: Character index where word starts in original text
-        - end_pos: Character index where word ends in original text
+        - start_pos: Character index where word starts in ORIGINAL text
+        - end_pos: Character index where word ends in ORIGINAL text
 
     Example:
         >>> extract_devanagari_words_with_positions("Hello अग्नि world मीळे")
         [('अग्नि', 6, 10), ('मीळे', 17, 21)]
+
+        >>> extract_devanagari_words_with_positions("**अग्नि** <!-- मीळे --> पुरोहितं")
+        [('अग्नि', 2, 6), ('पुरोहितं', 25, 33)]
+
+    Note:
+        The positions returned are in the ORIGINAL text, including all markdown
+        and other formatting. This is crucial for surgical repair that preserves
+        document structure.
     """
-    # Apply the same cleaning steps as extract_devanagari_words
-    # Remove HTML comments first, replacing them with an empty string (zero space)
-    text_without_comments = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
+    # Build list of excluded ranges
+    excluded_ranges = []
 
-    # Remove YAML frontmatter
-    if text_without_comments.strip().startswith("---"):
-        parts = text_without_comments.split("---", 2)
+    # 1. Find frontmatter range
+    if skip_frontmatter and text.strip().startswith("---"):
+        parts = text.split("---", 2)
         if len(parts) == 3:
-            text_without_comments = parts[2] # Keep only the content after the second ---
+            # Find the end of the second ---
+            first_dash_end = text.find("---") + 3
+            second_dash_start = text.find("---", first_dash_end)
+            second_dash_end = second_dash_start + 3
+            excluded_ranges.append((0, second_dash_end))
 
-    # Remove markdown heading lines to ignore Devanagari in headings
-    lines = text_without_comments.split("\n")
-    body_lines = [line for line in lines if not line.strip().startswith("#")]
-    text_without_headings = "\n".join(body_lines)
+    # 2. Find all HTML comment ranges
+    if skip_comments:
+        for match in re.finditer(r"<!--.*?-->", text, flags=re.DOTALL):
+            excluded_ranges.append((match.start(), match.end()))
 
-    # Remove ** markdown, replacing it with an empty string
-    text_cleaned = re.sub(r"\*\*", "", text_without_headings)
+    # 3. Find markdown heading line ranges
+    if skip_headings:
+        lines_processed = 0
+        for line in text.split("\n"):
+            line_start = lines_processed
+            line_end = lines_processed + len(line)
+            if line.strip().startswith("#"):
+                excluded_ranges.append((line_start, line_end))
+            lines_processed = line_end + 1  # +1 for the newline
 
+    # Extract all Devanagari words with positions
     pattern = r"[\u0900-\u097F]+"
-    matches = []
-    # Use re.finditer on the *cleaned* text, but map positions back to original
-    # This is the tricky part: the positions will be relative to the cleaned text.
-    # For repair, we need positions in the *original* text. This approach is flawed.
-    # Instead, we should extract words and positions from the *original* text,
-    # and then filter/adjust based on the cleaning logic.
-    # Let's revert to a simpler approach for now, and ensure the input_words and
-    # output_words are generated from the same *type* of cleaned text.
-    # The current approach of cleaning the text *before* finding positions is incorrect
-    # for surgical repair, as the positions will be shifted.
-    # The correct approach is to extract words and positions from the *original* text,
-    # and then filter/adjust the words based on the cleaning logic, but keep original positions.
-    # This is complex. For now, let's ensure the *comparison* is done on consistently cleaned text.
-
-    # Reverting to the original behavior of extract_devanagari_words_with_positions
-    # but ensuring that the text passed to it is already cleaned.
-    # This means the cleaning should happen *before* calling this function in repair_devanagari_simple.
-    # This is a temporary measure to get the validation to pass, then I will refine the surgical repair.
-
-    # The previous change was incorrect. The cleaning should happen *before* calling this function.
-    # I need to revert the change to extract_devanagari_words_with_positions and instead
-    # apply the cleaning to the `input_body` and `output_body` *before* passing them
-    # to `extract_devanagari_words_with_positions` in `repair_devanagari_simple`.
-
-    # Let's revert this change and apply the cleaning in repair_devanagari_simple.
-    pattern = r"[\u0900-\u097F]+"
-    matches = []
+    all_matches = []
     for match in re.finditer(pattern, text):
-        matches.append((match.group(), match.start(), match.end()))
-    return matches
+        word_start = match.start()
+        word_end = match.end()
+
+        # Check if this word is in any excluded range
+        is_excluded = False
+        for excl_start, excl_end in excluded_ranges:
+            if word_start >= excl_start and word_end <= excl_end:
+                is_excluded = True
+                break
+
+        if not is_excluded:
+            all_matches.append((match.group(), word_start, word_end))
+
+    return all_matches

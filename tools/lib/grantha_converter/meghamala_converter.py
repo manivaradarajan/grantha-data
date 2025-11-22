@@ -130,6 +130,7 @@ class MeghamalaConverter:
             use_upload_cache=not self.args.no_upload_cache,
             force_reanalysis=self.args.force_analysis,
             analysis_cache_dir=self.args.analysis_cache_dir,
+            custom_analysis_prompt=getattr(self.args, 'analysis_prompt', None),
         )
         print(f"📁 Analysis Cache Dir: {self.args.analysis_cache_dir}")
         try:
@@ -307,6 +308,7 @@ class MeghamalaConverter:
             prompt_manager=self.prompt_manager,
             file_log_dir=file_log_dir,
             use_upload_cache=not self.args.no_upload_cache,
+            custom_conversion_prompt=getattr(self.args, 'conversion_prompt', None),
         )
         validator = Validator(
             file_log_dir=file_log_dir,
@@ -422,7 +424,8 @@ class MeghamalaConverter:
 
     def _apply_metadata_overrides(self, analysis: dict, input_path: Path):
         """Applies command-line metadata overrides to the analysis result."""
-        if not self.args.directory:
+        # Only apply overrides if input is a directory (multi-part mode)
+        if not Path(self.args.input).is_dir():
             return
 
         if "metadata" not in analysis:
