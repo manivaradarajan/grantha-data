@@ -1,5 +1,5 @@
 ---
-grantha_id: ishavasya-upanishad
+grantha_id: isavasya-upanishad
 part_num: 1
 canonical_title: ईशावास्योपनिषत्
 text_type: upanishad
