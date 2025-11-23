@@ -90,6 +90,9 @@ class ChunkConverter:
         """
         chunk_index = chunk_metadata.get("chunk_index")
         chunk_log_dir = self.file_log_dir / "chunks" / f"chunk_{chunk_index}"
+
+        # Create temp file with original text (WITH bold markers)
+        # Conversion prompts rely on bold for structure identification
         temp_file_path = self._create_temp_file(chunk_text, chunk_index)
 
         try:

@@ -45,8 +45,10 @@ def test_full_conversion_with_prefatory_material():
     assert concluding['content']['sanskrit']['devanagari'] == 'Concluding text.'
 
     # 4. Validate Commentaries
+    # commentaries is a dict keyed by commentary_id, not a list
     assert len(data['commentaries']) == 1
-    commentary = data['commentaries'][0]
+    assert 'test-commentator' in data['commentaries']
+    commentary = data['commentaries']['test-commentator']
     assert commentary['commentary_id'] == 'test-commentator'
 
     assert len(commentary['passages']) == 2

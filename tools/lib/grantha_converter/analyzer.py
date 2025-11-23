@@ -45,7 +45,7 @@ class Analyzer:
         Returns the analysis dictionary on success, or None on failure.
         """
         print("🔍 Analyzing file structure...")
-        
+
         # Attempt to load the analysis from cache first.
         cached_result, cache = self._handle_analysis_cache(input_file)
         if cached_result:
@@ -60,10 +60,10 @@ class Analyzer:
         try:
             full_text = input_file.read_text(encoding="utf-8")
             analysis_result = self._get_analysis_from_gemini(input_file, full_text, model)
-            
+
             if self.use_cache and analysis_result:
                 cache.save(analysis_result, verbose=self.verbose)
-            
+
             return analysis_result
 
         except FileNotFoundError:
@@ -80,7 +80,9 @@ class Analyzer:
         This includes uploading the file, preparing the prompt, generating
         content, and parsing the response.
         """
-        # Upload the file for analysis, or fall back to text embedding.
+        # Analysis needs the original text WITH bold markers
+        # (the analysis prompt relies on bold for structure identification)
+        # Upload the original file for analysis
         uploaded_file = self._upload_file_for_analysis(input_file)
 
         # Prepare the prompt using the appropriate template.
@@ -96,7 +98,7 @@ class Analyzer:
 
         # Parse and validate the JSON response from the API.
         analysis_result = self._parse_and_validate_analysis(response_text)
-        
+
         return analysis_result
 
 
@@ -192,12 +194,12 @@ class Analyzer:
 
         # Regex to find a JSON object within the text
         json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
-        
+
         if not json_match:
             raise ValueError("No JSON object found in the Gemini response.")
 
         json_str = json_match.group(0)
-        
+
         try:
             return json.loads(json_str)
         except json.JSONDecodeError as e:

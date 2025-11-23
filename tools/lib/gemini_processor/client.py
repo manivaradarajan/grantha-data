@@ -120,9 +120,38 @@ class GeminiClient(BaseGeminiClient):
         # Use provided config or default
         generation_config = config if config is not None else GEMINI_CONTENT_CONFIG
 
-        response = self.client.models.generate_content(
-            model=model, contents=contents, config=generation_config
-        )
+        try:
+            response = self.client.models.generate_content(
+                model=model, contents=contents, config=generation_config
+            )
+        except Exception as e:
+            # Handle quota/rate limit errors gracefully
+            error_str = str(e)
+            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                print("\n" + "="*80)
+                print("❌ GEMINI API QUOTA EXCEEDED")
+                print("="*80)
+                print("\nYou have exceeded your Gemini API quota.")
+                print(f"Model: {model}")
+
+                # Extract retry delay if available
+                import re
+                retry_match = re.search(r'retry in (\d+\.?\d*)', error_str, re.IGNORECASE)
+                if retry_match:
+                    retry_seconds = float(retry_match.group(1))
+                    retry_minutes = retry_seconds / 60
+                    print(f"\nPlease retry in: {retry_seconds:.0f} seconds ({retry_minutes:.1f} minutes)")
+
+                print("\nFor more information:")
+                print("  - Rate limits: https://ai.google.dev/gemini-api/docs/rate-limits")
+                print("  - Monitor usage: https://ai.dev/usage?tab=rate-limit")
+                print("\n" + "="*80 + "\n")
+
+                # Re-raise as a more user-friendly error
+                raise SystemExit(1) from e
+            else:
+                # Re-raise other errors as-is
+                raise
 
         if not response.text:
             raise ValueError("Empty response from Gemini API")

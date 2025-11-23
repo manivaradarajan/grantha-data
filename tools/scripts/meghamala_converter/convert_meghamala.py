@@ -35,8 +35,8 @@ PROMPTS_DIR = SCRIPT_DIR / "prompts"
 LOGS_DIR = Path("logs")
 UPLOAD_CACHE_FILE = Path.cwd() / ".file_upload_cache.json"
 
-# Global log directory for current run
-# _run_log_dir: Path | None = None
+# Global log directory for current run - created once per invocation
+_run_log_dir: Path | None = None
 
 
 # class Tee:
@@ -65,10 +65,22 @@ def get_run_timestamp_dir() -> Path:
     return LOGS_DIR / f"run_{timestamp}"
 
 
+def get_or_create_run_log_dir() -> Path:
+    """Gets or creates a single run log directory for the entire invocation.
+
+    This ensures that when converting multiple files (directory mode),
+    all files log to the same timestamped run directory.
+    """
+    global _run_log_dir
+    if _run_log_dir is None:
+        _run_log_dir = get_run_timestamp_dir()
+        _run_log_dir.mkdir(parents=True, exist_ok=True)
+    return _run_log_dir
+
+
 def get_file_log_dir(input_file_stem: str) -> Path:
     """Gets or creates the log directory for a specific file within the current run."""
-    # The run_log_dir is now just a path, not necessarily created yet.
-    run_log_dir = get_run_timestamp_dir()
+    run_log_dir = get_or_create_run_log_dir()
     file_log_dir = run_log_dir / input_file_stem
     file_log_dir.mkdir(parents=True, exist_ok=True)
     return file_log_dir
@@ -202,6 +214,32 @@ Examples:
     )
     return parser.parse_args(argv)
 
+def _check_already_converted(output_dir: Path, input_file_stem: str, grantha_id: str) -> tuple[bool, str]:
+    """Check if a file has already been converted successfully.
+
+    Returns:
+        Tuple of (is_converted, output_path_or_message)
+    """
+    # Try to find the output file
+    # Format: grantha_id-commentary-part_num.md or similar
+    pattern = f"{grantha_id}*{input_file_stem}*.md"
+    matches = list(output_dir.glob(pattern))
+
+    if not matches:
+        # Try simpler pattern
+        pattern = f"*{input_file_stem}*.md"
+        matches = list(output_dir.glob(pattern))
+
+    if matches:
+        output_file = matches[0]
+        if output_file.exists() and output_file.stat().st_size > 0:
+            from datetime import datetime
+            mtime = output_file.stat().st_mtime
+            mtime_str = datetime.fromtimestamp(mtime).strftime('%Y-%m-%d %H:%M:%S')
+            return True, f"{output_file.name} (written {mtime_str})"
+
+    return False, ""
+
 def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_dir: Path, models: dict):
     """Handles the logic for converting all files in a directory."""
     input_dir = Path(args.input)
@@ -209,6 +247,10 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
     if not parts:
         print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
         return 1
+
+    # Create run log directory once for the entire directory conversion
+    run_log_dir = get_or_create_run_log_dir()
+    print(f"\n📁 Logging for this run to: {run_log_dir}")
 
     # Infer metadata from the first file if not provided via command line.
     # This is useful for multi-part works where the core metadata is consistent.
@@ -240,8 +282,48 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
         print(f"  ✓ Inferred grantha_id: {args.grantha_id}")
         print(f"  ✓ Inferred canonical_title: {args.canonical_title}")
 
-    failed_parts = []
+    # Check for already-converted files
+    already_converted = []
+    remaining_parts = []
+
     for file_path, _ in parts:
+        is_converted, info = _check_already_converted(output_dir, file_path.stem, args.grantha_id)
+        if is_converted:
+            already_converted.append((file_path.name, info))
+        else:
+            remaining_parts.append((file_path, _))
+
+    # Show resume prompt if some files are already converted
+    if already_converted:
+        print(f"\n{'='*60}")
+        print(f"📋 FOUND {len(already_converted)} ALREADY-CONVERTED FILE(S)")
+        print(f"{'='*60}\n")
+        for source_name, output_info in already_converted:
+            print(f"  ✓ {source_name} → {output_info}")
+
+        if remaining_parts:
+            print(f"\n{len(remaining_parts)} file(s) remaining to convert:")
+            for file_path, _ in remaining_parts[:5]:
+                print(f"  • {file_path.name}")
+            if len(remaining_parts) > 5:
+                print(f"  • ... and {len(remaining_parts) - 5} more")
+
+            print(f"\n{'='*60}")
+            response = input("Skip already-converted files and resume? [Y/n]: ").strip().lower()
+            if response and response not in ('y', 'yes'):
+                print("Converting all files (including already-converted ones)...")
+                parts_to_process = parts
+            else:
+                print(f"Resuming: will convert {len(remaining_parts)} remaining file(s)...")
+                parts_to_process = remaining_parts
+        else:
+            print("\n✅ All files already converted!")
+            return 0
+    else:
+        parts_to_process = parts
+
+    failed_parts = []
+    for file_path, _ in parts_to_process:
         file_log_dir = get_file_log_dir(file_path.stem)
         # Create a new converter for each file
         file_converter = MeghamalaConverter(
@@ -261,7 +343,9 @@ def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_d
         return 1
 
     print(f"\n{'='*60}")
-    print(f"✅ All {len(parts)} parts converted successfully!")
+    print(f"✅ All {len(parts_to_process)} parts converted successfully!")
+    if already_converted and parts_to_process != parts:
+        print(f"   ({len(already_converted)} file(s) were skipped as already converted)")
     print(f"Output directory: {output_dir}")
     return 0
 

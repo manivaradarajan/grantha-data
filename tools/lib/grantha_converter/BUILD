@@ -98,7 +98,11 @@ py_library(
     name = "md_to_json",
     srcs = ["md_to_json.py"],
     visibility = ["//visibility:public"],
-    deps = [requirement("pyyaml")],
+    deps = [
+        ":devanagari_extractor",
+        ":hasher",
+        requirement("pyyaml"),
+    ],
 )
 
 py_library(
@@ -176,6 +180,27 @@ py_test(
     deps = [
         ":devanagari_extractor",
         ":hasher",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_commentary_parser",
+    srcs = ["test_commentary_parser.py"],
+    imports = [".."],
+    deps = [
+        ":md_to_json",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_conversion_logic",
+    srcs = ["test_conversion_logic.py"],
+    imports = [".."],
+    data = glob(["test_data/**"]),
+    deps = [
+        ":md_to_json",
         requirement("pytest"),
     ],
 )

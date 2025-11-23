@@ -31,8 +31,10 @@ Some commentary text.
 
         json_data = convert_to_json(markdown_content)
 
+        # commentaries is a dict keyed by commentary_id, not a list
         self.assertEqual(len(json_data['commentaries']), 1)
-        commentary = json_data['commentaries'][0]
+        self.assertIn('test-commentary', json_data['commentaries'])
+        commentary = json_data['commentaries']['test-commentary']
 
         self.assertEqual(commentary['commentary_title'], "Test Title")
         self.assertEqual(commentary['commentator']['devanagari'], "Test Commentator")

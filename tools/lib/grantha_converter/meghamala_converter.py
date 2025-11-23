@@ -272,11 +272,26 @@ class MeghamalaConverter:
         if diff_count_after < diff_count_before:
             print(f"✅ Repair improved the output. Using repaired version.")
             final_content = repaired_content
+            final_devanagari = repaired_devanagari
+            final_diffs = diffs_after
         else:
             print(f"⚠️  Repair did not improve the output. Using original conversion.")
             final_content = merged_content
+            final_devanagari = converted_devanagari
+            final_diffs = diffs_before
 
-        # 6. Cleanup
+        # 6. Save complete diff log for FINAL content (post-repair)
+        final_diff_count = sum(1 for op, _ in final_diffs if op != dmp.DIFF_EQUAL)
+        if final_diff_count > 0:
+            self._save_complete_diff_log(
+                source_devanagari,
+                final_devanagari,
+                input_file,
+                output_file,
+                final_diffs
+            )
+
+        # 7. Cleanup
         os.remove(temp_output_path)
         repaired_backup = Path(str(temp_output_path) + ".repaired")
         if repaired_backup.exists():
@@ -522,6 +537,133 @@ class MeghamalaConverter:
         rows.append(separator)
         return "\n".join(rows), total_diff
 
+    def _save_complete_diff_log(
+        self,
+        source_devanagari: str,
+        converted_devanagari: str,
+        input_file: str,
+        output_file: str,
+        diffs: list,
+    ):
+        """Saves a complete diff log to the destination directory with timestamp."""
+        from datetime import datetime
+        from aksharamukha import transliterate
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        output_dir = Path(output_file).parent
+        diff_log_path = output_dir / f"diff_log_{timestamp}.txt"
+
+        try:
+            with open(diff_log_path, 'w', encoding='utf-8') as f:
+                f.write("="*80 + "\n")
+                f.write("COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)\n")
+                f.write("="*80 + "\n\n")
+                f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+                f.write(f"Source file: {Path(input_file).resolve()}\n")
+                f.write(f"Destination file: {Path(output_file).resolve()}\n")
+                f.write(f"\n{'='*80}\n\n")
+
+                # Calculate diff statistics
+                dmp = diff_match_patch.diff_match_patch()
+                diff_count = sum(1 for op, _ in diffs if op != dmp.DIFF_EQUAL)
+                f.write(f"Total differences found: {diff_count}\n\n")
+                f.write("="*80 + "\n\n")
+
+                # Generate all diffs with context
+                diff_num = 0
+                context_chars = 40
+
+                # Reconstruct position tracking
+                source_pos = 0
+                target_pos = 0
+
+                for op, text in diffs:
+                    if op == dmp.DIFF_EQUAL:
+                        source_pos += len(text)
+                        target_pos += len(text)
+                        continue
+
+                    diff_num += 1
+
+                    # Get context from source
+                    context_start = max(0, source_pos - context_chars)
+                    context_end = min(len(source_devanagari), source_pos + len(text) + context_chars)
+                    context = source_devanagari[context_start:context_end]
+
+                    f.write(f"--- Diff {diff_num} ---\n")
+                    f.write(f"CONTEXT (with surrounding text):\n")
+                    f.write(f"{context}\n")
+
+                    # Transliterate to Harvard-Kyoto
+                    try:
+                        transliterated = transliterate.process('Devanagari', 'HK', context)
+                        f.write(f"{transliterated}\n")
+                    except Exception:
+                        f.write("(transliteration failed)\n")
+
+                    f.write("\n")
+
+                    # Word-by-word analysis and whitespace detection
+                    f.write("WORD-BY-WORD BREAKDOWN:\n")
+
+                    # Check for whitespace-only changes
+                    if text.strip() == "":
+                        f.write(f"  ⚠️  WHITESPACE-ONLY CHANGE:\n")
+                        if op == dmp.DIFF_DELETE:
+                            f.write(f"    DELETED: {len(text)} whitespace character(s)\n")
+                            f.write(f"    Representation: {repr(text)}\n")
+                        elif op == dmp.DIFF_INSERT:
+                            f.write(f"    INSERTED: {len(text)} whitespace character(s)\n")
+                            f.write(f"    Representation: {repr(text)}\n")
+                    else:
+                        # Get words from the changed portion
+                        changed_text = text
+                        words = changed_text.split()
+
+                        # Check if there's leading/trailing whitespace
+                        has_leading_ws = text != text.lstrip()
+                        has_trailing_ws = text != text.rstrip()
+
+                        if has_leading_ws or has_trailing_ws:
+                            f.write(f"  ⚠️  CONTAINS WHITESPACE:\n")
+                            if has_leading_ws:
+                                leading_ws = text[:len(text) - len(text.lstrip())]
+                                f.write(f"    Leading whitespace: {len(leading_ws)} character(s) - {repr(leading_ws)}\n")
+                            if has_trailing_ws:
+                                trailing_ws = text[len(text.rstrip()):]
+                                f.write(f"    Trailing whitespace: {len(trailing_ws)} character(s) - {repr(trailing_ws)}\n")
+                            f.write("\n")
+
+                        if op == dmp.DIFF_DELETE:
+                            f.write(f"  DELETED from source ({len(words)} words):\n")
+                            for i, word in enumerate(words, 1):
+                                try:
+                                    word_translit = transliterate.process('Devanagari', 'HK', word)
+                                    f.write(f"    [{i}] {word} ({word_translit})\n")
+                                except:
+                                    f.write(f"    [{i}] {word}\n")
+                        elif op == dmp.DIFF_INSERT:
+                            f.write(f"  INSERTED in destination ({len(words)} words):\n")
+                            for i, word in enumerate(words, 1):
+                                try:
+                                    word_translit = transliterate.process('Devanagari', 'HK', word)
+                                    f.write(f"    [{i}] {word} ({word_translit})\n")
+                                except:
+                                    f.write(f"    [{i}] {word}\n")
+
+                    f.write("\n")
+
+                    # Update positions
+                    if op == dmp.DIFF_DELETE:
+                        source_pos += len(text)
+                    elif op == dmp.DIFF_INSERT:
+                        target_pos += len(text)
+
+            print(f"  📄 Complete diff log saved: {diff_log_path}")
+
+        except Exception as e:
+            print(f"  ⚠️  Warning: Could not save diff log: {e}", file=sys.stderr)
+
     def _save_log_file(self, log_path: Path, content: str):
         """Saves content to a specified path in the log directory."""
         try:
@@ -539,22 +681,50 @@ class MeghamalaConverter:
         """Applies deterministic regex replacements to normalize noisy input text."""
         import re
 
-        # Sanitize Headers: Convert noisy headers like **[उपक्रमशान्तिपाठः]** or **तृतीयोऽध्यायः**
-        # into a standard format without brackets or excessive noise.
-        # Find: **[?(.*?)]?** (Find bold text, optionally inside brackets)
-        # Replace: **$1** (Keep just the bold text).
-        # Refinement: If the text inside is metadata like (****...****), remove the inner asterisks.
-        processed_text = re.sub(r"\*\*\[?(.*?)\]?\*\*", r"**\1**", raw_text)
-        processed_text = re.sub(r"\*\*\*\*(.*?)\*\*\*\*", r"**\1**", processed_text)
+        # Fix broken bold markers: ****.....****  -> **.....**
+        # This handles cases where text is double-bolded by mistake
+        processed_text = re.sub(r"\*\*\*\*(.*?)\*\*\*\*", r"**\1**", raw_text)
 
         # Normalize Asterisks: Fix inconsistent bolding like **word ** or ** word**.
-        processed_text = re.sub(r"\*\*\s+", r"**", processed_text)
-        processed_text = re.sub(r"\s+\*\*", r"**", processed_text)
+        # Only remove spaces INSIDE bold markers, not BETWEEN separate bold spans.
+        # Match: **<space>content -> **content
+        processed_text = re.sub(r"\*\*\s+([^\*])", r"**\1", processed_text)
+        # Match: content<space>** -> content**
+        processed_text = re.sub(r"([^\*])\s+\*\*", r"\1**", processed_text)
 
         # Fix Broken Separators: Ensure separators are standard.
         processed_text = re.sub(r"^\*{3,}$", r"******", processed_text, flags=re.MULTILINE)
 
-        # Standardize Verse Numbers: Ensure verse numbers are detectable at the end of lines.
-        processed_text = re.sub(r"(।।\s*[\u0966-\u096F]+\s*।।)\s*$", r"\1", processed_text, flags=re.MULTILINE)
+        # Standardize Verse Numbers: Normalize spacing to ।। N ।।
+        # Only handle the standard Devanagari danda format (।।)
+        # Don't try to fix mixed formats - leave those for manual correction
+        def normalize_verse_number(match):
+            # Extract the number (group 1 from the regex)
+            number = match.group(1)
+            return f"।। {number} ।।"
+
+        # Match: ।। + optional_space + digits + optional_space + ।।
+        # This normalizes spacing but doesn't try to handle different delimiter types
+        processed_text = re.sub(
+            r'।।\s*([\u0966-\u096F]+)\s*।।',
+            normalize_verse_number,
+            processed_text
+        )
 
         return processed_text
+
+    def _remove_bold_markers(self, text: str) -> str:
+        """Removes markdown bold markers (**) from text.
+
+        This is applied before sending text to Gemini to:
+        1. Eliminate formatting noise that Gemini doesn't need to see
+        2. Prevent spacing artifacts from inconsistent bold marker placement
+        3. Ensure consistent spacing in converted output
+
+        Args:
+            text: Input text potentially containing ** markers
+
+        Returns:
+            Text with all ** markers removed
+        """
+        return re.sub(r'\*\*', '', text)
