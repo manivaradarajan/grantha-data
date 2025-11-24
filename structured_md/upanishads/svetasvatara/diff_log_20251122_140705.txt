@@ -1,0 +1,459 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)
+================================================================================
+
+Generated: 2025-11-22 14:07:05
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/svetasvatara/zvetAzvataropaniSat-pancama.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/svetasvatara/shvetashvatara-upanishad-rangaramanuja-05-01.md
+
+================================================================================
+
+Total differences found: 55
+
+================================================================================
+
+--- Diff 1 ---
+CONTEXT (with surrounding text):
+श्वेताश्वतरोपनिषत् अथ पञ्चमोऽध्यायः विद्याविद्ययो लक्षणम् द
+zvetAzvataropaniSat atha paJcamo'dhyAyaH vidyAvidyayo lakSaNam da
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] श्वेताश्वतरोपनिषत् (zvetAzvataropaniSat)
+
+--- Diff 2 ---
+CONTEXT (with surrounding text):
+चिद्विवेकञ्च प्रपञ्चयति द्वे अक्षरेइति ।ब्रह्मपरेब्रह्माराधनरूपेअनन्ते असंख्यातव्
+cidvivekaJca prapaJcayati dve akSareiti .brahmaparebrahmArAdhanarUpeanante asaMkhyAtav
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 3 ---
+CONTEXT (with surrounding text):
+द्वे अक्षरेइति ।ब्रह्मपरेब्रह्माराधनरूपेअनन्ते असंख्यातव्यक्तिके नित्यानित्यफलसाध
+dve akSareiti .brahmaparebrahmArAdhanarUpeanante asaMkhyAtavyaktike nityAnityaphalasAdha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 4 ---
+CONTEXT (with surrounding text):
+्याशब्दिते ते ज्ञानरूपकर्मरूपे द्वे यत्रअक्षरे आत्मनि दुर्मोचतया लग्ने सोऽप्यन्यः
+yAzabdite te jJAnarUpakarmarUpe dve yatraakSare Atmani durmocatayA lagne so'pyanyaH
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 5 ---
+CONTEXT (with surrounding text):
+यमानः तत्फलप्रदश्चान्यः इत्यर्थः ।। १ ।।यो योनिं योनिमधितिष्ठत्येको विश्वानि रूपा
+yamAnaH tatphalapradazcAnyaH ityarthaH .. 1 ..yo yoniM yonimadhitiSThatyeko vizvAni rUpA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 6 ---
+CONTEXT (with surrounding text):
+भर्ति जायमानं च पश्येत् ।। २ ।। योनिमिति। सर्वाणि समष्टिव्यष्टिरूपाणि तत्तद्योनीश
+bharti jAyamAnaM ca pazyet .. 2 .. yonimiti. sarvANi samaSTivyaSTirUpANi tattadyonIza
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 7 ---
+CONTEXT (with surrounding text):
+समष्टिव्यष्टिरूपाणि तत्तद्योनीश्च सर्वाःयोऽधितिष्ठति यस्तु अग्रे सृष्टि पूर्वसमये
+samaSTivyaSTirUpANi tattadyonIzca sarvAHyo'dhitiSThati yastu agre sRSTi pUrvasamaye
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 8 ---
+CONTEXT (with surrounding text):
+ोऽधितिष्ठति यस्तु अग्रे सृष्टि पूर्वसमयेप्रसूतं कपिलंज्ञानादियुक्तंबिभर्ति कृतवान
+o'dhitiSThati yastu agre sRSTi pUrvasamayeprasUtaM kapilaMjJAnAdiyuktaMbibharti kRtavAna
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 9 ---
+CONTEXT (with surrounding text):
+्टि पूर्वसमयेप्रसूतं कपिलंज्ञानादियुक्तंबिभर्ति कृतवान् जायमानदशायाञ्च सानुग्रहमे
+Ti pUrvasamayeprasUtaM kapilaMjJAnAdiyuktaMbibharti kRtavAn jAyamAnadazAyAJca sAnugrahame
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 10 ---
+CONTEXT (with surrounding text):
+तः सोऽप्यन्य इति पूर्वेण संबन्धः ।। २ ।।एकैकं जालं बहुधा विकुर्वन्न स्मिन् क्षेत्
+taH so'pyanya iti pUrveNa saMbandhaH .. 2 ..ekaikaM jAlaM bahudhA vikurvanna smin kSet
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 11 ---
+CONTEXT (with surrounding text):
+्वाधिपत्यं कुरुते महात्मा ॥ ३ ॥ एकैकमिति। यस्मिन्क्षेत्रेप्रकृतिरूपे जालवद् बन्धक
+vAdhipatyaM kurute mahAtmA .. 3 .. ekaikamiti. yasminkSetreprakRtirUpe jAlavad bandhaka
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 12 ---
+CONTEXT (with surrounding text):
+ं कुरुते महात्मा ॥ ३ ॥ एकैकमिति। यस्मिन्क्षेत्रेप्रकृतिरूपे जालवद् बन्धके महदादिक
+M kurute mahAtmA .. 3 .. ekaikamiti. yasminkSetreprakRtirUpe jAlavad bandhake mahadAdika
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 13 ---
+CONTEXT (with surrounding text):
+वन् पुनश्च संहरति तस्मिन्नेव प्रकृतिरूपेक्षेत्रेकल्पान्तरेऽपिभूयःप्रजापत्युपलक्षि
+van punazca saMharati tasminneva prakRtirUpekSetrekalpAntare'pibhUyaHprajApatyupalakSi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 14 ---
+CONTEXT (with surrounding text):
+मिन्नेव प्रकृतिरूपेक्षेत्रेकल्पान्तरेऽपिभूयःप्रजापत्युपलक्षितं प्रपञ्चंसृष्ट्वासर
+minneva prakRtirUpekSetrekalpAntare'pibhUyaHprajApatyupalakSitaM prapaJcaMsRSTvAsara
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 15 ---
+CONTEXT (with surrounding text):
+ान्तरेऽपिभूयःप्रजापत्युपलक्षितं प्रपञ्चंसृष्ट्वासर्वदा सर्वेषां नियन्तृतया आस्ते
+Antare'pibhUyaHprajApatyupalakSitaM prapaJcaMsRSTvAsarvadA sarveSAM niyantRtayA Aste
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 16 ---
+CONTEXT (with surrounding text):
+ौ ततो महामहिमशाल्यात्मा इत्यर्थः ।। ३ ।।सर्वा दिश ऊर्ध्वमधश्चतिर्यक् प्रकाशयन् भ्
+au tato mahAmahimazAlyAtmA ityarthaH .. 3 ..sarvA diza Urdhvamadhazcatiryak prakAzayan bh
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 17 ---
+CONTEXT (with surrounding text):
+ेण्यो योनिस्वभावानाधितिष्ठत्येकः ।। ४ ।।ननु एतस्य कथं युगपत् सर्वयोन्यधिष्ठातृत्व
+eNyo yonisvabhAvAnAdhitiSThatyekaH .. 4 ..nanu etasya kathaM yugapat sarvayonyadhiSThAtRtva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 18 ---
+CONTEXT (with surrounding text):
+यः सूर्यः तिर्यगूर्ध्वमधश्च युगपद्भासयन्यत् यथा भासते तथा मुमुक्षुभिर्वरणीयो भजनी
+yaH sUryaH tiryagUrdhvamadhazca yugapadbhAsayanyat yathA bhAsate tathA mumukSubhirvaraNIyo bhajanI
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 19 ---
+CONTEXT (with surrounding text):
+े तन्मया अमृता वै बभूवुः ।। ६ ।। यच्चेति। यच्चेति लिङ्गव्यत्ययश्छान्दसः ।यःसर्वेष
+e tanmayA amRtA vai babhUvuH .. 6 .. yacceti. yacceti liGgavyatyayazchAndasaH .yaHsarveSa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 20 ---
+CONTEXT (with surrounding text):
+यच्चेति। यच्चेति लिङ्गव्यत्ययश्छान्दसः ।यःसर्वेषामग्निजलादिवस्तूनाम् उष्णानुगुणस्
+yacceti. yacceti liGgavyatyayazchAndasaH .yaHsarveSAmagnijalAdivastUnAm uSNAnuguNas
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 21 ---
+CONTEXT (with surrounding text):
+ेषामग्निजलादिवस्तूनाम् उष्णानुगुणस्वभावंपचतिसङ्कल्पलक्षणपाकेन निर्वर्तयति यश्चपाच
+eSAmagnijalAdivastUnAm uSNAnuguNasvabhAvaMpacatisaGkalpalakSaNapAkena nirvartayati yazcapAca
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 22 ---
+CONTEXT (with surrounding text):
+वंपचतिसङ्कल्पलक्षणपाकेन निर्वर्तयति यश्चपाच्यान्परिणामयोग्यान् परिणामयति । सत्वा
+vaMpacatisaGkalpalakSaNapAkena nirvartayati yazcapAcyAnpariNAmayogyAn pariNAmayati . satvA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 23 ---
+CONTEXT (with surrounding text):
+परमात्मा सर्वप्रकृत्यधिष्ठाता इत्यर्थः ।तद्वेदेति । तेषु प्रसिद्धेषु वेदेषु गुह्य
+paramAtmA sarvaprakRtyadhiSThAtA ityarthaH .tadvedeti . teSu prasiddheSu vedeSu guhya
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 24 ---
+CONTEXT (with surrounding text):
+ योनिभूतं तत् परं ब्रह्म सकलवेदप्रवर्तकःब्रह्माचतुर्मुखःवेदते जानाति । अतादृशो न
+ yonibhUtaM tat paraM brahma sakalavedapravartakaHbrahmAcaturmukhaHvedate jAnAti . atAdRzo na
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 25 ---
+CONTEXT (with surrounding text):
+ं ब्रह्म सकलवेदप्रवर्तकःब्रह्माचतुर्मुखःवेदते जानाति । अतादृशो न जानाति ।ये च पूर
+M brahma sakalavedapravartakaHbrahmAcaturmukhaHvedate jAnAti . atAdRzo na jAnAti .ye ca pUra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 26 ---
+CONTEXT (with surrounding text):
+ुर्मुखःवेदते जानाति । अतादृशो न जानाति ।ये च पूर्वं देवा ऋषयश्चतत् ज्ञातवन्तः तेस
+urmukhaHvedate jAnAti . atAdRzo na jAnAti .ye ca pUrvaM devA RSayazcatat jJAtavantaH tesa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 27 ---
+CONTEXT (with surrounding text):
+ज्ञातवन्तः तेसर्वे तत्स समानाकारा मुक्ताबभूवुःइत्यर्थः ।। ५ ६ ।।गुणान्वयो यः फलकर
+jJAtavantaH tesarve tatsa samAnAkArA muktAbabhUvuHityarthaH .. 5 6 ..guNAnvayo yaH phalakara
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 28 ---
+CONTEXT (with surrounding text):
+समानाकारा मुक्ताबभूवुःइत्यर्थः ।। ५ ६ ।।गुणान्वयो यः फलकर्मकर्ता कृतस्य तस्यैव स
+samAnAkArA muktAbabhUvuHityarthaH .. 5 6 ..guNAnvayo yaH phalakarmakartA kRtasya tasyaiva sa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 29 ---
+CONTEXT (with surrounding text):
+्मा प्राणाधिपः संचरति स्वकर्मभिः ।। ७ ।।एवं परमात्मस्वरूपं तज्ज्ञानस्यामृतसाधनत्व
+mA prANAdhipaH saMcarati svakarmabhiH .. 7 ..evaM paramAtmasvarUpaM tajjJAnasyAmRtasAdhanatva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 30 ---
+CONTEXT (with surrounding text):
+न् कर्मपाशबद्धः सञ्चरति इत्यर्थः ।। ७ ।।अङ् गुष्ठमात्रो रवितुल्यरूपः सङ्कल्पाहङ्क
+n karmapAzabaddhaH saJcarati ityarthaH .. 7 ..aG guSThamAtro ravitulyarUpaH saGkalpAhaGka
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 31 ---
+CONTEXT (with surrounding text):
+यवरोऽपि दृष्टः ।।८।। अङ् गुष्ठमात्रइति ।बुद्धेःअन्तःकरणस्य सत्वरजस्तमोलक्षणगुणकार
+yavaro'pi dRSTaH ..8.. aG guSThamAtra_iti .buddheHantaHkaraNasya satvarajastamolakSaNaguNakAra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 32 ---
+CONTEXT (with surrounding text):
+ गुष्ठपरिमाणः शास्त्रेषु दृष्टः । ततोऽपिअवरः हीनपरिमाण आराग्रमात्र इत्यपिदृष्टः श
+ guSThaparimANaH zAstreSu dRSTaH . tato'piavaraH hInaparimANa ArAgramAtra ityapidRSTaH za
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 33 ---
+CONTEXT (with surrounding text):
+ ततोऽपिअवरः हीनपरिमाण आराग्रमात्र इत्यपिदृष्टः शास्त्रेषु दृष्ट इत्यर्थः ।। ८ ।।
+ tato'piavaraH hInaparimANa ArAgramAtra ityapidRSTaH zAstreSu dRSTa ityarthaH .. 8 ..
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 34 ---
+CONTEXT (with surrounding text):
+ः स विज्ञेयः स चानन्त्याय कल्पते ।। ९ ।।स्वमतमुपन्यस्यति वालाग्रेति।वालाग्रशतांश
+H sa vijJeyaH sa cAnantyAya kalpate .. 9 ..svamatamupanyasyati vAlAgreti.vAlAgrazatAMza
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 35 ---
+CONTEXT (with surrounding text):
+ल्पते ।। ९ ।।स्वमतमुपन्यस्यति वालाग्रेति।वालाग्रशतांश शतांशतुल्यपरिमाण एवजीवोमोक्
+lpate .. 9 ..svamatamupanyasyati vAlAgreti.vAlAgrazatAMza zatAMzatulyaparimANa evajIvomok
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] । (.)
+
+--- Diff 36 ---
+CONTEXT (with surrounding text):
+्पते ।। ९ ।।स्वमतमुपन्यस्यति वालाग्रेति।वालाग्रशतांश शतांशतुल्यपरिमाण एवजीवोमोक्षे
+pate .. 9 ..svamatamupanyasyati vAlAgreti.vAlAgrazatAMza zatAMzatulyaparimANa evajIvomokSe
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] । (.)
+
+--- Diff 37 ---
+CONTEXT (with surrounding text):
+ाग्रेति।वालाग्रशतांश शतांशतुल्यपरिमाण एवजीवोमोक्षे धर्मभूतज्ञानविकासेन विभुत्वलक्
+Agreti.vAlAgrazatAMza zatAMzatulyaparimANa evajIvomokSe dharmabhUtajJAnavikAsena vibhutvalak
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 38 ---
+CONTEXT (with surrounding text):
+मोक्षे धर्मभूतज्ञानविकासेन विभुत्वलक्षणानन्त्यायप्रभवतीत्यर्थः ।। ९ ।।नैव स्त्री
+mokSe dharmabhUtajJAnavikAsena vibhutvalakSaNAnantyAyaprabhavatItyarthaH .. 9 ..naiva strI
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 39 ---
+CONTEXT (with surrounding text):
+ुत्वलक्षणानन्त्यायप्रभवतीत्यर्थः ।। ९ ।।नैव स्त्री न पुपानेष न चैवायं नपुंसकः । य
+utvalakSaNAnantyAyaprabhavatItyarthaH .. 9 ..naiva strI na pupAneSa na caivAyaM napuMsakaH . ya
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 40 ---
+CONTEXT (with surrounding text):
+च्छरीरमादत्ते तेन तेन संयुज्यते ।। १० ।।श्रीनपुंसकत्वादिकमपि तस्य तादृशशरीरसम्बन्
+ccharIramAdatte tena tena saMyujyate .. 10 ..zrInapuMsakatvAdikamapi tasya tAdRzazarIrasamban
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 41 ---
+CONTEXT (with surrounding text):
+्धकृतम् न स्वाभाविकम् इत्याहनैव स्त्रीति। स्पष्टोऽर्थः ।। १० ।।सङ्कल्पनस्पर्शनदृष
+dhakRtam na svAbhAvikam ityAhanaiva strIti. spaSTo'rthaH .. 10 ..saGkalpanasparzanadRSa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 42 ---
+CONTEXT (with surrounding text):
+त्याहनैव स्त्रीति। स्पष्टोऽर्थः ।। १० ।।सङ्कल्पनस्पर्शनदृष्टिहोमै र्गासाम्बुवृष्ट
+tyAhanaiva strIti. spaSTo'rthaH .. 10 ..saGkalpanasparzanadRSTihomai rgAsAmbuvRSTa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 43 ---
+CONTEXT (with surrounding text):
+ स्थानेषु रूपाप्यभिसम्प्रपद्यते ।। ११ ।।देहप्राप्तौ हेतुमाह सङ्कल्पेनेति। पुण्यवि
+ sthAneSu rUpApyabhisamprapadyate .. 11 ..dehaprAptau hetumAha saGkalpeneti. puNyavi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 44 ---
+CONTEXT (with surrounding text):
+।। ११ ।।देहप्राप्तौ हेतुमाह सङ्कल्पेनेति। पुण्यविषयक सङ्कल्पगङ्गादिलक्षण पुण्यवस्
+.. 11 ..dehaprAptau hetumAha saGkalpeneti. puNyaviSayaka saGkalpagaGgAdilakSaNa puNyavas
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 45 ---
+CONTEXT (with surrounding text):
+ ब्राह्मणादिषु योनिषु अनुक्रमेण पर्यायेणप्रपद्यतइत्यर्थः ।। ११ ।।स्थूलानि सम्माणि
+ brAhmaNAdiSu yoniSu anukrameNa paryAyeNaprapadyata_ityarthaH .. 11 ..sthUlAni sammANi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 46 ---
+CONTEXT (with surrounding text):
+क्रमेण पर्यायेणप्रपद्यतइत्यर्थः ।। ११ ।।स्थूलानि सम्माणि बहूनि चैव रूपाणि देही स्
+krameNa paryAyeNaprapadyata_ityarthaH .. 11 ..sthUlAni sammANi bahUni caiva rUpANi dehI s
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 47 ---
+CONTEXT (with surrounding text):
+ात्मगुणैश्च तेषां संयोगहेतुरपरोऽपि दृष्ट ।। ११ ।।स्थूलानीति । मशकमातङ्गादिस्थूलसू
+AtmaguNaizca teSAM saMyogaheturaparo'pi dRSTa .. 11 ..sthUlAnIti . mazakamAtaGgAdisthUlasU
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ः (H)
+
+--- Diff 48 ---
+CONTEXT (with surrounding text):
+्च तेषां संयोगहेतुरपरोऽपि दृष्ट ।। ११ ।।स्थूलानीति । मशकमातङ्गादिस्थूलसूक्ष्मशरीर
+ca teSAM saMyogaheturaparo'pi dRSTa .. 11 ..sthUlAnIti . mazakamAtaGgAdisthUlasUkSmazarIra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 49 ---
+CONTEXT (with surrounding text):
+्वं कर्मैव हेतुर्दृष्ट इत्यर्थः ।। १५ ।।अनाद्यनन्तं कलिलस्य मध्ये विश्वस्य स्रष्ट
+vaM karmaiva heturdRSTa ityarthaH .. 15 ..anAdyanantaM kalilasya madhye vizvasya sraSTa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 50 ---
+CONTEXT (with surrounding text):
+ुच्यते सर्वपाशैः ।। १३ ।। अनाद्यनन्तमिति।कलिलस्य कार्यस्य मध्ये स्थित्वा हिरण्यगर
+ucyate sarvapAzaiH .. 13 .. anAdyanantamiti.kalilasya kAryasya madhye sthitvA hiraNyagara
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] । (.)
+
+--- Diff 51 ---
+CONTEXT (with surrounding text):
+च्यते सर्वपाशैः ।। १३ ।। अनाद्यनन्तमिति।कलिलस्य कार्यस्य मध्ये स्थित्वा हिरण्यगर्भ
+cyate sarvapAzaiH .. 13 .. anAdyanantamiti.kalilasya kAryasya madhye sthitvA hiraNyagarbha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] । (.)
+
+--- Diff 52 ---
+CONTEXT (with surrounding text):
+थित्वा हिरण्यगर्भ प्रजापत्याद्यनेकरूपतयाविश्वस्य स्रष्टारम्इत्यर्थः । शिष्टं पूर्
+thitvA hiraNyagarbha prajApatyAdyanekarUpatayAvizvasya sraSTAramityarthaH . ziSTaM pUr
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 53 ---
+CONTEXT (with surrounding text):
+करं देवं ये विदुस्ते जहुस्तनुम् ।। १४ ।।।। इति पञ्चमोऽध्यायः ।। भावेति । भावग्राह
+karaM devaM ye viduste jahustanum .. 14 .... iti paJcamo'dhyAyaH .. bhAveti . bhAvagrAha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 54 ---
+CONTEXT (with surrounding text):
+यः ।। भावेति । भावग्राह्यं भक्तिग्राह्यंअनीडत्वेन अनिलयत्वेन अनाधारत्वेन आख्यायमा
+yaH .. bhAveti . bhAvagrAhyaM bhaktigrAhyaManIDatvena anilayatvena anAdhAratvena AkhyAyamA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 55 ---
+CONTEXT (with surrounding text):
+िलयत्वेन अनाधारत्वेन आख्यायमानं विश्वस्यभावाभावकरं सर्गसंहारकारकं सर्वदा अशुभासृष
+ilayatvena anAdhAratvena AkhyAyamAnaM vizvasyabhAvAbhAvakaraM sargasaMhArakArakaM sarvadA azubhAsRSa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):

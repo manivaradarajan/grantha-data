@@ -1,0 +1,183 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)
+================================================================================
+
+Generated: 2025-11-22 14:04:41
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/svetasvatara/zvetAzvataropaniSat-caturtha.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/svetasvatara/shvetashvatara-upanishad-rangaramanuja-04-01.md
+
+================================================================================
+
+Total differences found: 20
+
+================================================================================
+
+--- Diff 1 ---
+CONTEXT (with surrounding text):
+वः स नो बुद्ध्या शुभया संयुनक्तु ।। १ ।।ब्रह्मणः सर्वविधकारणत्वं प्रपञ्चयिष्यन् त
+vaH sa no buddhyA zubhayA saMyunaktu .. 1 ..brahmaNaH sarvavidhakAraNatvaM prapaJcayiSyan ta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 2 ---
+CONTEXT (with surrounding text):
+ाचकयोरभेदोपचारात्स देवइत्युक्तिः ।। १ ।।तदेवाग्निस्तदादित्यस्तद्वायुस्तदु चन्द्रम
+AcakayorabhedopacArAtsa deva_ityuktiH .. 1 ..tadevAgnistadAdityastadvAyustadu candrama
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 3 ---
+CONTEXT (with surrounding text):
+रं तद्ब्रह्म तदापस्तत् प्रजापतिः ।। २ ।।तस्य देवस्य सर्वात्म्यमाह तदेवाग्निरिति ।
+raM tadbrahma tadApastat prajApatiH .. 2 ..tasya devasya sarvAtmyamAha tadevAgniriti .
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 4 ---
+CONTEXT (with surrounding text):
+मण्डलमित्यर्थः । शिष्टं स्पष्टम् ।। २ ।।त्वं स्त्री त्वं पुमानसि त्वं कुमार उत वा
+maNDalamityarthaH . ziSTaM spaSTam .. 2 ..tvaM strI tvaM pumAnasi tvaM kumAra uta vA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 5 ---
+CONTEXT (with surrounding text):
+ञ्चसि त्वं जातो भवसि विश्वतोमुखः ।। ३ ।।तदेव सार्वात्म्यं संबोधनेनाह त्वं स्त्रीत
+Jcasi tvaM jAto bhavasi vizvatomukhaH .. 3 ..tadeva sArvAtmyaM saMbodhanenAha tvaM strIta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 6 ---
+CONTEXT (with surrounding text):
+। त्वमेव सर्वरूपो जातोऽसीत्यर्थः ।। ३ ।।नीलः पतङ्गो हरितो लोहिताक्षः तडिद्गर्भ ऋत
+. tvameva sarvarUpo jAto'sItyarthaH .. 3 ..nIlaH pataGgo harito lohitAkSaH taDidgarbha Rta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 7 ---
+CONTEXT (with surrounding text):
+ ८ । अर्वाग्बिलश्चमस ऊर्ध्वबुध्न तस्मिन् यशोनिहितं विश्वरूपाम् बृ उ ४ २ ३ इति मन्
+ 8 . arvAgbilazcamasa Urdhvabudhna tasmin yazonihitaM vizvarUpAm bR u 4 2 3 iti man
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (0 words):
+
+--- Diff 8 ---
+CONTEXT (with surrounding text):
+्वाद्वत्त्यनश्नन्नन्योऽभिचाकशीति ।। ६ ।।प्रकृतिसम्बन्धाविशेषेऽपि जीवस्य भोक्तृत्व
+vAdvattyanaznannanyo'bhicAkazIti .. 6 ..prakRtisambandhAvizeSe'pi jIvasya bhoktRtva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 9 ---
+CONTEXT (with surrounding text):
+वृक्षत्वाद्यध्यवसानलक्षणारूपकातिशयोक्तिः विच्छित्तिविशेषायेति केचित् । वृक्षादिशब
+vRkSatvAdyadhyavasAnalakSaNArUpakAtizayoktiH vicchittivizeSAyeti kecit . vRkSAdizaba
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (0 words):
+
+--- Diff 10 ---
+CONTEXT (with surrounding text):
+तिः न तु रूपकातिशयोक्तिरित्यन्ये ।। ६ ।।समाने वृक्षे पुरुषो निमग्नोऽ नीशया शोचति
+tiH na tu rUpakAtizayoktirityanye .. 6 ..samAne vRkSe puruSo nimagno' nIzayA zocati
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 11 ---
+CONTEXT (with surrounding text):
+यति य इत् तद् विदुस्त इमे समासते ।। ८ ।।ऋच इति । न क्षरतीत्यक्षरम्। तादृशेऋच ऋक्छ
+yati ya it tad vidusta ime samAsate .. 8 ..Rca iti . na kSaratItyakSaram. tAdRzeRca Rkcha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 12 ---
+CONTEXT (with surrounding text):
+भूतैस्तु व्याप्तं सर्वमिदं जगत् ।। १० ।।माया नाम का तत्प्रेरकश्च क इत्यत्राह माया
+bhUtaistu vyAptaM sarvamidaM jagat .. 10 ..mAyA nAma kA tatprerakazca ka ityatrAha mAyA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 13 ---
+CONTEXT (with surrounding text):
+ं पुनः पुनः कथनमिति द्रष्टव्यम् ।। ११ ।।यो देवानां प्रभवश्चोद्भवश्च विश्वाधिपो रु
+M punaH punaH kathanamiti draSTavyam .. 11 ..yo devAnAM prabhavazcodbhavazca vizvAdhipo ru
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 14 ---
+CONTEXT (with surrounding text):
+ं स नो बुद्ध्या शुभया संयुनक्तु ।। १२ ।।तज्ज्ञाने तदनुग्रह एव कारणमिति तं प्रार्थ
+M sa no buddhyA zubhayA saMyunaktu .. 12 ..tajjJAne tadanugraha eva kAraNamiti taM prArtha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 15 ---
+CONTEXT (with surrounding text):
+वन्तंज्ञात्वा मुक्तोभवतीत्यर्थः ।। १६ ।।एष देवो विश्वकर्मा महात्मा सदा जनानां हृद
+vantaMjJAtvA muktobhavatItyarthaH .. 16 ..eSa devo vizvakarmA mahAtmA sadA janAnAM hRda
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 16 ---
+CONTEXT (with surrounding text):
+प्रज्ञा च तस्मात्प्रसृता पुराणी ।। १८ ।।गायत्रीप्रतिपाद्यत्वमपि तस्यैव इत्याहयदा
+prajJA ca tasmAtprasRtA purANI .. 18 ..gAyatrIpratipAdyatvamapi tasyaiva ityAhayadA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 17 ---
+CONTEXT (with surrounding text):
+ मा न आयुषि मानो गोषु मानो अश्वेषु रीरिष । वीरान्मानो रुद्र बीमतो वधीर्हविष्मन्त
+ mA na AyuSi mAno goSu mAno azveSu rIriSa . vIrAnmAno rudra bImato vadhIrhaviSmanta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ः (H)
+
+--- Diff 18 ---
+CONTEXT (with surrounding text):
+ । वीरान्मानो रुद्र बीमतो वधीर्हविष्मन्त सदसि त्वां हवानहे ॥ २२॥ ॥ इति चतुर्थोऽध्
+ . vIrAnmAno rudra bImato vadhIrhaviSmanta sadasi tvAM havAnahe .. 22.. .. iti caturtho'dh
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ः (H)
+
+--- Diff 19 ---
+CONTEXT (with surrounding text):
+ो वधीर्हविष्मन्त सदसि त्वां हवानहे ॥ २२॥ ॥ इति चतुर्थोऽध्यायः ॥ मा न स्तोकइति । अपत्यपुत्रायुर्गवाश्वाद
+o vadhIrhaviSmanta sadasi tvAM havAnahe .. 22.. .. iti caturtho'dhyAyaH .. mA na stoka_iti . apatyaputrAyurgavAzvAda
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (4 words):
+    [1] ॥ (..)
+    [2] इति (iti)
+    [3] चतुर्थोऽध्यायः (caturtho'dhyAyaH)
+    [4] ॥ (..)
+
+--- Diff 20 ---
+CONTEXT (with surrounding text):
+ इदित्यवधारणे । त्वामेवेत्यर्थः ।। २२ ।।।। इति चतुर्थाध्यायप्रकाशिका ।।
+ idityavadhAraNe . tvAmevetyarthaH .. 22 .... iti caturthAdhyAyaprakAzikA ..
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (4 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] चतुर्थोऽध्यायः (caturtho'dhyAyaH)
+    [4] ।। (..)

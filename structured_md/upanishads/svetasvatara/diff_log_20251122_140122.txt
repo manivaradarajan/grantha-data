@@ -1,0 +1,269 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)
+================================================================================
+
+Generated: 2025-11-22 14:01:22
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/svetasvatara/zvetAzvataropaniSat-tRtIya.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/svetasvatara/shvetashvatara-upanishad-rangaramanuja-03-01.md
+
+================================================================================
+
+Total differences found: 31
+
+================================================================================
+
+--- Diff 1 ---
+CONTEXT (with surrounding text):
+सम्भवे य एतद्विदुरमृतास्ते भवन्ति ।। १।।उत्तशानस्य फलमाह य एकइति । अपहतपाप्मा दिव
+sambhave ya etadviduramRtAste bhavanti .. 1..uttazAnasya phalamAha ya eka_iti . apahatapApmA diva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 2 ---
+CONTEXT (with surrounding text):
+्टे रज्ज्ञानं मोक्षसाधनमित्यर्थः ।। १ ।।एको हि रुद्रो न द्वितीयाय तस्थुः य इमान्
+Te rajjJAnaM mokSasAdhanamityarthaH .. 1 ..eko hi rudro na dvitIyAya tasthuH ya imAn
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 3 ---
+CONTEXT (with surrounding text):
+ाले संसृज्य विश्वा भुवनानि गोपाः ।। २ ।।ननु य एतद्विदुरमृतास्ते भवन्ति इति पूर्वम
+Ale saMsRjya vizvA bhuvanAni gopAH .. 2 ..nanu ya etadviduramRtAste bhavanti iti pUrvama
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 4 ---
+CONTEXT (with surrounding text):
+िष्यमाणत्वाञ्च नात्र चोद्यावकाशः ।। २ ।।विश्वतश्चक्षुरुत विश्वतोमुखो विश्वतोबाहुर
+iSyamANatvAJca nAtra codyAvakAzaH .. 2 ..vizvatazcakSuruta vizvatomukho vizvatobAhura
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 5 ---
+CONTEXT (with surrounding text):
+नानन्त शरीरेन्द्रियवान् इत्यर्थः ।। ३ ।।यो देवानां प्रभवश्चोद्भवश्च विश्वाधिको रु
+nAnanta zarIrendriyavAn ityarthaH .. 3 ..yo devAnAM prabhavazcodbhavazca vizvAdhiko ru
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 6 ---
+CONTEXT (with surrounding text):
+ूर्वं स नो बुद्ध्या शुभया संयुक्तु ॥ ४ ॥परमात्मोपलब्धिप्रार्थनामन्त्रमाह यो देवान
+UrvaM sa no buddhyA zubhayA saMyuktu .. 4 ..paramAtmopalabdhiprArthanAmantramAha yo devAna
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 7 ---
+CONTEXT (with surrounding text):
+तयाशुभयाबुद्ध्या योजयतु इत्यर्थः ।। ४ ।।या ते रुद्र शिवा तनूरघोरा पापकाशिनी । तया
+tayAzubhayAbuddhyA yojayatu ityarthaH .. 4 ..yA te rudra zivA tanUraghorA pApakAzinI . tayA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 8 ---
+CONTEXT (with surrounding text):
+हेणअभिचाकशीहि प्रकाशस्व इत्यर्थः ।। ५ ।।यामिषुं गिरशन्त हस्ते बिभर्ष्यस्तवे । शिव
+heNaabhicAkazIhi prakAzasva ityarthaH .. 5 ..yAmiSuM girazanta haste bibharSyastave . ziva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 9 ---
+CONTEXT (with surrounding text):
+्र तां कुरु मा हिंसी पुरुषं जगत् ।। ६ ।।यामिषुमिति । गिरित्र । गीः प्रतिपाद्यते इ
+ra tAM kuru mA hiMsI puruSaM jagat .. 6 ..yAmiSumiti . giritra . gIH pratipAdyate i
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 10 ---
+CONTEXT (with surrounding text):
+रान्धकूपपतितं मा कार्षीरित्यर्थः ।। ६ ।।ततः परं ब्रह्म परं बृहन्तं यथानिकायं सर्व
+rAndhakUpapatitaM mA kArSIrityarthaH .. 6 ..tataH paraM brahma paraM bRhantaM yathAnikAyaM sarva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 11 ---
+CONTEXT (with surrounding text):
+्वरंज्ञात्वामुक्ताभवन्तिइत्यर्थः ।। ७ ।।वेदाहमेतं पुरुषं महान्तमादित्यवर्णं तमसः
+varaMjJAtvAmuktAbhavantiityarthaH .. 7 ..vedAhametaM puruSaM mahAntamAdityavarNaM tamasaH
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 12 ---
+CONTEXT (with surrounding text):
+युमेति नान्यः पन्था विद्यतेऽयनाय ।। ८ ।।तज्ज्ञानस्य मोक्षसाधनत्वमुक्त्वा इतरस्य त
+yumeti nAnyaH panthA vidyate'yanAya .. 8 ..tajjJAnasya mokSasAdhanatvamuktvA itarasya ta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 13 ---
+CONTEXT (with surrounding text):
+क स्तेनेदं पूर्णं पुरुषेण सर्वम् ।। ९ ।।ननु आत्मज्ञानस्यैव तरति शोकमात्मवित् छां
+ka stenedaM pUrNaM puruSeNa sarvam .. 9 ..nanu AtmajJAnasyaiva tarati zokamAtmavit chAM
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 14 ---
+CONTEXT (with surrounding text):
+ववर्गस्य तदधीनजीवनत्वमुक्तं भवति ।। ९ ।।ततो यदुत्तरतरं तदरूपमनामयम् । य एतद्विदुर
+vavargasya tadadhInajIvanatvamuktaM bhavati .. 9 ..tato yaduttarataraM tadarUpamanAmayam . ya etadvidura
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 15 ---
+CONTEXT (with surrounding text):
+ते भवन्ति अथेतरे दुःखमेवापियंति ।। १० ।।यस्माद्धेतोः पुरुषापेक्षयोत्कृष्टं वा समं
+te bhavanti athetare duHkhamevApiyaMti .. 10 ..yasmAddhetoH puruSApekSayotkRSTaM vA samaM
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 16 ---
+CONTEXT (with surrounding text):
+दार्थसंग्रहव्याख्यानेऽप्युक्तम् ।। १० ।।सर्वाननशिग्रीवः सर्वभूतगहाशयः । सर्वव्याप
+dArthasaMgrahavyAkhyAne'pyuktam .. 10 ..sarvAnanazigrIvaH sarvabhUtagahAzayaH . sarvavyApa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 17 ---
+CONTEXT (with surrounding text):
+पी स भगवाँस्तस्मात् सर्वगनश्शिव ।। १५ ।।नन् तेने पूर्णं पुरुषेण सर्वमिति श्वे उ ३
+pI sa bhagavA~stasmAt sarvaganazziva .. 15 ..nan tene pUrNaM puruSeNa sarvamiti zve u 3
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 18 ---
+CONTEXT (with surrounding text):
+वत्वमेव न त्वशुभ सम्बध इति भावः ।। ११ ।।महान् प्रभुर्वै पुरुषः सत्त्वस्यैष प्रवर्
+vatvameva na tvazubha sambadha iti bhAvaH .. 11 ..mahAn prabhurvai puruSaH sattvasyaiSa pravar
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 19 ---
+CONTEXT (with surrounding text):
+मिमां शान्तिमीशानो ज्योतिरव्ययः ।। १२ ।।तज्ज्ञानस्यैव मोक्षसाधनत्वमित्येतत् द्रढय
+mimAM zAntimIzAno jyotiravyayaH .. 12 ..tajjJAnasyaiva mokSasAdhanatvamityetat draDhaya
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 20 ---
+CONTEXT (with surrounding text):
+्रवशान्तिम्ईशानः ईष्टे इत्यर्थः ।। १२ ।।अङ् गुष्टमात्रः पुरुषोऽन्तरात्मा सदा जनान
+ravazAntimIzAnaH ISTe ityarthaH .. 12 ..aG guSTamAtraH puruSo'ntarAtmA sadA janAna
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 21 ---
+CONTEXT (with surrounding text):
+प्तो य एतद्विदुरमृतास्ते भवन्ति ।। १३ ।।तज्ज्ञानसाधनमाहअङ् गुष्टमात्रइति । सर्वेष
+pto ya etadviduramRtAste bhavanti .. 13 ..tajjJAnasAdhanamAhaaG guSTamAtra_iti . sarveSa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 22 ---
+CONTEXT (with surrounding text):
+ो वृत्वाऽत्यतिष्ठत् दशाङ् गुलम् ।। १४ ।।अङ् गुष्ठमात्रशब्दश्रवणकृतपरिच्छेदभ्रान्त
+o vRtvA'tyatiSThat dazAG gulam .. 14 ..aG guSThamAtrazabdazravaNakRtaparicchedabhrAnta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 23 ---
+CONTEXT (with surrounding text):
+ामृतत्वस्येशानी यदन्नेनातिरोहति ।। १५ ।।यस्मात् पुरुषेण व्याप्तमिदं सर्वम् अतः भू
+AmRtatvasyezAnI yadannenAtirohati .. 15 ..yasmAt puruSeNa vyAptamidaM sarvam ataH bhU
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 24 ---
+CONTEXT (with surrounding text):
+तश्चोभयविभूतिनायकत्वमुक्तं भवति ।। १५ ।।सर्वतः पाणिपादं तत् सर्वतोक्षिशिरोमुखम् ।
+tazcobhayavibhUtinAyakatvamuktaM bhavati .. 15 ..sarvataH pANipAdaM tat sarvatokSiziromukham .
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 25 ---
+CONTEXT (with surrounding text):
+ १ ३ इति हि श्रूयते इति भाषितम् ।। १६ ।।सर्वेन्द्रियगुणाभासं सर्वेन्द्रियविवर्जित
+ 1 3 iti hi zrUyate iti bhASitam .. 16 ..sarvendriyaguNAbhAsaM sarvendriyavivarjita
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 26 ---
+CONTEXT (with surrounding text):
+र्वस्य लोकस्य स्थावरस्य चरस्य च ।। १८ ।।ननु सर्वतः पाणिपादत्वादिकं गीतासु परिशुद्
+rvasya lokasya sthAvarasya carasya ca .. 18 ..nanu sarvataH pANipAdatvAdikaM gItAsu parizud
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 27 ---
+CONTEXT (with surrounding text):
+ता तमाहुरग्र्यं पुरुषं महान्तम् ।। १९ ।।अपाणीति । पाणिपादाद्यभावेऽपि तत्कार्यकारी
+tA tamAhuragryaM puruSaM mahAntam .. 19 ..apANIti . pANipAdAdyabhAve'pi tatkAryakArI
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 28 ---
+CONTEXT (with surrounding text):
+ यः तमादिकारणं महापुरुषं वदन्तीत्यर्थः ।अणोरणीयान् महतो महीया नात्मा गुहायां निहि
+ yaH tamAdikAraNaM mahApuruSaM vadantItyarthaH .aNoraNIyAn mahato mahIyA nAtmA guhAyAM nihi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 29 ---
+CONTEXT (with surrounding text):
+बन्धस्य मिथ्यात्वं प्रत्युक्तम् ।। २० ।।वेदाहमेतमजरं पुराणं सर्वात्मानं सर्वगतं व
+bandhasya mithyAtvaM pratyuktam .. 20 ..vedAhametamajaraM purANaM sarvAtmAnaM sarvagataM va
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 30 ---
+CONTEXT (with surrounding text):
+रह्मवादिनो हि प्रवदन्ति नित्यम् ।। २१ ।। ।। इति तृतीयोध्यायः ।। वेदाहमितियस्य विभुत्वेन जन्माभावं प्रकर
+rahmavAdino hi pravadanti nityam .. 21 .. .. iti tRtIyodhyAyaH .. vedAhamitiyasya vibhutvena janmAbhAvaM prakara
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (4 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] तृतीयोध्यायः (tRtIyodhyAyaH)
+    [4] ।। (..)
+
+--- Diff 31 ---
+CONTEXT (with surrounding text):
+रह्मवादिनः नित्यं वदन्तीत्यर्थः ।। २१ ।।।। इति तृतीयाध्याय प्रकाशिका ।।
+rahmavAdinaH nityaM vadantItyarthaH .. 21 .... iti tRtIyAdhyAya prakAzikA ..
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (4 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] तृतीयोध्यायः (tRtIyodhyAyaH)
+    [4] ।। (..)

@@ -1,0 +1,281 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)
+================================================================================
+
+Generated: 2025-11-22 13:58:32
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/svetasvatara/zvetAzvataropaniSat-dvitiya.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/svetasvatara/shvetashvatara-upanishad-rangaramanuja-02-01.md
+
+================================================================================
+
+Total differences found: 33
+
+================================================================================
+
+--- Diff 1 ---
+CONTEXT (with surrounding text):
+श्वेताश्वतरोपनिषत् अथ द्वितीयोऽध्यायः युञ्जानः
+zvetAzvataropaniSat atha dvitIyo'dhyAyaH yuJjAnaH
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] ा (A)
+
+--- Diff 2 ---
+CONTEXT (with surrounding text):
+श्वेताश्वतरोपनिषत् अथ द्वितीयोऽध्यायः युञ्जानः प्र
+zvetAzvataropaniSat atha dvitIyo'dhyAyaH yuJjAnaH pra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] े (e)
+
+--- Diff 3 ---
+CONTEXT (with surrounding text):
+योतिर्निचाय्य पृथिव्या अध्याभवत् ।। १ ।।आत्मासंस्थपरमात्मप्रतीत्यौपयिकेन्द्रियनिग
+yotirnicAyya pRthivyA adhyAbhavat .. 1 ..AtmAsaMsthaparamAtmapratItyaupayikendriyaniga
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 4 ---
+CONTEXT (with surrounding text):
+्मनि मनो नियञ्जानो भवतु इत्यर्थः ।। १ ।।युक्तेन मनसा वयं देवस्य सवितुः सवे । सुवर
+mani mano niyaJjAno bhavatu ityarthaH .. 1 ..yuktena manasA vayaM devasya savituH save . suvara
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 5 ---
+CONTEXT (with surrounding text):
+र्मणेशक्त्यायुक्ता भवेम इत्यर्थः ।। २ ।।युक्त्वाय मनसा देवान् सुवर्यतो धिया दिवम्
+rmaNezaktyAyuktA bhavema ityarthaH .. 2 ..yuktvAya manasA devAn suvaryato dhiyA divam
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 6 ---
+CONTEXT (with surrounding text):
+िः करिष्यतः सविता प्रसुवाति तान् ।। ३ ।।परमात्मा प्रणिपातमात्रेण कथमनुज्ञां प्रयच
+iH kariSyataH savitA prasuvAti tAn .. 3 ..paramAtmA praNipAtamAtreNa kathamanujJAM prayaca
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 7 ---
+CONTEXT (with surrounding text):
+्यर्थः इति वयं मन्यामहे इति शेषः ।। ३ ।।युञ्जते मन उत युञ्जते धियो विप्रा विप्रस्
+yarthaH iti vayaM manyAmahe iti zeSaH .. 3 ..yuJjate mana uta yuJjate dhiyo viprA vipras
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 8 ---
+CONTEXT (with surrounding text):
+क इन्महीदेवस्य सवितुः परिष्टुतिः ।। ४ ।।परमात्मनि मनोयोगः तत्समाराधनं कर्म च केषा
+ka inmahIdevasya savituH pariSTutiH .. 4 ..paramAtmani manoyogaH tatsamArAdhanaM karma ca keSA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 9 ---
+CONTEXT (with surrounding text):
+परिचरणं भगवत्प्रीणनं भवतीत्यर्थः ।। ४ ।।युजे वां ब्रह्म पूर्व्यं नमोभिर्विश्लोक ए
+paricaraNaM bhagavatprINanaM bhavatItyarthaH .. 4 ..yuje vAM brahma pUrvyaM namobhirvizloka e
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 10 ---
+CONTEXT (with surrounding text):
+े धामानि दिव्यानि तस्थुः ।। ५ ।। युजे वाम् इति। दिव्यस्थानस्थिताः सर्वे ब्रह्मपुत्
+e dhAmAni divyAni tasthuH .. 5 .. yuje vAm iti. divyasthAnasthitAH sarve brahmaput
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] म् (m)
+
+--- Diff 11 ---
+CONTEXT (with surrounding text):
+धामानि दिव्यानि तस्थुः ।। ५ ।। युजे वाम् इति। दिव्यस्थानस्थिताः सर्वे ब्रह्मपुत्र
+dhAmAni divyAni tasthuH .. 5 .. yuje vAm iti. divyasthAnasthitAH sarve brahmaputra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ं (M)
+
+--- Diff 12 ---
+CONTEXT (with surrounding text):
+्स्तुतिः कर्तव्या इत्युक्तं भवति ।। ५ ।।अग्निर्यत्राभिमथ्यते वायुर्यत्राधिरुध्यते
+stutiH kartavyA ityuktaM bhavati .. 5 ..agniryatrAbhimathyate vAyuryatrAdhirudhyate
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 13 ---
+CONTEXT (with surrounding text):
+यत्रातिरिच्यते तत्र सञ्जायते मनः ।। ६ ।।योगमारम्भमाणस्य शीतोष्णदेशः परिहर्तव्य इत
+yatrAtiricyate tatra saJjAyate manaH .. 6 ..yogamArambhamANasya zItoSNadezaH parihartavya ita
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 14 ---
+CONTEXT (with surrounding text):
+मनः प्रत्यक्प्रवणं जायत इत्यर्थः ।। ६ ।।सवित्रा प्रसबेन जुषेत ब्रह्म पूर्व्यम् ।
+manaH pratyakpravaNaM jAyata ityarthaH .. 6 ..savitrA prasabena juSeta brahma pUrvyam .
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 15 ---
+CONTEXT (with surrounding text):
+ि । न निरस्यतीत्यर्थः लडर्थे लङ् ।। ७ ।।त्रिरुन्नतं स्थाप्य समं शरीरं हृदीन्द्रिय
+i . na nirasyatItyarthaH laDarthe laG .. 7 ..trirunnataM sthApya samaM zarIraM hRdIndriya
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 16 ---
+CONTEXT (with surrounding text):
+्वान् स्त्रोतांसि सर्वाणि भयावहानि ॥ ८ ॥योगदशेतिकर्तव्यतामाह त्रिरुन्नतमिति । उर
+vAn strotAMsi sarvANi bhayAvahAni .. 8 ..yogadazetikartavyatAmAha trirunnatamiti . ura
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 17 ---
+CONTEXT (with surrounding text):
+धानि जन्मस्रोतांसितरेत् इत्यर्थः ।। ८ ।।प्राणान् प्रपीड्येह स युक्तचेष्टः क्षीणे
+dhAni janmasrotAMsitaret ityarthaH .. 8 ..prANAn prapIDyeha sa yuktaceSTaH kSINe
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 18 ---
+CONTEXT (with surrounding text):
+ेनं विद्वान् मनो धारयेताप्रमत्तः ।। ९ ।।प्राणायामप्रकारमाहप्राणान्इति । युक्ताहार
+enaM vidvAn mano dhArayetApramattaH .. 9 ..prANAyAmaprakAramAhaprANAniti . yuktAhAra
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 19 ---
+CONTEXT (with surrounding text):
+्ञो मनः स्ववशं कुर्यात् इत्यर्थः ।। ९ ।।समे शुचौ शर्करावह्निवालुकाविवर्जिते शब्दज
+Jo manaH svavazaM kuryAt ityarthaH .. 9 ..same zucau zarkarAvahnivAlukAvivarjite zabdaja
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 20 ---
+CONTEXT (with surrounding text):
+पीडने गुहानिवाताश्रयणेन योजयेत् ।। १० ।।योगानुष्ठानयोग्यं देशं विस्तरेणाह समइति ।
+pIDane guhAnivAtAzrayaNena yojayet .. 10 ..yogAnuSThAnayogyaM dezaM vistareNAha sama_iti .
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 21 ---
+CONTEXT (with surrounding text):
+ते इति स्थितम् । प्रकृतमनुसरामः ।। १० ।।नीहारधूमार्कानिलानलानां खद्योतविद्युत्स्फ
+te iti sthitam . prakRtamanusarAmaH .. 10 ..nIhAradhUmArkAnilAnalAnAM khadyotavidyutspha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 22 ---
+CONTEXT (with surrounding text):
+णि ब्रह्मण्यभिव्यक्तिकराणि योगे ।। ११ ।।योगमभ्यस्यतो ब्रह्माभिव्यक्तिप्राचीनानि त
+Ni brahmaNyabhivyaktikarANi yoge .. 11 ..yogamabhyasyato brahmAbhivyaktiprAcInAni ta
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 23 ---
+CONTEXT (with surrounding text):
+्रह्माभिव्यक्तिचिह्नानिइत्यर्थः ।। ११ ।।पृथ्व्यप्तेजोऽनिलखे समुत्थिते पञ्चात्मके
+rahmAbhivyakticihnAniityarthaH .. 11 ..pRthvyaptejo'nilakhe samutthite paJcAtmake
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 24 ---
+CONTEXT (with surrounding text):
+ः प्राप्तस्य योगाग्निमयं शरीरम् ।। १२ ।।योगाभ्यासस्य कायसिद्धिफलकत्वमाह पृथ्वीति
+H prAptasya yogAgnimayaM zarIram .. 12 ..yogAbhyAsasya kAyasiddhiphalakatvamAha pRthvIti
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 25 ---
+CONTEXT (with surrounding text):
+ पुंसौ रोगादिर्न सं भवतीत्यर्थः ।। १२ ।।लघुत्वमारोग्यमलोलुपत्वं वर्णप्रसादं स्वरस
+ puMsau rogAdirna saM bhavatItyarthaH .. 12 ..laghutvamArogyamalolupatvaM varNaprasAdaM svarasa
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 26 ---
+CONTEXT (with surrounding text):
+पं योगप्रवृत्तिं प्रथमां बदन्ति ।। १३ ।।लघुत्वम् इति । स्पष्टोऽर्थः ।। १३ ।।यथैव
+paM yogapravRttiM prathamAM badanti .. 13 ..laghutvam iti . spaSTo'rthaH .. 13 ..yathaiva
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 27 ---
+CONTEXT (with surrounding text):
+३ ।।लघुत्वम् इति । स्पष्टोऽर्थः ।। १३ ।।यथैव बिम्बं मृदयोपलिप्तं तेजोमयं भ्राजते
+3 ..laghutvam iti . spaSTo'rthaH .. 13 ..yathaiva bimbaM mRdayopaliptaM tejomayaM bhrAjate
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 28 ---
+CONTEXT (with surrounding text):
+ देही एकः कृतार्थो भवते बीतशोकः ।। १४ ।।योगमभ्यस्यतो ब्रह्मोपलब्धिप्रकारं तत्फलञ्
+ dehI ekaH kRtArtho bhavate bItazokaH .. 14 ..yogamabhyasyato brahmopalabdhiprakAraM tatphalaJ
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 29 ---
+CONTEXT (with surrounding text):
+ सुधान्तमिति शब्द इत्यपि वदन्ति ।। १४ ।।यदात्मतत्त्वेन तु ब्रह्मतत्त्वं दीपोपमेनह
+ sudhAntamiti zabda ityapi vadanti .. 14 ..yadAtmatattvena tu brahmatattvaM dIpopamenaha
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 30 ---
+CONTEXT (with surrounding text):
+्वं बन्धक कर्महानिर्भवतीत्यर्थः ।। १५ ।।एष हि देवः प्रदिशोऽनु सर्वाः पूर्वो हि जा
+vaM bandhaka karmahAnirbhavatItyarthaH .. 15 ..eSa hi devaH pradizo'nu sarvAH pUrvo hi jA
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 31 ---
+CONTEXT (with surrounding text):
+रत्यङ् जनास्तिष्ठति विश्वतोमुखः ।। १६ ।।तस्य सर्वात्मकत्वं प्रपञ्चयति एष हिइति ।
+ratyaG janAstiSThati vizvatomukhaH .. 16 ..tasya sarvAtmakatvaM prapaJcayati eSa hiiti .
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 32 ---
+CONTEXT (with surrounding text):
+ादभानेऽपि योग्यत्वसत्वेनादोषात् ।। १६ ।।यो देवो अग्रौ यो अप्सु यो विश्वं भुवनमावि
+AdabhAne'pi yogyatvasatvenAdoSAt .. 16 ..yo devo agrau yo apsu yo vizvaM bhuvanamAvi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
+
+--- Diff 33 ---
+CONTEXT (with surrounding text):
+मो नमः ।। १७ ।। ।। इति द्वितीयाध्यायः ।।अन्तर्यामितया सर्वात्मत्वम्। न तु स्वरूपे
+mo namaH .. 17 .. .. iti dvitIyAdhyAyaH ..antaryAmitayA sarvAtmatvam. na tu svarUpe
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (0 words):
