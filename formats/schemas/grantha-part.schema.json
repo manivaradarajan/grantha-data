@@ -27,8 +27,18 @@
       "items": { "$ref": "grantha.schema.json#/definitions/passage" }
     },
     "commentaries": {
-      "type": "array",
-      "items": { "$ref": "grantha.schema.json#/definitions/commentary" }
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "Map of commentary_id to commentary object (preferred format)",
+          "additionalProperties": { "$ref": "grantha.schema.json#/definitions/commentary" }
+        },
+        {
+          "type": "array",
+          "description": "Array of commentary objects (legacy format)",
+          "items": { "$ref": "grantha.schema.json#/definitions/commentary" }
+        }
+      ]
     }
   },
   "required": ["grantha_id", "part_num"],

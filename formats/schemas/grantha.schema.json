@@ -44,8 +44,18 @@
       "items": { "$ref": "#/definitions/passage" }
     },
     "commentaries": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/commentary" }
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "Map of commentary_id to commentary object (preferred format)",
+          "additionalProperties": { "$ref": "#/definitions/commentary" }
+        },
+        {
+          "type": "array",
+          "description": "Array of commentary objects (legacy format)",
+          "items": { "$ref": "#/definitions/commentary" }
+        }
+      ]
     }
   },
   "required": [
@@ -99,8 +109,17 @@
           "required": ["devanagari"]
         },
         "children": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/structure_level" }
+          "oneOf": [
+            {
+              "type": "array",
+              "description": "Array of child structure levels (preferred format)",
+              "items": { "$ref": "#/definitions/structure_level" }
+            },
+            {
+              "description": "Single child structure level (legacy format - will be converted to array)",
+              "$ref": "#/definitions/structure_level"
+            }
+          ]
         }
       },
       "required": ["key", "scriptNames"]
