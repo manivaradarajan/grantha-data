@@ -104,6 +104,32 @@ def hash_grantha(data: Dict[str, Any],
 
     Returns:
         The SHA256 hash of all specified content in the document.
+
+    TODO: CRITICAL HASH ORDER ISSUE
+    The current implementation hashes content in this order:
+        1. All prefatory_material
+        2. All passages (mantras)
+        3. All concluding_material
+        4. All commentary passages
+
+    However, in Markdown files, mantras and commentaries are INTERLEAVED:
+        Mantra 1.1.1 -> Commentary 1.1.1 -> Mantra 1.1.2 -> Commentary 1.1.2 ...
+
+    This means the hash calculated from JSON (separated structure) does NOT match
+    the hash calculated from Markdown (interleaved structure), making round-trip
+    validation impossible when commentaries are included.
+
+    To fix this, we need to:
+    1. Iterate through passages in order
+    2. For each passage, hash the passage content first
+    3. Then find and hash all commentary passages that reference this passage
+    4. Handle commentary ref ranges (e.g., "1.1.1-1.1.5") that span multiple passages
+    5. Handle section-level commentaries (e.g., "1.1" covering all mantras in section)
+
+    This requires:
+    - Parsing commentary refs to detect ranges vs single refs
+    - Logic to determine which passages each commentary ref covers
+    - Careful ordering to match the Markdown interleaving exactly
     """
     all_texts = []
 

@@ -1,5 +1,5 @@
 load("@grantha_pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_library", "py_test")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 py_library(
     name = "analyzer",
@@ -140,6 +140,62 @@ py_library(
     visibility = ["//visibility:public"],
 )
 
+py_library(
+    name = "json_to_md",
+    srcs = ["json_to_md.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":devanagari_extractor",
+        ":hasher",
+        requirement("pyyaml"),
+    ],
+)
+
+py_library(
+    name = "envelope_generator",
+    srcs = ["envelope_generator.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "schema_validator",
+    srcs = ["schema_validator.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("jsonschema"),
+    ],
+)
+
+# CLI binary
+py_binary(
+    name = "grantha-converter",
+    srcs = [
+        "__init__.py",
+        "__main__.py",
+        "cli.py",
+        "devanagari_extractor.py",
+        "envelope_generator.py",
+        "hasher.py",
+        "json_to_md.py",
+        "md_to_json.py",
+        "schema_validator.py",
+    ],
+    data = ["//formats/schemas"],
+    imports = [".."],
+    main = "__main__.py",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":devanagari_extractor",
+        ":envelope_generator",
+        ":hasher",
+        ":json_to_md",
+        ":md_to_json",
+        ":schema_validator",
+        requirement("pyyaml"),
+        requirement("jsonschema"),
+    ],
+)
+
 # Tests
 py_test(
     name = "test_devanagari_extractor",
@@ -197,8 +253,8 @@ py_test(
 py_test(
     name = "test_conversion_logic",
     srcs = ["test_conversion_logic.py"],
-    imports = [".."],
     data = glob(["test_data/**"]),
+    imports = [".."],
     deps = [
         ":md_to_json",
         requirement("pytest"),

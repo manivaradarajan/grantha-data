@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from .devanagari_extractor import HASH_VERSION, extract_devanagari
+from .envelope_generator import create_envelope_from_parts, write_envelope
 from .hasher import hash_grantha, hash_text
 from .json_to_md import json_file_to_markdown_file
 from .md_to_json import markdown_file_to_json_file
@@ -18,12 +19,14 @@ from .md_to_json import markdown_file_to_json_file
 def parse_scripts(scripts_str: Optional[str]) -> List[str]:
     """Parses a comma-separated string of script names."""
     if not scripts_str:
-        return ['devanagari']
-    scripts = [s.strip() for s in scripts_str.split(',')]
-    valid_scripts = {'devanagari', 'roman', 'kannada'}
+        return ["devanagari"]
+    scripts = [s.strip() for s in scripts_str.split(",")]
+    valid_scripts = {"devanagari", "roman", "kannada"}
     for script in scripts:
         if script not in valid_scripts:
-            print(f"Warning: Unknown script '{script}'. Valid: {', '.join(valid_scripts)}")
+            print(
+                f"Warning: Unknown script '{script}'. Valid: {', '.join(valid_scripts)}"
+            )
     return scripts
 
 
@@ -31,7 +34,7 @@ def parse_commentaries(commentaries_str: Optional[str]) -> Optional[List[str]]:
     """Parses a comma-separated string of commentary IDs."""
     if not commentaries_str:
         return None
-    return [c.strip() for c in commentaries_str.split(',')]
+    return [c.strip() for c in commentaries_str.split(",")]
 
 
 def verify_files(json_path: str, md_path: str) -> bool:
@@ -41,28 +44,29 @@ def verify_files(json_path: str, md_path: str) -> bool:
 
     import yaml
 
-    with open(json_path, 'r', encoding='utf-8') as f:
+    with open(json_path, "r", encoding="utf-8") as f:
         json_data = json.load(f)
 
-    with open(md_path, 'r', encoding='utf-8') as f:
+    with open(md_path, "r", encoding="utf-8") as f:
         md_content = f.read()
 
-    match = re.match(r'^---\n(.*?)\n---\n', md_content, re.DOTALL)
+    match = re.match(r"^---\n(.*?)\n---\n", md_content, re.DOTALL)
     if not match:
         print("Error: No frontmatter found in markdown file")
         return False
     frontmatter = yaml.safe_load(match.group(1))
 
-    scripts = frontmatter.get('scripts', ['devanagari'])
-    commentaries = frontmatter.get('commentaries', None)
+    scripts = frontmatter.get("scripts", ["devanagari"])
+    commentaries = frontmatter.get("commentaries", None)
     json_hash = hash_grantha(json_data, scripts=scripts, commentaries=commentaries)
-    expected_hash = frontmatter.get('validation_hash', '').replace('sha256:', '')
+    expected_hash = frontmatter.get("validation_hash", "").replace("sha256:", "")
     return json_hash == expected_hash
 
 
 def cmd_json2md(args: argparse.Namespace):
     """Handles the 'json2md' command."""
     import json
+
     input_path = Path(args.input)
     output_path = Path(args.output)
 
@@ -75,24 +79,31 @@ def cmd_json2md(args: argparse.Namespace):
 
     if args.all_commentaries:
         try:
-            with open(input_path, 'r', encoding='utf-8') as f:
+            with open(input_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            if 'commentaries' in data and data['commentaries']:
-                commentaries = [c['commentary_id'] for c in data['commentaries']]
+            if "commentaries" in data and data["commentaries"]:
+                commentaries = [c["commentary_id"] for c in data["commentaries"]]
                 print(f"Found {len(commentaries)} commentaries in source file.")
             else:
                 print("Warning: No commentaries found in source file.")
                 commentaries = None
         except Exception as e:
-            print(f"Error reading source for commentary detection: {e}", file=sys.stderr)
+            print(
+                f"Error reading source for commentary detection: {e}", file=sys.stderr
+            )
             sys.exit(1)
 
     try:
         print(f"Converting {input_path} to {output_path}...")
         print(f"  Scripts: {', '.join(scripts)}")
-        print(f"  Commentaries: {', '.join(commentaries) if commentaries else 'core text only'}")
+        print(
+            f"  Commentaries: {', '.join(commentaries) if commentaries else 'core text only'}"
+        )
         json_file_to_markdown_file(
-            str(input_path), str(output_path), scripts=scripts, commentaries=commentaries
+            str(input_path),
+            str(output_path),
+            scripts=scripts,
+            commentaries=commentaries,
         )
         print(f"✓ Successfully converted to {output_path}")
 
@@ -101,7 +112,10 @@ def cmd_json2md(args: argparse.Namespace):
             if verify_files(str(input_path), str(output_path)):
                 print("✓ Verification passed - content hashes match.")
             else:
-                print("✗ Verification failed - content mismatch detected.", file=sys.stderr)
+                print(
+                    "✗ Verification failed - content mismatch detected.",
+                    file=sys.stderr,
+                )
                 sys.exit(1)
     except Exception as e:
         print(f"Error during conversion: {e}", file=sys.stderr)
@@ -114,13 +128,125 @@ def cmd_md2json(args: argparse.Namespace):
     output_path = Path(args.output)
 
     if not input_path.exists():
-        print(f"Error: Input file not found: {input_path}", file=sys.stderr)
+        print(f"Error: Input not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
+    # Check if input is a directory
+    if input_path.is_dir():
+        # Find all .md files in the directory
+        md_files = sorted(input_path.glob("*.md"))
+        if not md_files:
+            print(f"Error: No .md files found in {input_path}", file=sys.stderr)
+            sys.exit(1)
+
+        # If multiple files found, assume multipart conversion
+        if len(md_files) > 1:
+            print(
+                f"Found {len(md_files)} markdown files - assuming multipart conversion"
+            )
+
+            # Verify output is a directory
+            if output_path.exists() and not output_path.is_dir():
+                print(
+                    f"Error: For multipart conversion, output must be a directory, but {output_path} is a file",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
+            # Delegate to md2json-envelope command logic
+            from .envelope_generator import (
+                create_envelope_from_markdown_files,
+                write_envelope,
+            )
+            from .schema_validator import validate_grantha_envelope
+
+            # Create output directory if it doesn't exist
+            output_path.mkdir(parents=True, exist_ok=True)
+
+            print(
+                f"Converting {len(md_files)} file(s) to multipart JSON with envelope..."
+            )
+
+            # Determine grantha_id from first file
+            from .md_to_json import parse_frontmatter
+
+            with open(md_files[0], "r", encoding="utf-8") as f:
+                content = f.read()
+            frontmatter, _ = parse_frontmatter(content)
+            grantha_id = frontmatter.get("grantha_id")
+
+            if not grantha_id:
+                print(
+                    f"Error: Could not extract grantha_id from {md_files[0]}",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+
+            # Convert each markdown file to a part JSON file
+            for i, md_file in enumerate(md_files, start=1):
+                part_output = output_path / f"part{i}.json"
+                print(f"Converting {md_file} to part{i}.json...")
+                markdown_file_to_json_file(
+                    str(md_file),
+                    str(part_output),
+                    format="multipart",
+                    validate_schema=not args.no_schema_validation,
+                )
+                print(f"✓ Part {i} converted and validated")
+
+            # Create envelope
+            envelope_data = create_envelope_from_markdown_files(
+                grantha_id=grantha_id, markdown_files=md_files, output_dir=output_path
+            )
+
+            # Write envelope file
+            envelope_path = output_path / "envelope.json"
+            write_envelope(envelope_data, envelope_path)
+
+            # Validate envelope if requested
+            if not args.no_schema_validation:
+                envelope_file = output_path / "envelope.json"
+                validate_grantha_envelope(str(envelope_file))
+                print("✓ Envelope validation passed")
+
+            print(f"✓ Successfully created multipart JSON in {output_path}")
+            print("  • Envelope: envelope.json")
+            print(f"  • Parts: part1.json through part{len(md_files)}.json")
+            return
+        else:
+            # Single file in directory - treat as single file input
+            input_path = md_files[0]
+            print(f"Found single file in directory: {input_path.name}")
+
+            # For single-file grantha in directory mode, create appropriate output filename
+            if output_path.is_dir() or not output_path.exists():
+                # Extract grantha_id to name the output file
+                from .md_to_json import parse_frontmatter
+
+                with open(input_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                frontmatter, _ = parse_frontmatter(content)
+                grantha_id = frontmatter.get("grantha_id")
+
+                if not grantha_id:
+                    print(
+                        f"Error: Could not extract grantha_id from {input_path}",
+                        file=sys.stderr,
+                    )
+                    sys.exit(1)
+
+                # Create output directory if needed
+                output_path.mkdir(parents=True, exist_ok=True)
+                output_path = output_path / f"{grantha_id}.json"
+
+    # Single file mode
     # Validate format argument
     format_type = args.format
-    if format_type not in ['single', 'multipart']:
-        print(f"Error: Invalid format '{format_type}'. Must be 'single' or 'multipart'.", file=sys.stderr)
+    if format_type not in ["single", "multipart"]:
+        print(
+            f"Error: Invalid format '{format_type}'. Must be 'single' or 'multipart'.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     try:
@@ -129,12 +255,15 @@ def cmd_md2json(args: argparse.Namespace):
             str(input_path),
             str(output_path),
             format=format_type,
-            validate_schema=not args.no_schema_validation
+            validate_schema=not args.no_schema_validation,
         )
         print(f"✓ Successfully converted to {output_path}")
-        print("✓ Validation hash verified - no data loss detected.")
         if not args.no_schema_validation:
-            schema_name = 'grantha-part.schema.json' if format_type == 'multipart' else 'grantha.schema.json'
+            schema_name = (
+                "grantha-part.schema.json"
+                if format_type == "multipart"
+                else "grantha.schema.json"
+            )
             print(f"✓ JSON schema validation passed ({schema_name})")
     except ValueError as e:
         if "Validation hash mismatch" in str(e):
@@ -167,7 +296,7 @@ def cmd_md2json_envelope(args: argparse.Namespace):
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Find all .md files in the directory
-    md_files = sorted(input_dir.glob('*.md'))
+    md_files = sorted(input_dir.glob("*.md"))
     if not md_files:
         print(f"Error: No .md files found in {input_dir}", file=sys.stderr)
         sys.exit(1)
@@ -176,10 +305,11 @@ def cmd_md2json_envelope(args: argparse.Namespace):
 
     # Determine grantha_id from first file
     from .md_to_json import parse_frontmatter
-    with open(md_files[0], 'r', encoding='utf-8') as f:
+
+    with open(md_files[0], "r", encoding="utf-8") as f:
         content = f.read()
     frontmatter, _ = parse_frontmatter(content)
-    grantha_id = frontmatter.get('grantha_id')
+    grantha_id = frontmatter.get("grantha_id")
 
     if not grantha_id:
         print(f"Error: No grantha_id found in {md_files[0]}", file=sys.stderr)
@@ -198,39 +328,58 @@ def cmd_md2json_envelope(args: argparse.Namespace):
             markdown_file_to_json_file(
                 str(md_file),
                 str(output_file),
-                format='multipart',
-                validate_schema=not args.no_schema_validation
+                format="multipart",
+                validate_schema=not args.no_schema_validation,
             )
             part_files.append(output_file)
 
         # Create envelope.json
-        print(f"\nGenerating envelope.json...")
-        envelope = create_envelope_from_markdown_files(
-            grantha_id,
-            md_files,
-            output_dir
-        )
+        print("\nGenerating envelope.json...")
+        envelope = create_envelope_from_markdown_files(grantha_id, md_files, output_dir)
 
-        envelope_path = output_dir / 'envelope.json'
+        envelope_path = output_dir / "envelope.json"
         write_envelope(envelope, envelope_path)
         print(f"✓ Created {envelope_path}")
 
         # Validate envelope against schema
         if not args.no_schema_validation:
-            print(f"  Validating envelope against schema...")
+            print("  Validating envelope against schema...")
             is_valid, errors = validate_grantha_envelope(envelope)
             if not is_valid:
                 error_msg = "Envelope schema validation failed:\n"
                 error_msg += "\n".join(f"  - {err}" for err in errors)
                 raise ValueError(error_msg)
-            print(f"  ✓ Envelope schema validation passed")
+            print("  ✓ Envelope schema validation passed")
 
         print(f"\n✓ Successfully created multi-part grantha in {output_dir}")
         print(f"  - {len(part_files)} part file(s)")
-        print(f"  - 1 envelope.json")
+        print("  - 1 envelope.json")
 
     except Exception as e:
         print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+def cmd_generate_envelope(args: argparse.Namespace):
+    """Handles the 'generate-envelope' command."""
+    try:
+        print(f"Generating envelope for grantha: {args.grantha_id}")
+        part_paths = [Path(p) for p in args.part_files]
+        output_path = Path(args.output_file)
+
+        # Create output directory if it doesn't exist
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        envelope_data = create_envelope_from_parts(
+            grantha_id=args.grantha_id,
+            part_files=part_paths,
+            output_dir=output_path.parent,
+        )
+        write_envelope(envelope_data, output_path)
+        print(f"✓ Successfully generated envelope: {output_path}")
+
+    except Exception as e:
+        print(f"Error during envelope generation: {e}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -273,7 +422,7 @@ def cmd_validate_header(args: argparse.Namespace):
 
     try:
         # Read the file
-        with open(input_path, 'r', encoding='utf-8') as f:
+        with open(input_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Parse frontmatter
@@ -283,30 +432,42 @@ def cmd_validate_header(args: argparse.Namespace):
         warnings = []
 
         # Check required top-level fields
-        required_fields = ['grantha_id', 'canonical_title', 'text_type', 'language', 'structure_levels']
+        required_fields = [
+            "grantha_id",
+            "canonical_title",
+            "text_type",
+            "language",
+            "structure_levels",
+        ]
         for field in required_fields:
             if field not in frontmatter:
                 errors.append(f"Missing required field: {field}")
 
         # Check grantha_id format
-        if 'grantha_id' in frontmatter:
-            grantha_id = frontmatter['grantha_id']
-            if not re.match(r'^[a-z0-9-]+$', grantha_id):
-                errors.append(f"Invalid grantha_id format: '{grantha_id}' (must be lowercase alphanumeric with hyphens)")
+        if "grantha_id" in frontmatter:
+            grantha_id = frontmatter["grantha_id"]
+            if not re.match(r"^[a-z0-9-]+$", grantha_id):
+                errors.append(
+                    f"Invalid grantha_id format: '{grantha_id}' (must be lowercase alphanumeric with hyphens)"
+                )
 
         # Check text_type
-        if 'text_type' in frontmatter:
-            if frontmatter['text_type'] not in ['upanishad', 'commentary']:
-                errors.append(f"Invalid text_type: '{frontmatter['text_type']}' (must be 'upanishad' or 'commentary')")
+        if "text_type" in frontmatter:
+            if frontmatter["text_type"] not in ["upanishad", "commentary"]:
+                errors.append(
+                    f"Invalid text_type: '{frontmatter['text_type']}' (must be 'upanishad' or 'commentary')"
+                )
 
         # Check language
-        if 'language' in frontmatter:
-            if frontmatter['language'] not in ['sanskrit', 'english']:
-                errors.append(f"Invalid language: '{frontmatter['language']}' (must be 'sanskrit' or 'english')")
+        if "language" in frontmatter:
+            if frontmatter["language"] not in ["sanskrit", "english"]:
+                errors.append(
+                    f"Invalid language: '{frontmatter['language']}' (must be 'sanskrit' or 'english')"
+                )
 
         # Check structure_levels format
-        if 'structure_levels' in frontmatter:
-            structure_levels = frontmatter['structure_levels']
+        if "structure_levels" in frontmatter:
+            structure_levels = frontmatter["structure_levels"]
             if not isinstance(structure_levels, list):
                 errors.append("structure_levels must be an array/list")
             elif len(structure_levels) == 0:
@@ -317,16 +478,22 @@ def cmd_validate_header(args: argparse.Namespace):
                     if not isinstance(level, dict):
                         errors.append(f"structure_levels[{i}] must be an object/dict")
                         continue
-                    if 'key' not in level:
-                        errors.append(f"structure_levels[{i}] missing required field: key")
-                    if 'scriptNames' not in level:
-                        errors.append(f"structure_levels[{i}] missing required field: scriptNames")
-                    elif 'devanagari' not in level.get('scriptNames', {}):
-                        errors.append(f"structure_levels[{i}].scriptNames missing required field: devanagari")
+                    if "key" not in level:
+                        errors.append(
+                            f"structure_levels[{i}] missing required field: key"
+                        )
+                    if "scriptNames" not in level:
+                        errors.append(
+                            f"structure_levels[{i}] missing required field: scriptNames"
+                        )
+                    elif "devanagari" not in level.get("scriptNames", {}):
+                        errors.append(
+                            f"structure_levels[{i}].scriptNames missing required field: devanagari"
+                        )
 
         # Check commentaries_metadata format
-        if 'commentaries_metadata' in frontmatter:
-            commentaries_metadata = frontmatter['commentaries_metadata']
+        if "commentaries_metadata" in frontmatter:
+            commentaries_metadata = frontmatter["commentaries_metadata"]
 
             # Get all commentary IDs from metadata
             metadata_ids = set()
@@ -334,42 +501,60 @@ def cmd_validate_header(args: argparse.Namespace):
             if isinstance(commentaries_metadata, list):
                 for i, item in enumerate(commentaries_metadata):
                     if not isinstance(item, dict):
-                        errors.append(f"commentaries_metadata[{i}] must be an object/dict")
+                        errors.append(
+                            f"commentaries_metadata[{i}] must be an object/dict"
+                        )
                         continue
 
-                    if 'commentary_id' not in item:
-                        errors.append(f"commentaries_metadata[{i}] missing required field: commentary_id")
+                    if "commentary_id" not in item:
+                        errors.append(
+                            f"commentaries_metadata[{i}] missing required field: commentary_id"
+                        )
                     else:
-                        metadata_ids.add(item['commentary_id'])
+                        metadata_ids.add(item["commentary_id"])
 
-                    if 'commentary_title' not in item:
-                        errors.append(f"commentaries_metadata[{i}] missing required field: commentary_title")
+                    if "commentary_title" not in item:
+                        errors.append(
+                            f"commentaries_metadata[{i}] missing required field: commentary_title"
+                        )
 
-                    if 'commentator' not in item:
-                        errors.append(f"commentaries_metadata[{i}] missing required field: commentator")
-                    elif isinstance(item['commentator'], str):
-                        errors.append(f"commentaries_metadata[{i}].commentator must be an object with 'devanagari' field, not a string")
-                    elif not isinstance(item['commentator'], dict):
-                        errors.append(f"commentaries_metadata[{i}].commentator must be an object/dict")
-                    elif 'devanagari' not in item['commentator']:
-                        errors.append(f"commentaries_metadata[{i}].commentator missing required field: devanagari")
+                    if "commentator" not in item:
+                        errors.append(
+                            f"commentaries_metadata[{i}] missing required field: commentator"
+                        )
+                    elif isinstance(item["commentator"], str):
+                        errors.append(
+                            f"commentaries_metadata[{i}].commentator must be an object with 'devanagari' field, not a string"
+                        )
+                    elif not isinstance(item["commentator"], dict):
+                        errors.append(
+                            f"commentaries_metadata[{i}].commentator must be an object/dict"
+                        )
+                    elif "devanagari" not in item["commentator"]:
+                        errors.append(
+                            f"commentaries_metadata[{i}].commentator missing required field: devanagari"
+                        )
 
             elif isinstance(commentaries_metadata, dict):
                 # Dict format (legacy)
-                warnings.append("commentaries_metadata is in dict format; list format is preferred")
+                warnings.append(
+                    "commentaries_metadata is in dict format; list format is preferred"
+                )
                 metadata_ids = set(commentaries_metadata.keys())
 
             # Check commentary ID references in the body
-            COMMENTARY_METADATA = re.compile(r'<!--\s*commentary:\s*({.*?})\s*-->')
+            COMMENTARY_METADATA = re.compile(r"<!--\s*commentary:\s*({.*?})\s*-->")
             referenced_ids = set()
 
             for match in COMMENTARY_METADATA.finditer(body):
                 try:
                     meta = json_module.loads(match.group(1))
-                    if 'commentary_id' in meta:
-                        referenced_ids.add(meta['commentary_id'])
+                    if "commentary_id" in meta:
+                        referenced_ids.add(meta["commentary_id"])
                 except json_module.JSONDecodeError:
-                    warnings.append(f"Invalid JSON in commentary metadata comment: {match.group(1)[:50]}...")
+                    warnings.append(
+                        f"Invalid JSON in commentary metadata comment: {match.group(1)[:50]}..."
+                    )
 
             # Check for mismatches
             if metadata_ids and referenced_ids:
@@ -377,20 +562,24 @@ def cmd_validate_header(args: argparse.Namespace):
                 missing_in_metadata = referenced_ids - metadata_ids
                 if missing_in_metadata:
                     for cid in missing_in_metadata:
-                        errors.append(f"Commentary ID '{cid}' referenced in body but not declared in commentaries_metadata")
+                        errors.append(
+                            f"Commentary ID '{cid}' referenced in body but not declared in commentaries_metadata"
+                        )
 
                 # IDs in metadata but not used in body
                 unused_ids = metadata_ids - referenced_ids
                 if unused_ids:
                     for cid in unused_ids:
-                        warnings.append(f"Commentary ID '{cid}' declared in commentaries_metadata but not used in body")
+                        warnings.append(
+                            f"Commentary ID '{cid}' declared in commentaries_metadata but not used in body"
+                        )
 
         # Check hash_version
-        if 'hash_version' not in frontmatter:
+        if "hash_version" not in frontmatter:
             warnings.append("Missing hash_version field")
 
         # Check validation_hash
-        if 'validation_hash' not in frontmatter:
+        if "validation_hash" not in frontmatter:
             warnings.append("Missing validation_hash field")
 
         # Print results
@@ -422,6 +611,7 @@ def cmd_validate_header(args: argparse.Namespace):
     except Exception as e:
         print(f"Error during validation: {e}", file=sys.stderr)
         import traceback
+
         if args.verbose:
             traceback.print_exc()
         sys.exit(1)
@@ -435,22 +625,17 @@ def cmd_update_hash(args: argparse.Namespace):
 
     input_path = Path(args.input)
 
-    # Validate that file is in structured_md/ directory
-    if 'structured_md' not in input_path.parts:
-        print(f"Error: File must be in structured_md/ directory: {input_path}", file=sys.stderr)
-        sys.exit(1)
-
     if not input_path.exists():
         print(f"Error: File not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
     try:
         # Read the file
-        with open(input_path, 'r', encoding='utf-8') as f:
+        with open(input_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Extract YAML frontmatter
-        match = re.match(r'^---\n(.*?)\n---\n(.*)$', content, re.DOTALL)
+        match = re.match(r"^---\n(.*?)\n---\n(.*)$", content, re.DOTALL)
         if not match:
             print(f"Error: No YAML frontmatter found in {input_path}", file=sys.stderr)
             sys.exit(1)
@@ -466,16 +651,18 @@ def cmd_update_hash(args: argparse.Namespace):
         new_hash = hash_text(devanagari_text)
 
         # Update frontmatter
-        old_hash = frontmatter.get('validation_hash', '')
-        old_version = frontmatter.get('hash_version', None)
-        frontmatter['hash_version'] = HASH_VERSION
-        frontmatter['validation_hash'] = new_hash
+        old_hash = frontmatter.get("validation_hash", "")
+        old_version = frontmatter.get("hash_version", None)
+        frontmatter["hash_version"] = HASH_VERSION
+        frontmatter["validation_hash"] = new_hash
 
         # Write back to file
-        new_frontmatter_str = yaml.dump(frontmatter, allow_unicode=True, sort_keys=False)
+        new_frontmatter_str = yaml.dump(
+            frontmatter, allow_unicode=True, sort_keys=False
+        )
         new_content = f"---\n{new_frontmatter_str}---\n{body}"
 
-        with open(input_path, 'w', encoding='utf-8') as f:
+        with open(input_path, "w", encoding="utf-8") as f:
             f.write(new_content)
 
         print(f"✓ Updated validation_hash in {input_path}")
@@ -502,22 +689,17 @@ def cmd_verify_hash(args: argparse.Namespace):
 
     input_path = Path(args.input)
 
-    # Validate that file is in structured_md/ directory
-    if 'structured_md' not in input_path.parts:
-        print(f"Error: File must be in structured_md/ directory: {input_path}", file=sys.stderr)
-        sys.exit(1)
-
     if not input_path.exists():
         print(f"Error: File not found: {input_path}", file=sys.stderr)
         sys.exit(1)
 
     try:
         # Read the file
-        with open(input_path, 'r', encoding='utf-8') as f:
+        with open(input_path, "r", encoding="utf-8") as f:
             content = f.read()
 
         # Extract YAML frontmatter
-        match = re.match(r'^---\n(.*?)\n---\n(.*)$', content, re.DOTALL)
+        match = re.match(r"^---\n(.*?)\n---\n(.*)$", content, re.DOTALL)
         if not match:
             print(f"Error: No YAML frontmatter found in {input_path}", file=sys.stderr)
             sys.exit(1)
@@ -527,24 +709,36 @@ def cmd_verify_hash(args: argparse.Namespace):
         frontmatter = yaml.safe_load(frontmatter_str)
 
         # Check hash version
-        file_version = frontmatter.get('hash_version', None)
+        file_version = frontmatter.get("hash_version", None)
         if file_version is None:
             print(f"✗ Hash version MISSING in {input_path}", file=sys.stderr)
-            print(f"  File has no hash_version field (legacy/unversioned file)", file=sys.stderr)
+            print(
+                "  File has no hash_version field (legacy/unversioned file)",
+                file=sys.stderr,
+            )
             print(f"  Current version: {HASH_VERSION}", file=sys.stderr)
-            print(f"  Please run: grantha-converter update-hash -i \"{input_path}\"", file=sys.stderr)
+            print(
+                f'  Please run: grantha-converter update-hash -i "{input_path}"',
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         if file_version != HASH_VERSION:
             print(f"✗ Hash version MISMATCH in {input_path}", file=sys.stderr)
             print(f"  File version: {file_version}", file=sys.stderr)
             print(f"  Current version: {HASH_VERSION}", file=sys.stderr)
-            print(f"  The hashing algorithm has changed since this hash was generated.", file=sys.stderr)
-            print(f"  Please run: grantha-converter update-hash -i \"{input_path}\"", file=sys.stderr)
+            print(
+                "  The hashing algorithm has changed since this hash was generated.",
+                file=sys.stderr,
+            )
+            print(
+                f'  Please run: grantha-converter update-hash -i "{input_path}"',
+                file=sys.stderr,
+            )
             sys.exit(1)
 
         # Get expected hash from frontmatter
-        expected_hash = frontmatter.get('validation_hash', '')
+        expected_hash = frontmatter.get("validation_hash", "")
         if not expected_hash:
             print(f"Error: No validation_hash field in {input_path}", file=sys.stderr)
             sys.exit(1)
@@ -575,7 +769,7 @@ def cmd_verify_hash(args: argparse.Namespace):
 def main():
     """The main command-line interface entry point."""
     parser = argparse.ArgumentParser(
-        description='A tool to convert between Grantha Project JSON and structured Markdown formats.',
+        description="A tool to convert between Grantha Project JSON and structured Markdown formats.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -602,90 +796,183 @@ Examples:
 
   # Verify validation_hash in a structured Markdown file
   grantha-converter verify-hash -i structured_md/upanishads/isavasya/isavasya-1.md
-        """
+        """,
     )
 
-    subparsers = parser.add_subparsers(dest='command', help='Available commands')
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
     subparsers.required = True
 
     # json2md command
     json2md_parser = subparsers.add_parser(
-        'json2md',
-        help='Convert a canonical JSON file to structured Markdown.',
-        description='Converts a Grantha JSON file into a human-readable, structured Markdown file. The output includes a YAML frontmatter block with metadata for lossless round-trip conversion.'
+        "json2md",
+        help="Convert a canonical JSON file to structured Markdown.",
+        description="Converts a Grantha JSON file into a human-readable, structured Markdown file. The output includes a YAML frontmatter block with metadata for lossless round-trip conversion.",
     )
-    json2md_parser.add_argument('-i', '--input', required=True, help='Path to the input JSON file.')
-    json2md_parser.add_argument('-o', '--output', required=True, help='Path for the output Markdown file.')
-    json2md_parser.add_argument('--scripts', default='devanagari', help='Comma-separated list of scripts to include (e.g., "devanagari,roman"). Default: devanagari.')
-    json2md_parser.add_argument('--commentaries', help='Comma-separated list of commentary IDs to include in the output.')
-    json2md_parser.add_argument('--all-commentaries', action='store_true', help='A convenience flag to include all commentaries found in the source JSON file.')
-    json2md_parser.add_argument('--verify', action='store_true', help='After conversion, verify that the output Markdown correctly represents the source JSON by checking the content hash.')
+    json2md_parser.add_argument(
+        "-i", "--input", required=True, help="Path to the input JSON file."
+    )
+    json2md_parser.add_argument(
+        "-o", "--output", required=True, help="Path for the output Markdown file."
+    )
+    json2md_parser.add_argument(
+        "--scripts",
+        default="devanagari",
+        help='Comma-separated list of scripts to include (e.g., "devanagari,roman"). Default: devanagari.',
+    )
+    json2md_parser.add_argument(
+        "--commentaries",
+        help="Comma-separated list of commentary IDs to include in the output.",
+    )
+    json2md_parser.add_argument(
+        "--all-commentaries",
+        action="store_true",
+        help="A convenience flag to include all commentaries found in the source JSON file.",
+    )
+    json2md_parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="After conversion, verify that the output Markdown correctly represents the source JSON by checking the content hash.",
+    )
     json2md_parser.set_defaults(func=cmd_json2md)
 
     # md2json command
     md2json_parser = subparsers.add_parser(
-        'md2json',
-        help='Convert a structured Markdown file back to canonical JSON.',
-        description='Converts a structured Markdown file back into the Grantha JSON format. This command automatically verifies the `validation_hash` in the frontmatter to ensure no data was lost or corrupted.'
+        "md2json",
+        help="Convert Markdown file(s) back to canonical JSON.",
+        description="Converts structured Markdown file(s) back into Grantha JSON format. Automatically detects multipart mode when input is a directory with multiple .md files. Validates the `validation_hash` in frontmatter to ensure no data loss.",
     )
-    md2json_parser.add_argument('-i', '--input', required=True, help='Path to the input Markdown file.')
-    md2json_parser.add_argument('-o', '--output', required=True, help='Path for the output JSON file.')
-    md2json_parser.add_argument('--format', default='single', choices=['single', 'multipart'], help='Output format: "single" for complete grantha (default), "multipart" for grantha parts.')
-    md2json_parser.add_argument('--no-schema-validation', action='store_true', help='Skip JSON schema validation.')
+    md2json_parser.add_argument(
+        "-i",
+        "--input",
+        required=True,
+        help="Path to input Markdown file or directory. If directory contains multiple .md files, automatically creates multipart JSON with envelope.",
+    )
+    md2json_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Path for output JSON file (single mode) or directory (multipart mode).",
+    )
+    md2json_parser.add_argument(
+        "--format",
+        default="single",
+        choices=["single", "multipart"],
+        help='Output format: "single" for complete grantha (default), "multipart" for grantha parts. Ignored when input is a directory with multiple files.',
+    )
+    md2json_parser.add_argument(
+        "--no-schema-validation",
+        action="store_true",
+        help="Skip JSON schema validation.",
+    )
     md2json_parser.set_defaults(func=cmd_md2json)
 
     # md2json-envelope command
     envelope_parser = subparsers.add_parser(
-        'md2json-envelope',
-        help='Convert a directory of Markdown files to multi-part JSON with envelope.',
-        description='Scans a directory for .md files, converts each to a part JSON file (part1.json, part2.json, etc.), and generates an envelope.json file with metadata. All files are validated against their respective schemas.'
+        "md2json-envelope",
+        help="Convert a directory of Markdown files to multi-part JSON with envelope.",
+        description="Scans a directory for .md files, converts each to a part JSON file (part1.json, part2.json, etc.), and generates an envelope.json file with metadata. All files are validated against their respective schemas.",
     )
-    envelope_parser.add_argument('-i', '--input', required=True, help='Path to the input directory containing .md files.')
-    envelope_parser.add_argument('-o', '--output', required=True, help='Path to the output directory for JSON files.')
-    envelope_parser.add_argument('--no-schema-validation', action='store_true', help='Skip JSON schema validation.')
+    envelope_parser.add_argument(
+        "-i",
+        "--input",
+        required=True,
+        help="Path to the input directory containing .md files.",
+    )
+    envelope_parser.add_argument(
+        "-o",
+        "--output",
+        required=True,
+        help="Path to the output directory for JSON files.",
+    )
+    envelope_parser.add_argument(
+        "--no-schema-validation",
+        action="store_true",
+        help="Skip JSON schema validation.",
+    )
     envelope_parser.set_defaults(func=cmd_md2json_envelope)
+
+    # generate-envelope command
+    generate_envelope_parser = subparsers.add_parser(
+        "generate-envelope",
+        help="Generate an envelope.json from existing JSON part files.",
+        description="Creates an envelope.json file for a multi-part grantha from a set of existing part files.",
+    )
+    generate_envelope_parser.add_argument(
+        "--grantha-id",
+        required=True,
+        help="The grantha_id of the work.",
+    )
+    generate_envelope_parser.add_argument(
+        "--output-file",
+        required=True,
+        help="Path to the output envelope.json file.",
+    )
+    generate_envelope_parser.add_argument(
+        "part_files",
+        nargs='+',
+        help="Paths to the input JSON part files.",
+    )
+    generate_envelope_parser.set_defaults(func=cmd_generate_envelope)
 
     # verify command
     verify_parser = subparsers.add_parser(
-        'verify',
-        help='Verify that a JSON file and a Markdown file are in sync.',
-        description="Checks if a Markdown file is a faithful representation of a JSON file by recalculating the JSON hash based on the Markdown's frontmatter and comparing it to the stored validation hash."
+        "verify",
+        help="Verify that a JSON file and a Markdown file are in sync.",
+        description="Checks if a Markdown file is a faithful representation of a JSON file by recalculating the JSON hash based on the Markdown's frontmatter and comparing it to the stored validation hash.",
     )
-    verify_parser.add_argument('-j', '--json', required=True, help='Path to the JSON file.')
-    verify_parser.add_argument('-m', '--markdown', required=True, help='Path to the Markdown file.')
+    verify_parser.add_argument(
+        "-j", "--json", required=True, help="Path to the JSON file."
+    )
+    verify_parser.add_argument(
+        "-m", "--markdown", required=True, help="Path to the Markdown file."
+    )
     verify_parser.set_defaults(func=cmd_verify)
 
     # update-hash command
     update_hash_parser = subparsers.add_parser(
-        'update-hash',
-        help='Update the validation_hash in a structured Markdown file.',
-        description='Extracts Devanagari text from a structured Markdown file, computes the validation hash, and updates the YAML frontmatter. Only works on files in structured_md/ directory.'
+        "update-hash",
+        help="Update the validation_hash in a structured Markdown file.",
+        description="Extracts Devanagari text from a structured Markdown file, computes the validation hash, and updates the YAML frontmatter. Only works on files in structured_md/ directory.",
     )
-    update_hash_parser.add_argument('-i', '--input', required=True, help='Path to the structured Markdown file to update.')
+    update_hash_parser.add_argument(
+        "-i",
+        "--input",
+        required=True,
+        help="Path to the structured Markdown file to update.",
+    )
     update_hash_parser.set_defaults(func=cmd_update_hash)
 
     # verify-hash command
     verify_hash_parser = subparsers.add_parser(
-        'verify-hash',
-        help='Verify the validation_hash in a structured Markdown file.',
-        description='Extracts Devanagari text from a structured Markdown file, computes the hash, and compares it to the validation_hash in the YAML frontmatter. Only works on files in structured_md/ directory. Exits with code 0 if valid, 1 if invalid.'
+        "verify-hash",
+        help="Verify the validation_hash in a structured Markdown file.",
+        description="Extracts Devanagari text from a structured Markdown file, computes the hash, and compares it to the validation_hash in the YAML frontmatter. Only works on files in structured_md/ directory. Exits with code 0 if valid, 1 if invalid.",
     )
-    verify_hash_parser.add_argument('-i', '--input', required=True, help='Path to the structured Markdown file to verify.')
+    verify_hash_parser.add_argument(
+        "-i",
+        "--input",
+        required=True,
+        help="Path to the structured Markdown file to verify.",
+    )
     verify_hash_parser.set_defaults(func=cmd_verify_hash)
 
     # validate-header command
     validate_header_parser = subparsers.add_parser(
-        'validate-header',
-        help='Validate the frontmatter structure of a markdown file.',
-        description='Validates the YAML frontmatter structure and checks that commentary IDs in metadata match those referenced in the body. Exits with code 0 if valid, 1 if errors found.'
+        "validate-header",
+        help="Validate the frontmatter structure of a markdown file.",
+        description="Validates the YAML frontmatter structure and checks that commentary IDs in metadata match those referenced in the body. Exits with code 0 if valid, 1 if errors found.",
     )
-    validate_header_parser.add_argument('-i', '--input', required=True, help='Path to the markdown file to validate.')
-    validate_header_parser.add_argument('--verbose', action='store_true', help='Show detailed error traces.')
+    validate_header_parser.add_argument(
+        "-i", "--input", required=True, help="Path to the markdown file to validate."
+    )
+    validate_header_parser.add_argument(
+        "--verbose", action="store_true", help="Show detailed error traces."
+    )
     validate_header_parser.set_defaults(func=cmd_validate_header)
 
     args = parser.parse_args()
     args.func(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

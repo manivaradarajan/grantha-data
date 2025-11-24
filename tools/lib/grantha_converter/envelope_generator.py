@@ -6,7 +6,7 @@ granthas, combining metadata from multiple part files.
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 
 def create_envelope_from_parts(
@@ -87,7 +87,8 @@ def create_envelope_from_markdown_files(
         The envelope data dictionary
 
     Raises:
-        ValueError: If markdown files are missing required frontmatter
+        ValueError: If markdown files are missing required frontmatter or have
+                   inconsistent grantha_ids or invalid part numbering
     """
     from .md_to_json import parse_frontmatter
 
@@ -100,18 +101,83 @@ def create_envelope_from_markdown_files(
         with open(md_file, 'r', encoding='utf-8') as f:
             content = f.read()
         frontmatter, _ = parse_frontmatter(content)
-        frontmatters.append(frontmatter)
+        frontmatters.append((md_file, frontmatter))
 
-    # Verify all parts belong to the same grantha
-    for fm in frontmatters:
-        if fm.get('grantha_id') != grantha_id:
-            raise ValueError(
-                f"Markdown file {fm.get('grantha_id')} does not match "
-                f"expected grantha_id {grantha_id}"
-            )
+    # Verify all parts have the same grantha_id
+    grantha_ids = set()
+    for md_file, fm in frontmatters:
+        file_grantha_id = fm.get('grantha_id')
+        if not file_grantha_id:
+            raise ValueError(f"Missing grantha_id in {md_file}")
+        grantha_ids.add(file_grantha_id)
 
-    # Read metadata from first file
-    first_fm = frontmatters[0]
+    if len(grantha_ids) > 1:
+        # Build detailed error message showing which files have which IDs
+        id_to_files = {}
+        for md_file, fm in frontmatters:
+            file_id = fm.get('grantha_id')
+            if file_id not in id_to_files:
+                id_to_files[file_id] = []
+            id_to_files[file_id].append(md_file.name)
+
+        error_lines = ["Inconsistent grantha_id values found:"]
+        for gid, files in sorted(id_to_files.items()):
+            error_lines.append(f"  '{gid}': {', '.join(files)}")
+        raise ValueError('\n'.join(error_lines))
+
+    # Verify the grantha_id matches what was expected
+    actual_grantha_id = list(grantha_ids)[0]
+    if actual_grantha_id != grantha_id:
+        raise ValueError(
+            f"Grantha ID mismatch: expected '{grantha_id}' but files have '{actual_grantha_id}'"
+        )
+
+    # Verify part numbers are consecutive starting from 1
+    part_nums = []
+    for md_file, fm in frontmatters:
+        part_num = fm.get('part_num')
+        if part_num is None:
+            raise ValueError(f"Missing part_num in {md_file}")
+        part_nums.append((part_num, md_file))
+
+    # Sort by part number
+    part_nums.sort(key=lambda x: x[0])
+
+    # Check for duplicates and non-consecutive parts
+    seen_parts = {}  # maps part_num to list of files
+    for part_num, md_file in part_nums:
+        if part_num not in seen_parts:
+            seen_parts[part_num] = []
+        seen_parts[part_num].append(md_file)
+
+    # Report duplicates
+    duplicates = {pn: files for pn, files in seen_parts.items() if len(files) > 1}
+    if duplicates:
+        error_lines = ["Duplicate part_num values found:"]
+        for pn, files in sorted(duplicates.items()):
+            error_lines.append(f"  part_num {pn}: {', '.join(f.name for f in files)}")
+        raise ValueError('\n'.join(error_lines))
+
+    # Check that parts are consecutive starting from 1
+    expected_parts = set(range(1, len(markdown_files) + 1))
+    actual_parts = set(pn for pn, _ in part_nums)
+
+    if actual_parts != expected_parts:
+        missing = expected_parts - actual_parts
+        extra = actual_parts - expected_parts
+        error_msg = "Part numbers are not consecutive 1-N:"
+        if missing:
+            error_msg += f"\n  Missing parts: {sorted(missing)}"
+        if extra:
+            error_msg += f"\n  Unexpected parts: {sorted(extra)}"
+        raise ValueError(error_msg)
+
+    # Extract frontmatter objects in part order
+    file_to_fm = {md_file: fm for md_file, fm in frontmatters}
+    frontmatters_sorted = [file_to_fm[md_file] for _, md_file in part_nums]
+
+    # Read metadata from first file (in part order)
+    first_fm = frontmatters_sorted[0]
 
     # Generate part filenames
     part_files = [f"part{i+1}.json" for i in range(len(markdown_files))]
