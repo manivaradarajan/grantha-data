@@ -17,3 +17,13 @@ grantha_md2json_single(
     grantha_id = "isavasya-upanishad-srivatsanarayana",
     markdown_file = "isavasya-upanishad-srivatsanarayana-01.md",
 )
+
+# Aggregate both commentaries
+filegroup(
+    name = "json_files",
+    srcs = [
+        ":srivatsa-narayana",
+        ":vedanta-desika",
+    ],
+    visibility = ["//visibility:public"],
+)
