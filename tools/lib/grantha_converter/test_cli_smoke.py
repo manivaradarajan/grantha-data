@@ -11,7 +11,6 @@ the commands are properly wired up and don't crash on startup.
 """
 
 import subprocess
-import sys
 import pytest
 from pathlib import Path
 

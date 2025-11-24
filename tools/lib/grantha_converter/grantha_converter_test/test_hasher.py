@@ -5,7 +5,6 @@ is computed from ONLY the Devanagari characters (U+0900-U+097F) in the text,
 ignoring all other scripts, translations, markdown, and whitespace.
 """
 
-import pytest
 
 from grantha_converter.hasher import (
     extract_content_text,

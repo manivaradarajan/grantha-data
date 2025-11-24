@@ -4,7 +4,6 @@ This test suite ensures the canonical Devanagari extraction functions work
 correctly and consistently across all use cases.
 """
 
-import pytest
 
 from grantha_converter.devanagari_extractor import (
     extract_devanagari,

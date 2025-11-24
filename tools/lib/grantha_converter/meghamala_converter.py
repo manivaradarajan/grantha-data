@@ -5,13 +5,11 @@ import tempfile
 from pathlib import Path
 import sys
 import traceback
-from typing import Optional
 import diff_match_patch
 import os
 
 # Third-party imports
 from colorama import Fore, Style
-import yaml
 
 # Local imports
 from gemini_processor.base_client import BaseGeminiClient
@@ -116,14 +114,14 @@ class MeghamalaConverter:
             print(f"❌ Error reading input file: {e}", file=sys.stderr)
             return False
         except Exception:
-            print(f"❌ An unexpected error occurred during conversion:", file=sys.stderr)
+            print("❌ An unexpected error occurred during conversion:", file=sys.stderr)
             traceback.print_exc()
             return False
 
     def _run_analysis_phase(self, input_path: Path, file_log_dir: Path) -> dict | None:
         """Analyzes the input file to understand its structure."""
         print(f"\n{'='*60}")
-        print(f"📋 PHASE 1: ANALYZING FILE STRUCTURE")
+        print("📋 PHASE 1: ANALYZING FILE STRUCTURE")
         print(f"{ '='*60}\n")
         analyzer = Analyzer(
             client=self.client,
@@ -168,7 +166,7 @@ class MeghamalaConverter:
     def _run_chunking_phase(self, input_text: str, analysis: dict) -> list[tuple[str, dict]] | None:
         """Splits the input text into chunks based on the analysis execution plan."""
         print(f"\n{'='*60}")
-        print(f"📋 PHASE 2: CHUNKING FILE")
+        print("📋 PHASE 2: CHUNKING FILE")
         print(f"{ '='*60}\n")
         execution_plan = analysis.get("chunking_strategy", {}).get("execution_plan", [])
         if not execution_plan:
@@ -270,12 +268,12 @@ class MeghamalaConverter:
         print(f"📊 Repair analysis: Diffs before: {diff_count_before}, Diffs after: {diff_count_after}")
 
         if diff_count_after < diff_count_before:
-            print(f"✅ Repair improved the output. Using repaired version.")
+            print("✅ Repair improved the output. Using repaired version.")
             final_content = repaired_content
             final_devanagari = repaired_devanagari
             final_diffs = diffs_after
         else:
-            print(f"⚠️  Repair did not improve the output. Using original conversion.")
+            print("⚠️  Repair did not improve the output. Using original conversion.")
             final_content = merged_content
             final_devanagari = converted_devanagari
             final_diffs = diffs_before
@@ -591,7 +589,7 @@ class MeghamalaConverter:
                     context = source_devanagari[context_start:context_end]
 
                     f.write(f"--- Diff {diff_num} ---\n")
-                    f.write(f"CONTEXT (with surrounding text):\n")
+                    f.write("CONTEXT (with surrounding text):\n")
                     f.write(f"{context}\n")
 
                     # Transliterate to Harvard-Kyoto
@@ -608,7 +606,7 @@ class MeghamalaConverter:
 
                     # Check for whitespace-only changes
                     if text.strip() == "":
-                        f.write(f"  ⚠️  WHITESPACE-ONLY CHANGE:\n")
+                        f.write("  ⚠️  WHITESPACE-ONLY CHANGE:\n")
                         if op == dmp.DIFF_DELETE:
                             f.write(f"    DELETED: {len(text)} whitespace character(s)\n")
                             f.write(f"    Representation: {repr(text)}\n")
@@ -625,7 +623,7 @@ class MeghamalaConverter:
                         has_trailing_ws = text != text.rstrip()
 
                         if has_leading_ws or has_trailing_ws:
-                            f.write(f"  ⚠️  CONTAINS WHITESPACE:\n")
+                            f.write("  ⚠️  CONTAINS WHITESPACE:\n")
                             if has_leading_ws:
                                 leading_ws = text[:len(text) - len(text.lstrip())]
                                 f.write(f"    Leading whitespace: {len(leading_ws)} character(s) - {repr(leading_ws)}\n")

@@ -10,7 +10,6 @@ Usage:
 
 # Standard library imports
 import argparse
-import os
 import sys
 from datetime import datetime
 from pathlib import Path

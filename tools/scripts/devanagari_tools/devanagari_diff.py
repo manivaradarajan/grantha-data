@@ -98,7 +98,7 @@ def main():
     devanagari2 = extract_devanagari(cleaned_text2)
 
     # Show info about extraction
-    print(f"\n📊 Extracted Devanagari characters:")
+    print("\n📊 Extracted Devanagari characters:")
     print(f"   {file1_path.name}: {len(devanagari1)} characters")
     print(f"   {file2_path.name}: {len(devanagari2)} characters")
 

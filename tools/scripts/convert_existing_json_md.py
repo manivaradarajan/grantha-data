@@ -7,8 +7,6 @@ from grantha_data import JsonGrantha
 from grantha_data import MarkdownWriter
 
 # Import for hashing
-from grantha_converter.hasher import hash_grantha, hash_text
-from grantha_converter.devanagari_extractor import extract_devanagari
 
 
 def main():

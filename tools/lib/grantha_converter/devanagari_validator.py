@@ -6,7 +6,7 @@ that no characters are lost during markdown format conversion.
 """
 
 import re
-from typing import List, Tuple
+from typing import Tuple
 
 
 def extract_devanagari(text: str) -> str:

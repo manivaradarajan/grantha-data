@@ -24,7 +24,6 @@ Workflow:
 import argparse
 import hashlib
 import logging
-import re
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -361,7 +360,7 @@ def run_batch_repair(args: argparse.Namespace):
             best_match, diffs = find_best_match_file(source_file, match_dir, logger)
 
             if best_match is None:
-                logger.warning(f"    - No matching destination file found.")
+                logger.warning("    - No matching destination file found.")
                 unmatched_source_files.add(source_file)
                 continue
 

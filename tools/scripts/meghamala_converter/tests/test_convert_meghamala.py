@@ -1,6 +1,4 @@
 import unittest
-import json
-import sys
 import tempfile
 import os
 import contextlib

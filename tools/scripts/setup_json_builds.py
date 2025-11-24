@@ -56,7 +56,8 @@ grantha_md2json_single(
 )
 '''
     else:
-        # Multi-part grantha
+        # Multi-part grantha - list files explicitly
+        file_list = ",\n        ".join([f'"{f.name}"' for f in md_files])
         build_content = f'''# BUILD file for {category}/{subdir}
 # Converts structured Markdown to JSON format
 
@@ -65,7 +66,9 @@ load("//tools/bazel:grantha_converter.bzl", "grantha_md2json_multipart")
 grantha_md2json_multipart(
     name = "md2json",
     grantha_id = "{grantha_id}",
-    num_parts = {num_parts},
+    markdown_files = [
+        {file_list},
+    ],
 )
 '''
 

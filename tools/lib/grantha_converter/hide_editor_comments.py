@@ -8,7 +8,6 @@ It is designed to be idempotent, meaning it will not re-wrap already hidden comm
 import argparse
 import os
 import re
-import shutil
 import sys
 from typing import List, Tuple
 

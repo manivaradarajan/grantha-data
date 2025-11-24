@@ -1,5 +1,3 @@
-import os
-import sys
 import unittest
 
 from grantha_converter.md_to_json import convert_to_json

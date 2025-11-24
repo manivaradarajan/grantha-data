@@ -1,6 +1,5 @@
 """Tests for HTML details to Grantha Markdown converter."""
 
-import pytest
 
 from .html_details_to_grantha_md import (
     DetailsBlock,

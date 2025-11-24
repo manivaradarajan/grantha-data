@@ -6,10 +6,9 @@ formats, and proper commentary linking. It can be run as a standalone tool
 from the command line.
 """
 import argparse
-import os
 import re
 import sys
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import yaml
 

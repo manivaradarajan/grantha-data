@@ -62,7 +62,7 @@ class GranthaValidator:
         # For now, basic check: refs should be non-empty
         for ref in all_refs:
             if not ref or not ref.strip():
-                raise ValueError(f"Invalid empty ref found")
+                raise ValueError("Invalid empty ref found")
 
             # Check ref format (should be dot-separated numbers)
             parts = ref.split('.')

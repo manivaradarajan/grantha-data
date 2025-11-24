@@ -6,8 +6,6 @@ validation hashing, and Devanagari content preservation checks.
 """
 
 import os
-import re
-from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import yaml

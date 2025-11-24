@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Optional
 from grantha_data.base import BaseGrantha
 from grantha_data.models import (
     Commentary,
-    GranthaMetadata,
     Passage,
     Structure,
 )

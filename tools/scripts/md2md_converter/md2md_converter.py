@@ -17,7 +17,6 @@ import sys
 from typing import Tuple
 
 from google import genai
-from google.genai import types
 from grantha_converter.hasher import normalize_text
 
 # --- Configuration ---

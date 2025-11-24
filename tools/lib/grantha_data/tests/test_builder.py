@@ -1,7 +1,6 @@
 """Tests for the GranthaBuilder."""
 
 import unittest
-from pathlib import Path
 
 from grantha_data.builder import GranthaBuilder
 from grantha_data.models import Structure

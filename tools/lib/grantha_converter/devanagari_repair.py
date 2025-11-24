@@ -1,9 +1,8 @@
 import shutil
-import re
 from difflib import SequenceMatcher
 from rapidfuzz import fuzz
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Optional, Tuple
 
 from grantha_converter.devanagari_extractor import (
     extract_devanagari_words_with_positions,

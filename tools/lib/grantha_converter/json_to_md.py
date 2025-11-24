@@ -11,12 +11,12 @@ Key features include:
 """
 
 import json
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import yaml
 
 from .devanagari_extractor import HASH_VERSION
-from .hasher import extract_content_text, hash_grantha
+from .hasher import hash_grantha
 
 
 def get_lowest_level_key(structure_levels: List[Dict[str, Any]]) -> str:

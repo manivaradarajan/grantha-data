@@ -42,12 +42,12 @@ class AnalysisCache:
         # Create a short, stable hash of the absolute file path to ensure uniqueness
         path_hash = hashlib.sha256(str(self.input_file.resolve()).encode()).hexdigest()[:8]
         cache_filename = f"{self.input_file.stem}-{path_hash}.json"
-        
+
         if self.cache_dir:
             print(f"  - Using specified cache directory: {self.cache_dir}")
             return self.cache_dir / cache_filename
-        
-        print(f"  - Using default cache location (next to input file).")
+
+        print("  - Using default cache location (next to input file).")
         # Fallback to the input file's directory if no cache_dir is provided
         return self.input_file.parent / f".cache_analysis_{cache_filename}"
 

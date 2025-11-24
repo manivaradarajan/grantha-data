@@ -1,6 +1,6 @@
 # Standard library imports
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from pathlib import Path
 import tempfile
 import shutil

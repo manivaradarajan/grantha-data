@@ -215,7 +215,7 @@ class TestRealWorldConsistency:
             )
         else:
             assert "No repair needed" not in msg, (
-                f"Diff shows differences but repair says no action needed"
+                "Diff shows differences but repair says no action needed"
             )
 
 

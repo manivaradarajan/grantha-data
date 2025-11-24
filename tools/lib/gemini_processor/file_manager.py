@@ -18,7 +18,7 @@ Typical usage example:
 import hashlib
 import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional
 
@@ -557,7 +557,7 @@ def upload_file_with_cache(
     # Cache miss - upload file
     try:
         if verbose:
-            print(f"📤 Uploading file to Gemini API...")
+            print("📤 Uploading file to Gemini API...")
 
         with open(file_path, "rb") as f:
             uploaded_file = client.files.upload(

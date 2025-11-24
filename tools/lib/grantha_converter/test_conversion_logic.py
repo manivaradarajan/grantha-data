@@ -1,8 +1,5 @@
-import json
 import os
-import sys
 
-import pytest
 
 # Add project root to sys.path to allow imports
 from grantha_converter.md_to_json import convert_to_json

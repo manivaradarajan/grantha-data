@@ -5,8 +5,6 @@ from markdown files, ensuring consistency across validation, hashing, and diffin
 """
 
 import pytest
-from pathlib import Path
-import tempfile
 
 from grantha_converter.devanagari_extractor import (
     extract_devanagari,

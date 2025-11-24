@@ -1,6 +1,5 @@
 import pytest
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 
@@ -11,19 +10,19 @@ script_to_test = Path(__file__).parent.parent / "batch_repair.py"
 def setup_test_environment(tmp_path: Path) -> Path:
     """Create a temporary directory structure for testing batch_repair.py."""
     base_dir = tmp_path / "grantha-data"
-    
+
     # --- Source Directory ---
     source_base = base_dir / "sources/upanishads/meghamala"
     source_upanishad_dir = source_base / "test_upanishad"
     source_upanishad_dir.mkdir(parents=True)
-    
+
     (source_upanishad_dir / "perfect_match.md").write_text("""---
 grantha_id: test-upanishad-perfect
 ---
 # Title
 देवनागरी पाठः
 """, encoding="utf-8")
-    
+
     (source_upanishad_dir / "unmatched_source.md").write_text("""---
 grantha_id: test-upanishad-unmatched-src
 ---

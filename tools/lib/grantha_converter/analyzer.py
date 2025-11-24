@@ -169,7 +169,7 @@ class Analyzer:
             analysis_text, was_sampled = create_smart_sample(full_text, max_size=500000)
             if was_sampled:
                 sample_size = len(analysis_text)
-                print(f"✂️ File too large - using smart sampling")
+                print("✂️ File too large - using smart sampling")
                 print(f"  📊 Sample size: {sample_size:,} bytes")
             else:
                 print("📄 Using text embedding for analysis")
@@ -233,12 +233,12 @@ class Analyzer:
 
         if "execution_plan" not in chunking_strategy:
             print(
-                f"Warning: Missing execution_plan in chunking_strategy",
+                "Warning: Missing execution_plan in chunking_strategy",
                 file=sys.stderr,
             )
         if "recommended_unit" not in parsing_instructions:
             print(
-                f"Warning: Missing recommended_unit in parsing_instructions",
+                "Warning: Missing recommended_unit in parsing_instructions",
                 file=sys.stderr,
             )
 

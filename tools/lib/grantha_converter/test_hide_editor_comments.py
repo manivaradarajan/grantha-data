@@ -2,7 +2,6 @@ import os
 import shutil
 import sys
 import unittest
-from typing import List, Tuple
 from unittest.mock import patch
 
 from grantha_converter.hide_editor_comments import (

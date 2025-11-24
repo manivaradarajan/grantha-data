@@ -59,7 +59,7 @@ def main():
 
     # --- 2. Determine output path and create a temporary copy of fileB ---
     output_path = Path(args.output) if args.output else fileB_path.with_suffix(fileB_path.suffix + ".repaired")
-    
+
     try:
         shutil.copy2(fileB_path, output_path)
     except Exception as e:
@@ -83,11 +83,11 @@ def main():
 
     # --- 4. Report result ---
     if repair_successful:
-        print(f"\n✅ Repair successful.")
+        print("\n✅ Repair successful.")
         print(f"   - {repair_message}")
         print(f"   - Repaired file saved to: {output_path}")
     else:
-        print(f"\n❌ Repair failed.")
+        print("\n❌ Repair failed.")
         print(f"   - {repair_message}")
         # Clean up the partially modified file on failure
         if output_path.exists():
