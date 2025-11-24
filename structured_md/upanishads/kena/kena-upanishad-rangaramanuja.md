@@ -6,21 +6,21 @@ text_type: upanishad
 language: sanskrit
 structure_type: khanda
 commentaries_metadata:
-- commentary_id: rangaramanuja-muni-prakashika
-  commentary_title: प्रकाशिका
-  commentator:
-    devanagari: श्रीरङ्गरामानुजमुनिः
-    roman: śrīraṅgarāmānujamuniḥ
-  authored_colophon: श्रीरङ्गरामानुजमुनिभिः विरचिता
+  - commentary_id: rangaramanuja-muni-prakashika
+    commentary_title: प्रकाशिका
+    commentator:
+      devanagari: श्रीरङ्गरामानुजमुनिः
+      roman: śrīraṅgarāmānujamuniḥ
+    authored_colophon: श्रीरङ्गरामानुजमुनिभिः विरचिता
 structure_levels:
-- key: Khanda
-  scriptNames:
-    devanagari: खण्डः
-    roman: khaṇḍa
-- key: Mantra
-  scriptNames:
-    devanagari: मन्त्रः
-    roman: mantra
+  - key: Khanda
+    scriptNames:
+      devanagari: खण्डः
+      roman: khaṇḍa
+  - key: Mantra
+    scriptNames:
+      devanagari: मन्त्रः
+      roman: mantra
 hash_version: 3
 validation_hash: 4c7743cc9b97020cc1f50576843996b5f63febeee50495da56fea450eef502ff
 ---
