@@ -7,7 +7,13 @@ load(
 )
 
 grantha_md2json_single(
-    name = "md2json",
-    grantha_id = "isavasya-upanishad",
-    markdown_file = "isavasya-upanishad-vedanta-desika-01.md",
+    name = "vedanta-desika",
+    grantha_id = "isavasya-upanishad-vedantadesika",
+    markdown_file = "isavasya-upanishad-vedantadesika-01.md",
+)
+
+grantha_md2json_single(
+    name = "srivatsa-narayana",
+    grantha_id = "isavasya-upanishad-srivatsanarayana",
+    markdown_file = "isavasya-upanishad-srivatsanarayana-01.md",
 )
