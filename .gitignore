@@ -3,6 +3,7 @@
 .cache*
 .file_upload_*
 logs/
+.analysis_cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -220,3 +221,9 @@ bazel-out/
 bazel-testlogs/
 bazel-grantha-data/
 build_events.json
+
+# Temporary conversion artifacts
+chunks/
+ocr_output/
+pdf_ocr_workdir/
+*.md.repaired
