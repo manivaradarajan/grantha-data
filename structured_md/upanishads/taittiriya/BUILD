@@ -6,5 +6,9 @@ load("//tools/bazel:grantha_converter.bzl", "grantha_md2json_multipart")
 grantha_md2json_multipart(
     name = "md2json",
     grantha_id = "taittiriya-upanishad",
-    num_parts = 3,
+    markdown_files = [
+        "taittiriya-upanishad-rangaramanuja-01-01-01.md",
+        "taittiriya-upanishad-rangaramanuja-02-01-01.md",
+        "taittiriya-upanishad-rangaramanuja-03-01-01.md",
+    ],
 )

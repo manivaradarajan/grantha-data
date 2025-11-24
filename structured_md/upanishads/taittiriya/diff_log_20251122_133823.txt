@@ -1,0 +1,145 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:38:23
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/taittiriya/taittirIyopaniSat-zikSA.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/taittiriya/taittiriya-upanishad-rangaramanuja-01-01-01.md
+
+================================================================================
+
+Total differences found: 33
+
+================================================================================
+
+--- Diff 1 ---
+िः शान्तिः । विघ्नानाम् अस्त इति शेषः ।।द्वितीयोऽनुवाकः शिक्षार्थसङ्ग्रहः शीक्षां
+iH zAntiH . vighnAnAm asta iti zeSaH ..dvitIyo'nuvAkaH zikSArthasaGgrahaH zIkSAM
+
+--- Diff 2 ---
+ं पञ्च ।। २ ।। ।। इति द्वितीयोऽनुवाकः ।।शीक्षां व्याख्यास्यामः इति । शिक्षाख्यवेद
+M paJca .. 2 .. .. iti dvitIyo'nuvAkaH ..zIkSAM vyAkhyAsyAmaH iti . zikSAkhyaveda
+
+--- Diff 3 ---
+ग्रन्थविशेषस्य उपयोगो वर्णित इत्यर्थः ।।तृतीयोऽनुवाकः महासंहितोपासनम् सह नौ यशः ।
+granthavizeSasya upayogo varNita ityarthaH ..tRtIyo'nuvAkaH mahAsaMhitopAsanam saha nau yazaH .
+
+--- Diff 4 ---
+ प्रजननँ सन्धानम् । इत्यधिप्रजम् ।। ३ ।।अथाध्यात्मम् । अधरा हनुः पूर्वरूपम् । उत्
+ prajanana~ sandhAnam . ityadhiprajam .. 3 ..athAdhyAtmam . adharA hanuH pUrvarUpam . ut
+
+--- Diff 5 ---
+्चसेनान्नाद्येन सुवर्ग्येण लोकेन ।। ३ ।।सन्धिराचार्यः पूर्वरूपमित्यधिप्रजं लोकेन
+casenAnnAdyena suvargyeNa lokena .. 3 ..sandhirAcAryaH pUrvarUpamityadhiprajaM lokena
+
+--- Diff 6 ---
+ार्यः पूर्वरूपमित्यधिप्रजं लोकेन ।। ३ ।।।। इति तृतीयोऽनुवाकः ।।विद्याफलं गुरुशिष्
+AryaH pUrvarUpamityadhiprajaM lokena .. 3 .... iti tRtIyo'nuvAkaH ..vidyAphalaM guruziS
+
+--- Diff 7 ---
+रजं लोकेन ।। ३ ।।।। इति तृतीयोऽनुवाकः ।।विद्याफलं गुरुशिष्योभयगतमस्त्विति गुरुशिष
+rajaM lokena .. 3 .... iti tRtIyo'nuvAkaH ..vidyAphalaM guruziSyobhayagatamastviti guruziSa
+
+--- Diff 8 ---
+अन्वितो भवतीत्यर्थः । शिष्टं स्पष्टम् ।।चतुर्थोऽनुवाकः मेधासिद्धये जपनीया मन्त्रा
+anvito bhavatItyarthaH . ziSTaM spaSTam ..caturtho'nuvAkaH medhAsiddhaye japanIyA mantrA
+
+--- Diff 9 ---
+ं मे गोपाय ।। आवहन्ती वितन्वाना ।। १ ।। धनसाध्यहोमोपयिका मन्त्राः कुर्वाणा चीरमात्मनः । वासाँसि मम गावश्च । अन्नपाने च सर्वदा । ततो मे श्रियमावह । लोमशां पशुभिः सह स्वाहा ।। आ मा यन्तु ब्रह्मचारिणः स्वाहा । यशो जनेऽसानि स्वाहा । श्रेयान् वस्यसोऽसानि स्वाहा । तं त्वा भग प्रविशानि स्वाहा समा भग प्रविश स्वाहा ।। २ ।। सच्छिष्यलाभाय प्रार्थना तस्मिन् सहस्रशाखे । नि भगाहं त्वयि मृजे स्वाहा । यथाऽऽप प्रवता यन्ति । यथा मासा अहर्जरम् । एवं मां ब्रह्मचारिणः । धातरायन्तु सर्वतः स्वाहा । प्रतिवेशोऽसि प्र मा पाहि प्र मा पद्यस्व ।। ३ ।। वितन्वाना विशस्वाहा सप्त च ।। ४ ।। ।। इति चतुर्थोनुवाकः ।।ब्रह्मविद्यार्थं प्रणवं प्रार्थयते यश्छन
+M me gopAya .. AvahantI vitanvAnA .. 1 .. dhanasAdhyahomopayikA mantrAH kurvANA cIramAtmanaH . vAsA~si mama gAvazca . annapAne ca sarvadA . tato me zriyamAvaha . lomazAM pazubhiH saha svAhA .. A mA yantu brahmacAriNaH svAhA . yazo jane'sAni svAhA . zreyAn vasyaso'sAni svAhA . taM tvA bhaga pravizAni svAhA samA bhaga praviza svAhA .. 2 .. sacchiSyalAbhAya prArthanA tasmin sahasrazAkhe . ni bhagAhaM tvayi mRje svAhA . yathA''pa pravatA yanti . yathA mAsA aharjaram . evaM mAM brahmacAriNaH . dhAtarAyantu sarvataH svAhA . prativezo'si pra mA pAhi pra mA padyasva .. 3 .. vitanvAnA vizasvAhA sapta ca .. 4 .. .. iti caturthonuvAkaH ..brahmavidyArthaM praNavaM prArthayate yazchana
+
+--- Diff 10 ---
+ यथा अप्रमृष्टो भवति तथा कुरु इत्यर्थः । विद्यौपयिकहोमसाधनमन्त्राः उच्यन्ते आवहन्ती इत्यादिः । लक्ष्मीप्रार्थनामन्त्रोऽयम् । आवहन्ती उत्पादयन्ती वितन्वाना वर्धयन्ती यतस्त्वम् ततो मे चीरमितराणि वासांसि गा अन्नपाने च सर्वदा कुर्वाणा सती सा हि श्रीरमृता सताम् तै ब्रा १ २ १ इति त्रयीलक्षणां श्रियम् लोमशाम् बहुलां यज्ञाद्यौपयिकपश्वादिद्रव्यैस्सह आवह उत्पादय ।
+ yathA apramRSTo bhavati tathA kuru ityarthaH . vidyaupayikahomasAdhanamantrAH ucyante AvahantI ityAdiH . lakSmIprArthanAmantro'yam . AvahantI utpAdayantI vitanvAnA vardhayantI yatastvam tato me cIramitarANi vAsAMsi gA annapAne ca sarvadA kurvANA satI sA hi zrIramRtA satAm tai brA 1 2 1 iti trayIlakSaNAM zriyam lomazAm bahulAM yajJAdyaupayikapazvAdidravyaissaha Avaha utpAdaya .
+
+--- Diff 11 ---
+ामन्त्रः । यशः इति । जनमध्ये यशस्वी भवानि इत्यर्थः । श्रेयान् इति । वस्यस वसीयस वसु
+AmantraH . yazaH iti . janamadhye yazasvI bhavAni ityarthaH . zreyAn iti . vasyasa vasIyasa vasu
+
+--- Diff 12 ---
+्त्रः । यशः इति । जनमध्ये यशस्वी भवानि इत्यर्थः । श्रेयान् इति । वस्यस वसीयस वसुम
+traH . yazaH iti . janamadhye yazasvI bhavAni ityarthaH . zreyAn iti . vasyasa vasIyasa vasuma
+
+--- Diff 13 ---
+ । हे भग सः त्वं मां प्राप्नुहीत्यर्थः । तस्मिन् इति । हे भग सहस्रशाखे ऐश्वर्यवीर्याद्यनन्तविधायुक्तेत्वयि प्रविष्टोऽहं निमृजे शुद्धो भवानीत्यर्थः । मृजूष् शुद्धौ धा पा १०६६ इति हि धातु । यथाऽऽपः इति । हे धात परमात्मन् यथा जलानि प्रवताः प्रवणाः दिशो यन्ति । । तानादिकाद्वनुतेः निष्ठायामनुनासिकलोप यथा मासा अहर्जरम् अहोभिः जरा यस्य स पुरुष अहर्जरः । यस्
+ . he bhaga saH tvaM mAM prApnuhItyarthaH . tasmin iti . he bhaga sahasrazAkhe aizvaryavIryAdyanantavidhAyuktetvayi praviSTo'haM nimRje zuddho bhavAnItyarthaH . mRjUS zuddhau dhA pA 1066 iti hi dhAtu . yathA''paH iti . he dhAta paramAtman yathA jalAni pravatAH pravaNAH dizo yanti . . tAnAdikAdvanuteH niSThAyAmanunAsikalopa yathA mAsA aharjaram ahobhiH jarA yasya sa puruSa aharjaraH . yas
+
+--- Diff 14 ---
+तर्भावितण्यर्थोऽयं पदिः । प्रपन्नं मां कुरु इत्यर्थः ।।पञ्चमोऽनुवाकः परविद्योपासनाङ
+tarbhAvitaNyartho'yaM padiH . prapannaM mAM kuru ityarthaH ..paJcamo'nuvAkaH paravidyopAsanAGa
+
+--- Diff 15 ---
+ऽयं पदिः । प्रपन्नं मां कुरु इत्यर्थः ।।पञ्चमोऽनुवाकः परविद्योपासनाङ्गव्याहत्युपा
+'yaM padiH . prapannaM mAM kuru ityarthaH ..paJcamo'nuvAkaH paravidyopAsanAGgavyAhatyupA
+
+--- Diff 16 ---
+द द्वे च ।। ४ ।। ।। इति पञ्चमोऽनुवाकः ।।वक्ष्यमाणपरविद्याङ्गभूतव्याहृत्युपासनमुपद
+da dve ca .. 4 .. .. iti paJcamo'nuvAkaH ..vakSyamANaparavidyAGgabhUtavyAhRtyupAsanamupada
+
+--- Diff 17 ---
+र्वे च देवाः पूजां कुर्वन्ति इत्यर्थः ।।षष्ठोऽनुवाकः शिष्यं प्रति उपासनोपदेशः स य
+rve ca devAH pUjAM kurvanti ityarthaH ..SaSTho'nuvAkaH ziSyaM prati upAsanopadezaH sa ya
+
+--- Diff 18 ---
+्नौ प्रतितिष्ठति । भुव इति वायौ ।। १ ।। सुवरित्यादित्ये । मह इति ब्रह्मणि । आप्नोति स्वाराज्यम् । आप्नोति मनसस्पतिम् । वाक्पतिश्चक्षुष्पतिः । श्रोत्रपतिर्विज्ञानपतिः । एतत् ततो भवति । आकाशशरीरं ब्रह्म । सत्यात्मप्राणारामं मन आनन्दम् । शान्ति समृद्धममृतम् इति प्राचीनयोग्योपास्स्व ।। २ ।। वायावमृतमेकं च ।। ६ ।। ।। इति षष्ठोऽनुवाकः ।।अङ्गान्युपदिश्य परविद्यामाह स य एष इत्या
+nau pratitiSThati . bhuva iti vAyau .. 1 .. suvarityAditye . maha iti brahmaNi . Apnoti svArAjyam . Apnoti manasaspatim . vAkpatizcakSuSpatiH . zrotrapatirvijJAnapatiH . etat tato bhavati . AkAzazarIraM brahma . satyAtmaprANArAmaM mana Anandam . zAnti samRddhamamRtam iti prAcInayogyopAssva .. 2 .. vAyAvamRtamekaM ca .. 6 .. .. iti SaSTho'nuvAkaH ..aGgAnyupadizya paravidyAmAha sa ya eSa ityA
+
+--- Diff 19 ---
+ख्यातञ्च । अतो जीवविषयत्वशकां न कार्या । एवं परविद्यामुपदिश्य अचिरादिगतिं दर्शयति अन्तरेण इत्यादिना । तालुके जिह्वायां अन्तरेण मध्ये गोस्तन इव यो लम्बते सा इन्द्रस्य सन्निहितमुक्तैश्वर्यस्य जीवस्य योनिः निर्गममार्गः । यत्रासौ इति । यत्र यस्मिन्मार्गे केशयोः कः ब्रह्मा ईशः रुद्रः । क इति ब्रह्मणो नाम ईशोऽहं सर्वदेहिनाम् ह वं १३ ४८ इति केशवशब्दनिरुक्तौ तथा वर्णनात् तयोरन्त
+khyAtaJca . ato jIvaviSayatvazakAM na kAryA . evaM paravidyAmupadizya acirAdigatiM darzayati antareNa ityAdinA . tAluke jihvAyAM antareNa madhye gostana iva yo lambate sA indrasya sannihitamuktaizvaryasya jIvasya yoniH nirgamamArgaH . yatrAsau iti . yatra yasminmArge kezayoH kaH brahmA IzaH rudraH . ka iti brahmaNo nAma Izo'haM sarvadehinAm ha vaM 13 48 iti kezavazabdaniruktau tathA varNanAt tayoranta
+
+--- Diff 20 ---
+ोग्यनामानं शिष्यमनुशिष्टवान् इति शेषः ।।सप्तमोऽनुवाकः पाङ्क्तोपासनम् पृथिव्यन्तरि
+ogyanAmAnaM ziSyamanuziSTavAn iti zeSaH ..saptamo'nuvAkaH pAGktopAsanam pRthivyantari
+
+--- Diff 21 ---
+्वमेकञ्च ।। ७ ।। ।। इति सप्तमोऽनुवाकः ।।पृथिव्यन्तरिक्षम् इत्यादि । अधिभूतेषु पृथ
+vamekaJca .. 7 .. .. iti saptamo'nuvAkaH ..pRthivyantarikSam ityAdi . adhibhUteSu pRtha
+
+--- Diff 22 ---
+ट्कटमधिकृत्य कश्चिदृषिः अवोचदित्यर्थः ।।अष्टमोऽनुवाकः प्रणवप्रशंसा ओमिति ब्रह्म ।
+TkaTamadhikRtya kazcidRSiH avocadityarthaH ..aSTamo'nuvAkaH praNavaprazaMsA omiti brahma .
+
+--- Diff 23 ---
+्रमनुजानाति ।। ८ ।। इति अष्टमोऽनुवाकः ।।प्रणवं प्रशंसति ओमिति ब्रह्म इति । ब्रह्म
+ramanujAnAti .. 8 .. iti aSTamo'nuvAkaH ..praNavaM prazaMsati omiti brahma iti . brahma
+
+--- Diff 24 ---
+ैव वेदं प्राप्नोतीति दृष्टमेवेत्यर्थः ।।नवमोऽनुवाकः । स्वाध्यायप्रवचनादिविद्याङ्ग
+aiva vedaM prApnotIti dRSTamevetyarthaH ..navamo'nuvAkaH . svAdhyAyapravacanAdividyAGga
+
+--- Diff 25 ---
+ने च षट् च ।। ९ ।। ।। इति नवमोऽनुवाकः ।।ब्रह्मविद्याङ्गमनुष्ठेयं कर्माऽऽह ऋतञ्च इ
+ne ca SaT ca .. 9 .. .. iti navamo'nuvAkaH ..brahmavidyAGgamanuSTheyaM karmA''ha RtaJca i
+
+--- Diff 26 ---
+पः इति नाको मोद्गल्यो मन्यते इत्यर्थः ।।दशमोऽनुवाकः विद्याङ्गमन्त्रः अहंवृक्षस्य
+paH iti nAko modgalyo manyate ityarthaH ..dazamo'nuvAkaH vidyAGgamantraH ahaMvRkSasya
+
+--- Diff 27 ---
+ त्रिशंकोर्वेदानुवचनम् । अहँषट् ।। १० ।।विद्याङ्गतया जप्यमन्त्रमाह अहं इत्यादिना
+ trizaMkorvedAnuvacanam . aha~SaT .. 10 ..vidyAGgatayA japyamantramAha ahaM ityAdinA
+
+--- Diff 28 ---
+नम् त्रिशंकुदृष्टोऽयं मन्त्र इत्यर्थः ।।एकादशोऽनुवाकः आचार्यानुशासनम् वेदमनूच्याऽ
+nam trizaMkudRSTo'yaM mantra ityarthaH ..ekAdazo'nuvAkaH AcAryAnuzAsanam vedamanUcyA'
+
+--- Diff 29 ---
+ सप्त च ।। ११ ।। ।। इति एकादशोऽनुवाकः ।।वेदमनूच्य इति । वेदमध्याप्य आचार्यः शिष्य
+ sapta ca .. 11 .. .. iti ekAdazo'nuvAkaH ..vedamanUcya iti . vedamadhyApya AcAryaH ziSya
+
+--- Diff 30 ---
+त्यर्थः । आचार्याय इति । गुरवे दक्षिणां दत्वा पुत्रसन्तत्यविच्छेदाय भार्यामुद्वहे
+tyarthaH . AcAryAya iti . gurave dakSiNAM datvA putrasantatyavicchedAya bhAryAmudvahe
+
+--- Diff 31 ---
+ शब्दोऽवधारणे । एवमेव उपास्यमित्यर्थः ।।द्वादशोऽनुवाकः उपसंहारशान्तिपाठः शं नो मि
+ zabdo'vadhAraNe . evameva upAsyamityarthaH ..dvAdazo'nuvAkaH upasaMhArazAntipAThaH zaM no mi
+
+--- Diff 32 ---
+ोऽनुवाकः।। ।। इति शिक्षावल्ली समाप्ता ।।अधीतानामुपनिषदाम् अन्ते पठितव्यां शान्तिम
+o'nuvAkaH.. .. iti zikSAvallI samAptA ..adhItAnAmupaniSadAm ante paThitavyAM zAntima
+
+--- Diff 33 ---
+े भूतार्थत्वात् लुङ्प्रयोग इति विशेषः ।।।। इति तैत्तिरीयशिक्षावल्लीप्रकाशिका ।।
+e bhUtArthatvAt luGprayoga iti vizeSaH .... iti taittirIyazikSAvallIprakAzikA ..

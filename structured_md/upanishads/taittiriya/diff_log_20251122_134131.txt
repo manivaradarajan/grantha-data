@@ -1,0 +1,105 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:41:31
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/taittiriya/taittirIyopaniSat-bhRguvala.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/taittiriya/taittiriya-upanishad-rangaramanuja-03-01-01.md
+
+================================================================================
+
+Total differences found: 23
+
+================================================================================
+
+--- Diff 1 ---
+तपस्तत्वा ।। १ ।। ।। इति प्रथमोनुवाकः ।।अथ लक्षणान्तरमुखेन ब्रह्म प्रतिपादयितुम्
+tapastatvA .. 1 .. .. iti prathamonuvAkaH ..atha lakSaNAntaramukhena brahma pratipAdayitum
+
+--- Diff 2 ---
+त् तदेव साधनमिति ज्ञात्वा तपः कृत्वा ।।।द्वितीयोऽनुवाकः अन्ने ब्रह्मत्व परिज्ञानम
+t tadeva sAdhanamiti jJAtvA tapaH kRtvA ...dvitIyo'nuvAkaH anne brahmatva parijJAnama
+
+--- Diff 3 ---
+तपस्तप्त्वा ।। ।। इति द्वितीयोऽनुवाकः ।।प्रथमतः अन्नस्य सर्वभूतोत्पत्त्यादिकारणत्
+tapastaptvA .. .. iti dvitIyo'nuvAkaH ..prathamataH annasya sarvabhUtotpattyAdikAraNat
+
+--- Diff 4 ---
+ स तपस्तप्त्वा इत्यादि । स्पष्टोऽर्थः ।।तृतीयोऽनुवाकः प्राणे ब्रह्मत्वपरिज्ञानम्
+ sa tapastaptvA ityAdi . spaSTo'rthaH ..tRtIyo'nuvAkaH prANe brahmatvaparijJAnam
+
+--- Diff 5 ---
+ स तपस्तप्त्वा ।। ॥ इति तृतीयोऽनुवाकः ।।स्पष्टोऽर्थः ।।चतुर्थोऽनुवाकः मनसि ब्रह्म
+ sa tapastaptvA .. .. iti tRtIyo'nuvAkaH ..spaSTo'rthaH ..caturtho'nuvAkaH manasi brahma
+
+--- Diff 6 ---
+।। ॥ इति तृतीयोऽनुवाकः ।।स्पष्टोऽर्थः ।।चतुर्थोऽनुवाकः मनसि ब्रह्मत्वज्ञानम् मनो
+.. .. iti tRtIyo'nuvAkaH ..spaSTo'rthaH ..caturtho'nuvAkaH manasi brahmatvajJAnam mano
+
+--- Diff 7 ---
+ तपस्तप्त्वा ।। ।। इति चतुर्थोऽनुवाकः ।।स्पष्टोऽर्थः ।।पञ्चमोऽनुवाकः विज्ञानं ब्र
+ tapastaptvA .. .. iti caturtho'nuvAkaH ..spaSTo'rthaH ..paJcamo'nuvAkaH vijJAnaM bra
+
+--- Diff 8 ---
+ ।। इति चतुर्थोऽनुवाकः ।।स्पष्टोऽर्थः ।।पञ्चमोऽनुवाकः विज्ञानं ब्रह्म इति परिज्ञा
+ .. iti caturtho'nuvAkaH ..spaSTo'rthaH ..paJcamo'nuvAkaH vijJAnaM brahma iti parijJA
+
+--- Diff 9 ---
+त । स तपस्तत्वा । ।। इति पञ्चमोनुवाकः ।।स्पष्टोऽर्थः ।।षष्ठोऽनुवाकः ब्रह्मविद्याफ
+ta . sa tapastatvA . .. iti paJcamonuvAkaH ..spaSTo'rthaH ..SaSTho'nuvAkaH brahmavidyApha
+
+--- Diff 10 ---
+ । ।। इति पञ्चमोनुवाकः ।।स्पष्टोऽर्थः ।।षष्ठोऽनुवाकः ब्रह्मविद्याफलम् आनन्दो ब्रह
+ . .. iti paJcamonuvAkaH ..spaSTo'rthaH ..SaSTho'nuvAkaH brahmavidyAphalam Anando braha
+
+--- Diff 11 ---
+महान् कीर्त्या ।। ।। इति षष्टोऽनुवाकः ।।सैषा भार्गवी इति । भृगवे वरुणेन प्रोक्ता
+mahAn kIrtyA .. .. iti SaSTo'nuvAkaH ..saiSA bhArgavI iti . bhRgave varuNena proktA
+
+--- Diff 12 ---
+ फलमाह स य एवं वेद इति । स्पष्टोऽर्थः ।।सप्तमोऽनुवाकः ब्रह्मविद्यांगतया अनुष्ठेया
+ phalamAha sa ya evaM veda iti . spaSTo'rthaH ..saptamo'nuvAkaH brahmavidyAMgatayA anuSTheyA
+
+--- Diff 13 ---
+हान् कीर्त्या ।। ।। इति सप्तमोऽनुवाकः ।।एतद्विद्याङ्गं व्रतमाह अन्नं न निन्द्यात्
+hAn kIrtyA .. .. iti saptamo'nuvAkaH ..etadvidyAGgaM vratamAha annaM na nindyAt
+
+--- Diff 14 ---
+तत्फलञ्चाह प्राणो वा अन्नम् इत्यादिना ।।अष्टमोऽनुवाकः अन्ननिन्दानिषेधः अन्नं न पर
+tatphalaJcAha prANo vA annam ityAdinA ..aSTamo'nuvAkaH annanindAniSedhaH annaM na para
+
+--- Diff 15 ---
+हान् कीर्त्या ।। ।। इति अष्टमोऽनुवाकः ।।न परिचक्षीत । पात्रस्थम् अन्नं न निराकुर्
+hAn kIrtyA .. .. iti aSTamo'nuvAkaH ..na paricakSIta . pAtrastham annaM na nirAkur
+
+--- Diff 16 ---
+्रस्थम् अन्नं न निराकुर्यात् इत्यर्थः ।।नवमोऽनुवाकः अन्नं बहु कुर्वीत । तद्व्रतम्
+rastham annaM na nirAkuryAt ityarthaH ..navamo'nuvAkaH annaM bahu kurvIta . tadvratam
+
+--- Diff 17 ---
+ महान् कीर्त्या ।। ।। इति नवमोऽनुवाकः ।।बहु कुर्वीति इति । अतिथ्यभ्यागतस्वजनपर्या
+ mahAn kIrtyA .. .. iti navamo'nuvAkaH ..bahu kurvIti iti . atithyabhyAgatasvajanaparyA
+
+--- Diff 18 ---
+्थः । अन्ने बहुमतिं कुर्यात् इत्यर्थः ।।दशमोऽनुवाकः अन्नदानमाहात्म्यम् न कञ्चन वस
+thaH . anne bahumatiM kuryAt ityarthaH ..dazamo'nuvAkaH annadAnamAhAtmyam na kaJcana vasa
+
+--- Diff 19 ---
+्धम् । अन्ततोऽस्मा अन्नँ राध्यते ।। १ ।।न कञ्चन वसतौ प्रत्याचक्षीत इति । स्वगृहे
+dham . antato'smA anna~ rAdhyate .. 1 ..na kaJcana vasatau pratyAcakSIta iti . svagRhe
+
+--- Diff 20 ---
+ं पुरुषे यश्चासावादित्ये । स एकः ।। ४ ।।क्षेम इति इत्यादि । क्षेमसाधनत्वात् वाचः
+M puruSe yazcAsAvAditye . sa ekaH .. 4 ..kSema iti ityAdi . kSemasAdhanatvAt vAcaH
+
+--- Diff 21 ---
+वनमभ्यभवा३म् । सुवर्णज्योती । य एवं वेद ।। ६ ।।इत्युपनिषत् । राध्यते विद्युति मानवान् भ
+vanamabhyabhavA3m . suvarNajyotI . ya evaM veda .. 6 ..ityupaniSat . rAdhyate vidyuti mAnavAn bha
+
+--- Diff 22 ---
+णज्योती । य एवं वेद ।। ६ ।।इत्युपनिषत् । राध्यते विद्युति मानवान् भवत्येको हा३वु य एवं व
+NajyotI . ya evaM veda .. 6 ..ityupaniSat . rAdhyate vidyuti mAnavAn bhavatyeko hA3vu ya evaM va
+
+--- Diff 23 ---
+ समाप्ता । समाप्ता च तैत्तिरीयोपनिषत् ।।स यः इत्यादि । पूर्ववदर्थः । एतत् वक्ष्यम
+ samAptA . samAptA ca taittirIyopaniSat ..sa yaH ityAdi . pUrvavadarthaH . etat vakSyama

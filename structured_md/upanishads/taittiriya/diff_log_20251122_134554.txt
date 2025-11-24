@@ -1,0 +1,177 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:45:54
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/taittiriya/taittirIyopaniSat-Anandava.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/taittiriya/taittiriya-upanishad-rangaramanuja-02-01-01.md
+
+================================================================================
+
+Total differences found: 41
+
+================================================================================
+
+--- Diff 1 ---
+्विषावहै । ओं शान्तिः शान्तिः शान्तिः ।। १ ।।सह नाववतु इत्यादि । अधीतो मन्त्रः नौ ग
+viSAvahai . oM zAntiH zAntiH zAntiH .. 1 ..saha nAvavatu ityAdi . adhIto mantraH nau ga
+
+--- Diff 2 ---
+वहै । ओं शान्तिः शान्तिः शान्तिः ।। १ ।।सह नाववतु इत्यादि । अधीतो मन्त्रः नौ गुरु
+vahai . oM zAntiH zAntiH zAntiH .. 1 ..saha nAvavatu ityAdi . adhIto mantraH nau guru
+
+--- Diff 3 ---
+्तिः शान्तिः दोषान्तराणामस्त्विति शेषः।।प्रथमोऽनुवाकः आनन्दमयविद्या ब्रह्मविदाप्न
+tiH zAntiH doSAntarANAmastviti zeSaH..prathamo'nuvAkaH AnandamayavidyA brahmavidApna
+
+--- Diff 4 ---
+ । यो वेद निहितं गुहायां परमे व्योमन् ।। १ ।। सोऽश्नुते सर्वान् कामान्थ्सह । ब्रह्म
+ . yo veda nihitaM guhAyAM parame vyoman .. 1 .. so'znute sarvAn kAmAnthsaha . brahma
+
+--- Diff 5 ---
+धयः । ओषधीभ्योऽन्नम् । अन्नात् पुरुषः ।। २ ।। स वा एष पुरुषोऽन्नरसमयः । तस्येदमेव श
+dhayaH . oSadhIbhyo'nnam . annAt puruSaH .. 2 .. sa vA eSa puruSo'nnarasamayaH . tasyedameva za
+
+--- Diff 6 ---
+ुच्छं प्रतिष्ठा । तदप्येष श्लोको भवति ।। ३ ।। ।। इति प्रथमोऽनुवाकः ।।परमतत्त्वहितपु
+ucchaM pratiSThA . tadapyeSa zloko bhavati .. 3 .. .. iti prathamo'nuvAkaH ..paramatattvahitapu
+
+--- Diff 7 ---
+ोको भवति ।। ३ ।। ।। इति प्रथमोऽनुवाकः ।।परमतत्त्वहितपुरुषार्थप्रतिपादिका आनन्दवल्
+oko bhavati .. 3 .. .. iti prathamo'nuvAkaH ..paramatattvahitapuruSArthapratipAdikA Anandaval
+
+--- Diff 8 ---
+ तद्गुणानां फलदशायां प्राधान्यं प्रतिपादयितुं ब्रह्मणा सह इति निर्देशः । सहयुक्ते
+ tadguNAnAM phaladazAyAM prAdhAnyaM pratipAdayituM brahmaNA saha iti nirdezaH . sahayukte
+
+--- Diff 9 ---
+अयं मन्त्ररूप श्लोकोऽपि भवति इत्यर्थः ।।द्वितीयोऽनुवाकः अन्नमयकोशमहिमा अन्नाद्वै
+ayaM mantrarUpa zloko'pi bhavati ityarthaH ..dvitIyo'nuvAkaH annamayakozamahimA annAdvai
+
+--- Diff 10 ---
+नां ज्येष्ठम् । तस्मात्सर्वौषधमुच्यते ।। १ ।। अन्नाद्भूतानि जायन्ते । जातान्यन्नेन
+nAM jyeSTham . tasmAtsarvauSadhamucyate .. 1 .. annAdbhUtAni jAyante . jAtAnyannena
+
+--- Diff 11 ---
+ तस्य पुरुषविधताम् । अन्वयं पुरुषविधः ।। २ ।। तस्य प्राण एव शिरः । व्यानो दक्षिण पक
+ tasya puruSavidhatAm . anvayaM puruSavidhaH .. 2 .. tasya prANa eva ziraH . vyAno dakSiNa paka
+
+--- Diff 12 ---
+ुच्छं प्रतिष्ठा । तदप्येष श्लोको भवति ।। ३ ।। ।। इति द्वितीयोऽनुवाकः ।।अन्नाद्वा इत
+ucchaM pratiSThA . tadapyeSa zloko bhavati .. 3 .. .. iti dvitIyo'nuvAkaH ..annAdvA ita
+
+--- Diff 13 ---
+ो भवति ।। ३ ।। ।। इति द्वितीयोऽनुवाकः ।।अन्नाद्वा इति । पृथिव्यां वर्तमानाः सर्वा
+o bhavati .. 3 .. .. iti dvitIyo'nuvAkaH ..annAdvA iti . pRthivyAM vartamAnAH sarvA
+
+--- Diff 14 ---
+्य प्रतिष्ठितत्वात् तस्याः पुच्छत्वम् ।।तृतीयोऽनुवाकः प्राणमयकोशमीमांसा प्राणं दे
+ya pratiSThitatvAt tasyAH pucchatvam ..tRtIyo'nuvAkaH prANamayakozamImAMsA prANaM de
+
+--- Diff 15 ---
+ष श्लोको भवति ।। ।। इति तृतीयोऽनुवाकः ।।प्राणम् इति । देव मनुष्य पशवः प्राणम् अनु
+Sa zloko bhavati .. .. iti tRtIyo'nuvAkaH ..prANam iti . deva manuSya pazavaH prANam anu
+
+--- Diff 16 ---
+शब्दः तज्जन्यज्ञानहेतुभूतमनोव्यापारपरः।।चतुर्थोऽनुवाकः विज्ञानमयकोशमीमांसा यतो वा
+zabdaH tajjanyajJAnahetubhUtamanovyApAraparaH..caturtho'nuvAkaH vijJAnamayakozamImAMsA yato vA
+
+--- Diff 17 ---
+वस्य । तस्माद्वा एतस्मात् पुरुषविध एव ।। १ ।। तस्य पुरुषविधताम् । अन्वयं पुरुषविधः
+vasya . tasmAdvA etasmAt puruSavidha eva .. 1 .. tasya puruSavidhatAm . anvayaM puruSavidhaH
+
+--- Diff 18 ---
+ुच्छं प्रतिष्ठा । तदप्येष श्लोको भवति ।। २ ।। ।। इति चतुर्थोऽनुवाकः ।।यतो वाचो इति
+ucchaM pratiSThA . tadapyeSa zloko bhavati .. 2 .. .. iti caturtho'nuvAkaH ..yato vAco iti
+
+--- Diff 19 ---
+को भवति ।। २ ।। ।। इति चतुर्थोऽनुवाकः ।।यतो वाचो इति । यस्मात् ब्रह्मानन्दात् वाङ
+ko bhavati .. 2 .. .. iti caturtho'nuvAkaH ..yato vAco iti . yasmAt brahmAnandAt vAGa
+
+--- Diff 20 ---
+्वात् प्रकरणस्य इति भाष्यस्य न विरोधः ।।पञ्चमोऽनुवाकः विज्ञानमयकोशविचारः विज्ञानं
+vAt prakaraNasya iti bhASyasya na virodhaH ..paJcamo'nuvAkaH vijJAnamayakozavicAraH vijJAnaM
+
+--- Diff 21 ---
+ि । तस्यैष एव शारीर आत्मा यः पूर्वस्य ।। १ ।। तस्माद्वा एतस्माद्विज्ञानमयात् अन्योऽ
+i . tasyaiSa eva zArIra AtmA yaH pUrvasya .. 1 .. tasmAdvA etasmAdvijJAnamayAt anyo'
+
+--- Diff 22 ---
+ष श्लोको भवति ।। ।। इति पञ्चमोऽनुवाकः ।।विज्ञानम् इति । अत्र विज्ञानमयशब्दनिर्दिष
+Sa zloko bhavati .. .. iti paJcamo'nuvAkaH ..vijJAnam iti . atra vijJAnamayazabdanirdiSa
+
+--- Diff 23 ---
+अतः अत्र आनन्दमय एव प्रक्रान्तं ब्रह्म ।षष्ठोऽनुवाकः ब्रह्मप्रतिपादनम् असन्नेव स
+ataH atra Anandamaya eva prakrAntaM brahma .SaSTho'nuvAkaH brahmapratipAdanam asanneva sa
+
+--- Diff 24 ---
+ गच्छति । आहो विद्वानमुं लोकं प्रेत्य ।। १ ।। कश्चित्समश्नुता उ ।। सोऽकामयत । बहुस्
+ gacchati . Aho vidvAnamuM lokaM pretya .. 1 .. kazcitsamaznutA u .. so'kAmayata . bahus
+
+--- Diff 25 ---
+्वा । तदेवानुप्राविशत् । तदनुप्रविश्य ।। २ ।। सञ्च त्यञ्चाभवत् । निरुक्तं चानिरुक्त
+vA . tadevAnuprAvizat . tadanupravizya .. 2 .. saJca tyaJcAbhavat . niruktaM cAnirukta
+
+--- Diff 26 ---
+त्यमित्याचक्षते । तदप्येष श्लोको भवति ।। ३ ।। ।। इति षष्ठोऽनुवाकः ।।असन्नेव इति । प
+tyamityAcakSate . tadapyeSa zloko bhavati .. 3 .. .. iti SaSTho'nuvAkaH ..asanneva iti . pa
+
+--- Diff 27 ---
+लोको भवति ।। ३ ।। ।। इति षष्ठोऽनुवाकः ।।असन्नेव इति । पूर्वेषु चतुर्षु पर्यायेषु
+loko bhavati .. 3 .. .. iti SaSTho'nuvAkaH ..asanneva iti . pUrveSu caturSu paryAyeSu
+
+--- Diff 28 ---
+ुः वि पु २ १२ ३८ इत्याचक्षते इत्यर्थः ।।सप्तमोऽनुवाकः अभयप्रतिष्ठा असद्वा इदमग्र
+uH vi pu 2 12 38 ityAcakSate ityarthaH ..saptamo'nuvAkaH abhayapratiSThA asadvA idamagra
+
+--- Diff 29 ---
+आनन्दो न स्यात् । एष ह्येवाऽऽनन्दयाति ।। १ ।। यदा ह्येवैष एतस्मिन्नदृश्येऽनात्म्येऽ
+Anando na syAt . eSa hyevA''nandayAti .. 1 .. yadA hyevaiSa etasminnadRzye'nAtmye'
+
+--- Diff 30 ---
+िदुषोऽमन्वानस्य । तदप्येष श्लोको भवति ।। २ ।।तस्माद्वा इत्यादि । इदम् स्थूलचेतनाचेत
+iduSo'manvAnasya . tadapyeSa zloko bhavati .. 2 ..tasmAdvA ityAdi . idam sthUlacetanAceta
+
+--- Diff 31 ---
+ऽमन्वानस्य । तदप्येष श्लोको भवति ।। २ ।।तस्माद्वा इत्यादि । इदम् स्थूलचेतनाचेतनशर
+'manvAnasya . tadapyeSa zloko bhavati .. 2 ..tasmAdvA ityAdi . idam sthUlacetanAcetanazara
+
+--- Diff 32 ---
+िमुखजनसंवासवैशसम् ।। कात्यायनवचनम् इति ।अष्टमोऽनुवाकः आनन्दमीमांसा भीषाऽस्माद् वा
+imukhajanasaMvAsavaizasam .. kAtyAyanavacanam iti .aSTamo'nuvAkaH AnandamImAMsA bhISA'smAd vA
+
+--- Diff 33 ---
+्य पूर्णा स्यात् । स एको मानुष आनन्दः ।। १ ।। ते ये शतं मानुषा आनन्दाः । स एको मनुष
+ya pUrNA syAt . sa eko mAnuSa AnandaH .. 1 .. te ye zataM mAnuSA AnandAH . sa eko manuSa
+
+--- Diff 34 ---
+े ये शतं पितृणां चिरलोकलोकानामानन्दाः ।। २ ।। स एक आजानजानां देवानामानन्दः । श्रोत्
+e ye zataM pitRNAM ciralokalokAnAmAnandAH .. 2 .. sa eka AjAnajAnAM devAnAmAnandaH . zrot
+
+--- Diff 35 ---
+चाकामहतस्य । ते ये शतं देवानामानन्दाः ।। ३ ।। स एको इन्द्रस्यानन्दः । श्रोत्रियस्य
+cAkAmahatasya . te ye zataM devAnAmAnandAH .. 3 .. sa eko indrasyAnandaH . zrotriyasya
+
+--- Diff 36 ---
+रजापतेरानन्दाः । स एको ब्रह्मण आनन्दः ।। ४ ।। श्रोत्रियस्य चाकामहतस्य । स यश्चायं प
+rajApaterAnandAH . sa eko brahmaNa AnandaH .. 4 .. zrotriyasya cAkAmahatasya . sa yazcAyaM pa
+
+--- Diff 37 ---
+ष श्लोको भवति ।। ।। इति अष्टमोऽनुवाकः ।।भीषाऽस्मात् इति । अग्नीन्द्रसूर्यप्रमुखाः
+Sa zloko bhavati .. .. iti aSTamo'nuvAkaH ..bhISA'smAt iti . agnIndrasUryapramukhAH
+
+--- Diff 38 ---
+र्थे साक्षित्वेन श्लोकं पठति तदपि इति ।।नवमोऽनुवाकः यतो वाचो निवर्तन्ते । अप्राप्
+rthe sAkSitvena zlokaM paThati tadapi iti ..navamo'nuvAkaH yato vAco nivartante . aprAp
+
+--- Diff 39 ---
+ोऽनुवाकः ।। ।। इति आनन्दवल्ली समाप्ता ।।यतो वाचः इति । वाङ्मनसी आनन्दस्य इयत्तालक
+o'nuvAkaH .. .. iti AnandavallI samAptA ..yato vAcaH iti . vAGmanasI Anandasya iyattAlaka
+
+--- Diff 40 ---
+ीर्णा। तदनन्तरञ्च प्राणमयात् अन्तरे मनोमये ततो विज्ञानमये। ततः आनन्दमये प्रक्रान्त
+IrNA. tadanantaraJca prANamayAt antare manomaye tato vijJAnamaye. tataH Anandamaye prakrAnta
+
+--- Diff 41 ---
+रिकसत्यत्वस्यापि अभावप्रसङ्गात् इत्याहुः।। इति आनन्दवल्लीप्रकाशिका ।।
+rikasatyatvasyApi abhAvaprasaGgAt ityAhuH.. iti AnandavallIprakAzikA ..
