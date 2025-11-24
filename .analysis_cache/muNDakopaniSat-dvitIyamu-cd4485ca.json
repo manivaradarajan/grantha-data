@@ -1,6 +1,6 @@
 {
   "file_hash": "f5b993795b1df18eafd2e6c3fb856717c2e2d4f3a727d642be9e97c54607c40c",
-  "timestamp": "2025-11-21T11:56:59.369102",
+  "timestamp": "2025-11-22T00:29:36.907054",
   "analysis": {
     "metadata": {
       "canonical_title": "मुण्डकोपनिषत्",
@@ -8,14 +8,13 @@
       "commentary_id": "rangaramanuja-muni-prakashika",
       "commentary_title": "प्रकाशिका",
       "commentator": "श्रीरङ्गरामानुजमुनिः",
-      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता",
-      "structure_type": "khanda"
+      "authored_colophon": "श्रीरङ्गरामानुजमुनिभिः विरचिता"
     },
     "structural_analysis": {
       "starting_id": "2.1.1",
-      "context_justification": "The document contains the header 'द्वितीयमुण्डके' (Second Mundaka) and 'प्रथमखण्डः' (First Khanda). The first numbered unit is Mantra 1 (।।१।।). Therefore, the starting coordinate is 2.1.1.",
+      "context_justification": "The text contains headers for Mundaka 2 (द्वितीय) and Khanda 1 (प्रथम). The first parsed unit is Mantra 1. Thus, the start ID is 2.1.1.",
       "suggested_filename": "mundaka-upanishad-rangaramanuja-02-01-01",
-      "filename_justification": "Combines the grantha ID ('mundaka-upanishad'), a slug for the commentator ('rangaramanuja'), and the zero-padded, hyphen-separated starting ID ('02-01-01') for a unique, sortable filename.",
+      "filename_justification": "Combines the grantha ID, a slug for the commentary author, and the zero-padded start ID (02-01-01) for unique, sortable file naming.",
       "structure_levels": {
         "key": "Mundaka",
         "scriptNames": {
@@ -41,38 +40,38 @@
     "chunking_strategy": {
       "proposed_strategy": {
         "name": "Validated Group by Character Count",
-        "description": "This strategy combines consecutive Khandas, strictly ensuring no chunk exceeds the safety character limit of 125,000 characters. Since the provided text contains only a single Khanda and is well below the limit, it constitutes a single chunk.",
+        "description": "This strategy combines consecutive Khandas, strictly ensuring no chunk exceeds the safety character limit. The plan is regenerated internally if any proposed chunk is too large.",
         "safety_character_limit": 125000
       },
       "execution_plan": [
         {
           "chunk_id": 1,
-          "description": "The entire provided text, which constitutes the first Khanda of the second Mundaka, including its commentary.",
-          "start_marker": "**मुण्डकोपनिषत्**",
+          "description": "The complete text of Mundaka 2, Khanda 1.",
+          "start_marker": "**द्वितीयमुण्डके** **प्रथमखण्डः**",
           "end_marker": "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।",
-          "estimated_character_count": 11539
+          "estimated_character_count": 10235
         }
       ]
     },
     "parsing_instructions": {
       "recommended_unit": "Khanda",
-      "justification": "The Mundaka is primarily divided into Khandas, which are the main semantic and structural sections containing a group of mantras and their corresponding commentary.",
-      "numbering_capture_strategy": "Capture the Devanagari numeral(s) from the mantra lines, which are enclosed in double dandas, e.g., '।।१।।' or '।। १० ।।'.",
+      "justification": "The Mundaka is primarily divided into Khandas, which are the main semantic and structural sections of the text.",
+      "numbering_capture_strategy": "Extract the Devanagari numeral enclosed within double dandas at the end of the mantra line (e.g., ।।१।।, ।। २ ।।).",
       "start_pattern": {
-        "description": "A new Khanda begins with a bolded heading indicating the Mundaka number and the Khanda number.",
+        "description": "A new Khanda begins with a bolded heading indicating its Mundaka and Khanda number.",
         "examples": [
           "**द्वितीयमुण्डके** **प्रथमखण्डः**"
         ],
         "regex": "\\*\\*([\\u0900-\\u097F]+मुण्डके)\\*\\*\\s*\\*\\*([\\u0900-\\u097F]+खण्डः)\\*\\*"
       },
       "end_pattern": {
-        "description": "The end of a Khanda's commentary is marked by a specific colophon line.",
+        "description": "The end of a Khanda is marked by a concluding colophon line specifying the Mundaka and Khanda of the commentary.",
         "examples": [
           "।। इति द्वितीयमुण्डके प्रथमखण्डप्रकाशिका ।।"
         ],
-        "regex": "।।\\s*इति\\s*[\\u0900-\\u097F]+मुण्डके\\s*[\\u0900-\\u097F]+खण्डप्रकाशिका\\s*।।"
+        "regex": "।।\\s*इति\\s*.*?खण्डप्रकाशिका\\s*।।"
       },
-      "pre_content_handling": "The initial text 'मुण्डकोपनिषत्' should be treated as global document metadata. Thematic sub-headings within square brackets, such as '[अक्षरात् जगत्सृष्टिः]', should be parsed as topic markers associated with the subsequent group of mantras."
+      "pre_content_handling": "Parse any unnumbered thematic headings (e.g., **[अक्षरात् जगत्सृष्टिः]**) and prefatory phrases (e.g., **तदेतत् सत्यम् ।।**) that appear after the Khanda start pattern but before the first numbered mantra as introductory content for that Khanda."
     }
   },
   "version": "1.0"

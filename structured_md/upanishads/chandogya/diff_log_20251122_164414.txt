@@ -1,0 +1,1762 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)
+================================================================================
+
+Generated: 2025-11-22 16:44:14
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/chandogya/chAndogyopaniSat-prathama.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/chandogya/chhandogya-upanishad-rangaramanuja-01-01-01.md
+
+================================================================================
+
+Total differences found: 161
+
+================================================================================
+
+--- Diff 1 ---
+CONTEXT (with surrounding text):
+ः एवं फलमित्यादिकथनम् क्रियते इति शेषः ।एषां भूतानां पृथिवी रसः पृथिव्या आपो रसः
+H evaM phalamityAdikathanam kriyate iti zeSaH .eSAM bhUtAnAM pRthivI rasaH pRthivyA Apo rasaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 2 ---
+CONTEXT (with surrounding text):
+तत्परिणामत्वात् इति भावः ।ओषधीनां पुरुषोरसः। अन्नपरिणामत्वात् शरीरस्य इति भावः ।प
+tatpariNAmatvAt iti bhAvaH .oSadhInAM puruSorasaH. annapariNAmatvAt zarIrasya iti bhAvaH .pa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 3 ---
+CONTEXT (with surrounding text):
+३ ।। प्र स एषः परमः। स एषः ओङ्कारः रसतमःपरमः भूतादीनाम् उत्तरोत्तररसानाम् अतिशयित
+3 .. pra sa eSaH paramaH. sa eSaH oGkAraH rasatamaHparamaH bhUtAdInAm uttarottararasAnAm atizayita
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 4 ---
+CONTEXT (with surrounding text):
+कतमः कतम उद्गीथ इति विमृष्टंभवति ।। ४ ।।प्र वाच ऋग्रसः ऋच सामरस साम्न उद्गीथोरसः
+katamaH katama udgItha iti vimRSTaMbhavati .. 4 ..pra vAca RgrasaH Rca sAmarasa sAmna udgIthorasaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 5 ---
+CONTEXT (with surrounding text):
+िकतमत् कतमत् सामइत्यादौ द्रष्टव्यम् ।इतिविमृष्टं भवति। विमर्शः कृतो भवतीत्यर्थः ।
+ikatamat katamat sAma_ityAdau draSTavyam .itivimRSTaM bhavati. vimarzaH kRto bhavatItyarthaH .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 6 ---
+CONTEXT (with surrounding text):
+सनस्य यजमानगतकामाप्तिः एव फलमित्यर्थः ।।तद्वा एतदनुज्ञाक्षरं यद्धि किञ्चानुजानात्
+sanasya yajamAnagatakAmAptiH eva phalamityarthaH ..tadvA etadanujJAkSaraM yaddhi kiJcAnujAnAt
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 7 ---
+CONTEXT (with surrounding text):
+ित्याश्रावयति ओमिति शँसति ओमित्युद्गायतिएतस्यैवाक्षरस्यापचित्यै महिना रसेन ।। ९ ।
+ityAzrAvayati omiti za~sati omityudgAyatietasyaivAkSarasyApacityai mahinA rasena .. 9 .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 8 ---
+CONTEXT (with surrounding text):
+मित्युद्गायतिएतस्यैवाक्षरस्यापचित्यै महिना रसेन ।। ९ ।।प्र उपास्यम् ओङ्कारं प्ररोच
+mityudgAyatietasyaivAkSarasyApacityai mahinA rasena .. 9 ..pra upAsyam oGkAraM praroca
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] म् (m)
+
+--- Diff 9 ---
+CONTEXT (with surrounding text):
+स्यैवाक्षरस्यापचित्यै महिना रसेन ।। ९ ।।प्र उपास्यम् ओङ्कारं प्ररोचनार्थं स्तौति
+syaivAkSarasyApacityai mahinA rasena .. 9 ..pra upAsyam oGkAraM prarocanArthaM stauti
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 10 ---
+CONTEXT (with surrounding text):
+द्धयोपनिषदा तदेव वीर्यवत्तरं भवति ।। इतिखल्वेतस्यैवाक्षरस्योपव्याख्यानं भवति ।। १
+ddhayopaniSadA tadeva vIryavattaraM bhavati .. itikhalvetasyaivAkSarasyopavyAkhyAnaM bhavati .. 1
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 11 ---
+CONTEXT (with surrounding text):
+तस्यैवाक्षरस्योपव्याख्यानं भवति ।। १० ।। ।। इति प्रथमः खण्डः ।। प्र ननु अनेवंविद्भिरपि कर्मणः अनुष्ठीयम
+tasyaivAkSarasyopavyAkhyAnaM bhavati .. 10 .. .. iti prathamaH khaNDaH .. pra nanu anevaMvidbhirapi karmaNaH anuSThIyama
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] प्रथमः (prathamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 12 ---
+CONTEXT (with surrounding text):
+ृतमनुसरामः ।। ।। इति प्रथमखण्डभाष्यम् ।। द्वितीयः खण्डः उद्गीथावयवे ओङ्कारे मुख्यप्राणदृष्टिः देवासुरा
+RtamanusarAmaH .. .. iti prathamakhaNDabhASyam .. dvitIyaH khaNDaH udgIthAvayave oGkAre mukhyaprANadRSTiH devAsurA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] प्रथमः (prathamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 13 ---
+CONTEXT (with surrounding text):
+्राणं उपायत्वेन स्वीकृतवन्तः इत्यर्थः ।।ते ह नासिक्यं प्राणमुद्गीथमुपासाञ्चक्रिरे
+rANaM upAyatvena svIkRtavantaH ityarthaH ..te ha nAsikyaM prANamudgIthamupAsAJcakrire
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 14 ---
+CONTEXT (with surrounding text):
+ नासिक्यः प्राणः पापविद्ध एव इत्यर्थः ।।अथ ह वाचमुद्गीथमुपासाञ्चक्रिरे ताँ हासुरा
+ nAsikyaH prANaH pApaviddha eva ityarthaH ..atha ha vAcamudgIthamupAsAJcakrire tA~ hAsurA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 15 ---
+CONTEXT (with surrounding text):
+ ।। प्र अथ ह वाचम् इत्यादि । पूर्ववत् ।।अथ ह चक्षुरुद्गीथमुपासाञ्चक्रिरे तद्धासुर
+ .. pra atha ha vAcam ityAdi . pUrvavat ..atha ha cakSurudgIthamupAsAJcakrire taddhAsura
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 16 ---
+CONTEXT (with surrounding text):
+ादि ।अदर्शनीयम् अमेध्यादिकम् इत्यर्थः ।।अथ ह श्रोत्रमुद्गीथमुपासाञ्चक्रिरे तद्धास
+Adi .adarzanIyam amedhyAdikam ityarthaH ..atha ha zrotramudgIthamupAsAJcakrire taddhAsa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 17 ---
+CONTEXT (with surrounding text):
+ेइत्यादि ।अश्रवणीयं पापवचनम् इत्यर्थः ।।अथ ह मन उद्गीथमुपासाञ्चक्रिरे तद्धासुराः
+eityAdi .azravaNIyaM pApavacanam ityarthaH ..atha ha mana udgIthamupAsAJcakrire taddhAsurAH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 18 ---
+CONTEXT (with surrounding text):
+प्राणः तमुद्गीथमुपासाञ्चक्रिरे तँ हासुराऋत्वा विदध्वँसुः यथाऽश्मानमाखणमृत्वा विध्
+prANaH tamudgIthamupAsAJcakrire ta~ hAsurARtvA vidadhva~suH yathA'zmAnamAkhaNamRtvA vidh
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 19 ---
+CONTEXT (with surrounding text):
+ विध्वँसते एवं हैव स विध्वँसते य एवंविदिपापं कामयते यश्चैनमभिदासति स एषोऽश्माखणः
+ vidhva~sate evaM haiva sa vidhva~sate ya evaMvidipApaM kAmayate yazcainamabhidAsati sa eSo'zmAkhaNaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 20 ---
+CONTEXT (with surrounding text):
+कलिङ्गनिर्दिष्टस्यापि स एष इति पुल्लिङ्गसामानाधिकरण्येन आखणशब्दस्य पुल्लिङ्गत्वोपप
+kaliGganirdiSTasyApi sa eSa iti pulliGgasAmAnAdhikaraNyena AkhaNazabdasya pulliGgatvopapa
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] सा (sA)
+
+--- Diff 21 ---
+CONTEXT (with surrounding text):
+िङ्गनिर्दिष्टस्यापि स एष इति पुल्लिङ्गसामानाधिकरण्येन आखणशब्दस्य पुल्लिङ्गत्वोपपत
+iGganirdiSTasyApi sa eSa iti pulliGgasAmAnAdhikaraNyena AkhaNazabdasya pulliGgatvopapata
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 22 ---
+CONTEXT (with surrounding text):
+िजानाति अपहतपाप्मा ह्येषः । तेन यदश्नातियत्पिबति तेनेतरान् प्राणानवति एतमु एवान्त
+ijAnAti apahatapApmA hyeSaH . tena yadaznAtiyatpibati tenetarAn prANAnavati etamu evAnta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 23 ---
+CONTEXT (with surrounding text):
+ति परोक्षप्रियत्वात् देवानाम् इति भावः ।तेन तँ ह बृहस्पतिरुद्गीथमुपासाञ्चक्रे । ए
+ti parokSapriyatvAt devAnAm iti bhAvaH .tena ta~ ha bRhaspatirudgIthamupAsAJcakre . e
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 24 ---
+CONTEXT (with surrounding text):
+ास्यस्यैव बृहस्पतित्वं मन्यन्त इत्यर्थः।तेन तँ हायास्य उद्गीथमुपासाञ्चक्रे एतमु ए
+Asyasyaiva bRhaspatitvaM manyanta ityarthaH.tena ta~ hAyAsya udgIthamupAsAJcakre etamu e
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 25 ---
+CONTEXT (with surrounding text):
+स्यात् मुखात्अयते निर्गच्छति इत्यर्थः ।।तेन तँ ह बको दाल्भ्यो विदाञ्चकार । स ह नै
+syAt mukhAtayate nirgacchati ityarthaH ..tena ta~ ha bako dAlbhyo vidAJcakAra . sa ha nai
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 26 ---
+CONTEXT (with surrounding text):
+भवति य एतदेवं विद्वानक्षरमुद्गीथमुपास्तेइत्यध्यात्मम् ।। १४ ।। ।। इति द्वितीयः खण
+bhavati ya etadevaM vidvAnakSaramudgIthamupAsteityadhyAtmam .. 14 .. .. iti dvitIyaH khaNa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 27 ---
+CONTEXT (with surrounding text):
+्षरमुद्गीथमुपास्तेइत्यध्यात्मम् ।। १४ ।। ।। इति द्वितीयः खण्डः ।। प्र आगाता उपास्ते।एवम् उपासको यजमानकामा
+SaramudgIthamupAsteityadhyAtmam .. 14 .. .. iti dvitIyaH khaNDaH .. pra AgAtA upAste.evam upAsako yajamAnakAmA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] द्वितीयः (dvitIyaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 28 ---
+CONTEXT (with surrounding text):
+िद्याभेद इति स्थितम् । प्रकृतमनुसरामः ।।।। इति द्वितीयखण्डभाष्यम् ।। तृतीयः खण्डः आदित्यदृष्ट्या उद्गीथोपा
+idyAbheda iti sthitam . prakRtamanusarAmaH .... iti dvitIyakhaNDabhASyam .. tRtIyaH khaNDaH AdityadRSTyA udgIthopA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] द्वितीयः (dvitIyaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 29 ---
+CONTEXT (with surrounding text):
+मुपासीत यद्वै प्राणिति स प्राणः यदपानितिसोऽपानः। अथ यः प्राणापानयोः सन्धिः स व्या
+mupAsIta yadvai prANiti sa prANaH yadapAnitiso'pAnaH. atha yaH prANApAnayoH sandhiH sa vyA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 30 ---
+CONTEXT (with surrounding text):
+ानवृत्त्या वाचम् अभिव्याहरति इत्यर्थः ।।या वाक् सर्क् तस्मादप्राणन् अनपानन् ऋचमभि
+AnavRttyA vAcam abhivyAharati ityarthaH ..yA vAk sark tasmAdaprANan anapAnan Rcamabhi
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 31 ---
+CONTEXT (with surrounding text):
+्राणन् अनपानन् ऋचमभिव्याहरति । यर्क् तत्साम तस्मादप्राणन् अनपानन् साम गायति यत् स
+rANan anapAnan RcamabhivyAharati . yark tatsAma tasmAdaprANan anapAnan sAma gAyati yat sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 32 ---
+CONTEXT (with surrounding text):
+य वागृक्सामोद्गीथानाञ्च ऐक्यमित्यर्थः ।।अतो यान्यन्यानि वीर्यवन्ति कर्माणि यथा अग
+ya vAgRksAmodgIthAnAJca aikyamityarthaH ..ato yAnyanyAni vIryavanti karmANi yathA aga
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 33 ---
+CONTEXT (with surrounding text):
+ात् व्यानमेव उद्गीथम् उपासीत इत्यर्थः ।।अथ खलूद्गीथाक्षराण्युपासीत उद्गीथ इति । प
+At vyAnameva udgItham upAsIta ityarthaH ..atha khalUdgIthAkSarANyupAsIta udgItha iti . pa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 34 ---
+CONTEXT (with surrounding text):
+ुपासीत उद्गीथ इति । प्राण एव उत् प्राणेनह्युत्तिष्ठति । वाग्गीः वाचो ह गिर इत्याच
+upAsIta udgItha iti . prANa eva ut prANenahyuttiSThati . vAggIH vAco ha gira ityAca
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 35 ---
+CONTEXT (with surrounding text):
+जुर्वेदो गी ऋग्वेदः थम् दुग्धेऽस्मै वाग्दोहम् यो वाचो दोहः अन्नवान् अन्नादो भवति
+jurvedo gI RgvedaH tham dugdhe'smai vAgdoham yo vAco dohaH annavAn annAdo bhavati
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 36 ---
+CONTEXT (with surrounding text):
+िरुपसरणानीत्युपासीत येन साम्ना स्तोष्यन्स्यात् तत् सामोपधावेत् ।। ८ ।। प्र अथ उपा
+irupasaraNAnItyupAsIta yena sAmnA stoSyansyAt tat sAmopadhAvet .. 8 .. pra atha upA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 37 ---
+CONTEXT (with surrounding text):
+् । उपासीत इत्यर्थः । शिष्टं स्पष्टम् ।।यस्यामृचि तामृचम् । यदार्षेयम् तमृषिम् या
+ . upAsIta ityarthaH . ziSTaM spaSTam ..yasyAmRci tAmRcam . yadArSeyam tamRSim yA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 38 ---
+CONTEXT (with surrounding text):
+्तयेत् इत्यर्थः ।यां धावेत्। स्पष्टम् ।।येनच्छन्दसा स्तोष्यन् स्यात् तच्छन्द उपधा
+tayet ityarthaH .yAM dhAvet. spaSTam ..yenacchandasA stoSyan syAt tacchanda upadhA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 39 ---
+CONTEXT (with surrounding text):
+रिवृत्पञ्चदशादिलक्षण ऋक्सङ्ख्याविशेषः ।।यां दिशमभिष्टोष्यन् स्यात् तां दिशमुपधावे
+rivRtpaJcadazAdilakSaNa RksaGkhyAvizeSaH ..yAM dizamabhiSToSyan syAt tAM dizamupadhAve
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 40 ---
+CONTEXT (with surrounding text):
+् स्यात् तां दिशं च ध्यायेत् इत्यर्थः ।।आत्मानमन्तत उपसृत्य स्तुवीत कामं ध्यायन्
+ syAt tAM dizaM ca dhyAyet ityarthaH ..AtmAnamantata upasRtya stuvIta kAmaM dhyAyan
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 41 ---
+CONTEXT (with surrounding text):
+ः स्तुवीतेति यत्कामः स्तुवीतेति ।। १२ ।। ।। इति तृतीयः खण्डः ।। प्र आत्मानं अप्रमत्तः। उक्तं सर्वं ध्या
+H stuvIteti yatkAmaH stuvIteti .. 12 .. .. iti tRtIyaH khaNDaH .. pra AtmAnaM apramattaH. uktaM sarvaM dhyA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] तृतीयः (tRtIyaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 42 ---
+CONTEXT (with surrounding text):
+्पवमानादिस्तोत्रमारभेत इत्यर्थः ।अभ्याशोह स्तुवीतेति। यत्कामनया एवंवित् स्तोत्रं
+pavamAnAdistotramArabheta ityarthaH .abhyAzoha stuvIteti. yatkAmanayA evaMvit stotraM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 43 ---
+CONTEXT (with surrounding text):
+र्थः । द्विरुक्तिः विद्यासमाप्त्यर्था ।।चतुर्थः खण्डः प्रणवप्रशंसा ओमित्येतदक्षरमुद्गीथमुपासीत ओमिति ह्य
+rthaH . dviruktiH vidyAsamAptyarthA ..caturthaH khaNDaH praNavaprazaMsA omityetadakSaramudgIthamupAsIta omiti hya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] तृतीयः (tRtIyaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 44 ---
+CONTEXT (with surrounding text):
+ोपासनया अन्तरितत्वात् इति द्रष्टव्यम् ।।देवा वै मृत्योर्बिभ्यतस्त्रयीं विद्यां प्
+opAsanayA antaritatvAt iti draSTavyam ..devA vai mRtyorbibhyatastrayIM vidyAM p
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 45 ---
+CONTEXT (with surrounding text):
+ विद्यां प्राविशन् ते छन्दोभिरच्छादयन् ।यदेभिरच्छादयन् तत् छन्दसां छन्दस्त्वम् ।।
+ vidyAM prAvizan te chandobhiracchAdayan .yadebhiracchAdayan tat chandasAM chandastvam ..
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 46 ---
+CONTEXT (with surrounding text):
+ वैदिकमन्त्राणां छन्दस्त्वम् इत्यर्थः ।।तानु तत्र मृत्युः यथा मत्स्यमुदके परिपश्य
+ vaidikamantrANAM chandastvam ityarthaH ..tAnu tatra mRtyuH yathA matsyamudake paripazya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 47 ---
+CONTEXT (with surrounding text):
+मुदके परिपश्येत् एवं पर्यपश्यदृचि साम्नियजुषि । ते नु विदित्वो र्ध्वा ऋचः साम्नो
+mudake paripazyet evaM paryapazyadRci sAmniyajuSi . te nu viditvo rdhvA RcaH sAmno
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 48 ---
+CONTEXT (with surrounding text):
+्राविशन् उपासितुं प्रवृत्ताः इत्यर्थः ।।यदा वा ऋचमाप्नोति ओमित्येवातिस्वरति एवँ स
+rAvizan upAsituM pravRttAH ityarthaH ..yadA vA RcamApnoti omityevAtisvarati eva~ sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 49 ---
+CONTEXT (with surrounding text):
+्रणौति एतदेवाक्षरँ स्वरममृतमभयं प्रविशतितत्प्रविश्य यदमृता देवा तदमृतो भवति ।। ५
+raNauti etadevAkSara~ svaramamRtamabhayaM pravizatitatpravizya yadamRtA devA tadamRto bhavati .. 5
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 50 ---
+CONTEXT (with surrounding text):
+प्रविश्य यदमृता देवा तदमृतो भवति ।। ५ ।। ।। इति चतुर्थः खण्डः ।। प्र स य प्रणौति इत्यादि। य एतदेवाक्षरं
+pravizya yadamRtA devA tadamRto bhavati .. 5 .. .. iti caturthaH khaNDaH .. pra sa ya praNauti ityAdi. ya etadevAkSaraM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] चतुर्थः (caturthaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 51 ---
+CONTEXT (with surrounding text):
+मृतत्वादियुक्ताः तादृशः भवति इत्यर्थः ।।।। इति चतुर्थखण्डभाष्यम् ।। पञ्चमः खण्डः प्रणबोद्गीथयोः एकत्वविज्
+mRtatvAdiyuktAH tAdRzaH bhavati ityarthaH .... iti caturthakhaNDabhASyam .. paJcamaH khaNDaH praNabodgIthayoH ekatvavij
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] चतुर्थः (caturthaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 52 ---
+CONTEXT (with surrounding text):
+सविता प्रणवः अत एव उद्गीथश्च इति भावः ।।एतमु एवाहमभ्यगासिषम् तस्मान्मम त्वमेकोऽसि
+savitA praNavaH ata eva udgIthazca iti bhAvaH ..etamu evAhamabhyagAsiSam tasmAnmama tvameko'si
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 53 ---
+CONTEXT (with surrounding text):
+वायं मुख्यः प्राणः तमुद्गीथमुपासीत ओमितिह्येष स्वरन्नेति ।। ३ ।। प्र अथाध्यात्मम्
+vAyaM mukhyaH prANaH tamudgIthamupAsIta omitihyeSa svaranneti .. 3 .. pra athAdhyAtmam
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 54 ---
+CONTEXT (with surrounding text):
+ात्प्राणःएव प्रणवः उद्गीथश्च इत्यर्थः ।।एतमु एवाहमभ्यगासिषम् तस्मान्मम त्वमेकोऽसि
+AtprANaHeva praNavaH udgIthazca ityarthaH ..etamu evAhamabhyagAsiSam tasmAnmama tvameko'si
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 55 ---
+CONTEXT (with surrounding text):
+िषम् तस्मान्मम त्वमेकोऽसि इति ह कौषीतकिःपुत्रमुवाच प्राणाँस्त्वं भूमानमभिगायतात्
+iSam tasmAnmama tvameko'si iti ha kauSItakiHputramuvAca prANA~stvaM bhUmAnamabhigAyatAt
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 56 ---
+CONTEXT (with surrounding text):
+ यः प्रणवः स उद्गीथ इति होतृषदनाद्धैवापिदुरुद्गीथमनुसमाहरतीति अनुसमाहरतीति ।। ५ ।
+ yaH praNavaH sa udgItha iti hotRSadanAddhaivApidurudgIthamanusamAharatIti anusamAharatIti .. 5 .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 57 ---
+CONTEXT (with surrounding text):
+रुद्गीथमनुसमाहरतीति अनुसमाहरतीति ।। ५ ।। ।। इति पञ्चमः खण्डः ।। प्र उक्तप्रणवोद्गीथैकत्वविज्ञानफलमाह अथ
+rudgIthamanusamAharatIti anusamAharatIti .. 5 .. .. iti paJcamaH khaNDaH .. pra uktapraNavodgIthaikatvavijJAnaphalamAha atha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] पञ्चमः (paJcamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 58 ---
+CONTEXT (with surrounding text):
+ अन्ये तु अन्यथात्वं शब्दात् ब्र सू ३ ३ ६ इत्यत्र भाष्यस्य अन्वारुह्योक्तित्वात् क
+ anye tu anyathAtvaM zabdAt bra sU 3 3 6 ityatra bhASyasya anvAruhyoktitvAt ka
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Trailing whitespace: 1 character(s) - ' '
+
+  DELETED from source (1 words):
+    [1] ६ (6)
+
+--- Diff 59 ---
+CONTEXT (with surrounding text):
+कृदभिमतम् इति वदन्ति । प्रकृतमनुसरामः ।।।। इति पञ्चमखण्डभाष्यम् ।। षष्ठः खण्डः इयमेवर्क् । अग्निस्साम तद
+kRdabhimatam iti vadanti . prakRtamanusarAmaH .... iti paJcamakhaNDabhASyam .. SaSThaH khaNDaH iyamevark . agnissAma tada
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] पञ्चमः (paJcamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 60 ---
+CONTEXT (with surrounding text):
+न सामव्यवहारो लोके प्रवर्तते इत्यर्थः ।।अन्तरिक्षमेवर्क् वायुस्साम तदेतदेतस्यामृच
+na sAmavyavahAro loke pravartate ityarthaH ..antarikSamevark vAyussAma tadetadetasyAmRca
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 61 ---
+CONTEXT (with surrounding text):
+षमेवर्ग्वायुस्सामइत्यादेः पूर्ववदर्थः ।।अथ यदेतदादित्यस्य शुक्लं भाः सैवर्क् अथ य
+SamevargvAyussAma_ityAdeH pUrvavadarthaH ..atha yadetadAdityasya zuklaM bhAH saivark atha ya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 62 ---
+CONTEXT (with surrounding text):
+ृच्यध्यूढँ साम गीयते अथ यदेवैतदादित्यस्यशुक्लं भाः सैव सा अथ यन्नीलं पर कृष्णम् त
+RcyadhyUDha~ sAma gIyate atha yadevaitadAdityasyazuklaM bhAH saiva sA atha yannIlaM para kRSNam ta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 63 ---
+CONTEXT (with surrounding text):
+ीयश्मश्रुकेशः रमणीयसर्वावयवः इत्यर्थः ।।तस्य यथा कप्यासं पुण्डरीकामेवमक्षिणी तस्य
+IyazmazrukezaH ramaNIyasarvAvayavaH ityarthaH ..tasya yathA kapyAsaM puNDarIkAmevamakSiNI tasya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 64 ---
+CONTEXT (with surrounding text):
+ं पुण्डरीकामेवमक्षिणी तस्योदिति नाम स एषसर्वेभ्यः पाप्मभ्य उदितः उदेति ह वै सर्वे
+M puNDarIkAmevamakSiNI tasyoditi nAma sa eSasarvebhyaH pApmabhya uditaH udeti ha vai sarve
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 65 ---
+CONTEXT (with surrounding text):
+नस्य फलमाहउदेति वेदइति । स्पष्टोऽर्थः ।।तस्य ऋक् च साम च गेष्णौ तस्मादुद्गीथः तस्
+nasya phalamAha_udeti veda_iti . spaSTo'rthaH ..tasya Rk ca sAma ca geSNau tasmAdudgIthaH tas
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 66 ---
+CONTEXT (with surrounding text):
+्मादुद्गीथः तस्मात्त्वेवोद्गाता एतस्य हिगाता । स एष ये चामुष्मात् पराञ्चो लोकाः त
+mAdudgIthaH tasmAttvevodgAtA etasya higAtA . sa eSa ye cAmuSmAt parAJco lokAH ta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 67 ---
+CONTEXT (with surrounding text):
+पराञ्चो लोकाः तेषां च ईष्टे देवकामानां चइत्यधिदैवतम् ।। ८ ।। प्र तस्यर्क् च साम च
+parAJco lokAH teSAM ca ISTe devakAmAnAM ca_ityadhidaivatam .. 8 .. pra tasyark ca sAma ca
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 68 ---
+CONTEXT (with surrounding text):
+यधिदैवतम्। उपासनम् उपदिष्टम् इति शेषः ।।।। इति षष्ठखण्डभाष्यम् ।। सप्तमः खण्डः अध
+yadhidaivatam. upAsanam upadiSTam iti zeSaH .... iti SaSThakhaNDabhASyam .. saptamaH khaNDaH adha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 69 ---
+CONTEXT (with surrounding text):
+ढँसाम गीयते चक्षुरेव सा आत्माऽमः तत् साम।।२।। श्रोत्रमेवर्क् मनस्साम तदेतदेतस्याम
+Dha~sAma gIyate cakSureva sA AtmA'maH tat sAma..2.. zrotramevark manassAma tadetadetasyAma
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 70 ---
+CONTEXT (with surrounding text):
+ुरुषो दृश्यते सैवर्क् तत् साम तदुक्थम् ।तद्यजुः तद्ब्रह्म । तस्यैतस्य तदेव रूपम्
+uruSo dRzyate saivark tat sAma taduktham .tadyajuH tadbrahma . tasyaitasya tadeva rUpam
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 71 ---
+CONTEXT (with surrounding text):
+व रूपम् यदमुष्य रूपम् यावमुष्य गेष्णौ तौगेष्णौ यन्नाम तन्नाम ।। ५ ।। प्र एवमृचि व
+va rUpam yadamuSya rUpam yAvamuSya geSNau taugeSNau yannAma tannAma .. 5 .. pra evamRci va
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 72 ---
+CONTEXT (with surrounding text):
+गेष्णौ च तानि सर्वाणि भवन्ति इत्यर्थः ।।स एष ये चैतस्मादर्वाञ्चो लोकाः तेषां च ईष
+geSNau ca tAni sarvANi bhavanti ityarthaH ..sa eSa ye caitasmAdarvAJco lokAH teSAM ca ISa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 73 ---
+CONTEXT (with surrounding text):
+ाः तेषां च ईष्टे मनुष्यकामानां चेति तद्यइमे वीणायां गायन्ति एतं ते गायन्ति तस्मात
+AH teSAM ca ISTe manuSyakAmAnAM ceti tadya_ime vINAyAM gAyanti etaM te gAyanti tasmAta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 74 ---
+CONTEXT (with surrounding text):
+ सामगायत्युभौ स गायति । सोऽमुनैव स एष येचामुष्मात्पराञ्चो लोकास्ताँश्चाप्नोति देव
+ sAmagAyatyubhau sa gAyati . so'munaiva sa eSa yecAmuSmAtparAJco lokAstA~zcApnoti deva
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 75 ---
+CONTEXT (with surrounding text):
+कास्ताँश्चाप्नोति मनुष्यकामाँश्च तस्मादुहैवंविदुद्गाता ब्रूयात् ।। ८ ।। प्र अथाने
+kAstA~zcApnoti manuSyakAmA~zca tasmAduhaivaMvidudgAtA brUyAt .. 8 .. pra athAne
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 76 ---
+CONTEXT (with surrounding text):
+यायुक्त उद्गाता यजमानं प्रति ब्रूयात् ।।कं ते काममागायानीति । एष ह्येव कामागानस्य
+yAyukta udgAtA yajamAnaM prati brUyAt ..kaM te kAmamAgAyAnIti . eSa hyeva kAmAgAnasya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 77 ---
+CONTEXT (with surrounding text):
+ ह्येव कामागानस्येष्टे य एतदेवं विद्वान्साम गायति साम गायति ।। ९ ।। ।। इति सप्तमः
+ hyeva kAmAgAnasyeSTe ya etadevaM vidvAnsAma gAyati sAma gAyati .. 9 .. .. iti saptamaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 78 ---
+CONTEXT (with surrounding text):
+देवं विद्वान्साम गायति साम गायति ।। ९ ।। ।। इति सप्तमः खण्डः ।। प्र किमिति इत्यत्राह कं ते काममागायानिइ
+devaM vidvAnsAma gAyati sAma gAyati .. 9 .. .. iti saptamaH khaNDaH .. pra kimiti ityatrAha kaM te kAmamAgAyAnii
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] सप्तमः (saptamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 79 ---
+CONTEXT (with surrounding text):
+न परमात्मेति स्थितम् । प्रकृतमनुसरामः ।।।। इति सप्तमखण्डभाष्यम् ।। अष्टमः खण्डः उद्गीथाक्षरस्य परोवरीयस्
+na paramAtmeti sthitam . prakRtamanusarAmaH .... iti saptamakhaNDabhASyam .. aSTamaH khaNDaH udgIthAkSarasya parovarIyas
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] सप्तमः (saptamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 80 ---
+CONTEXT (with surrounding text):
+ उद्गीथे वै कुशलाः स्मः हन्तोद्गीथे कथांवदाम इति ।। १ ।। प्र प्रकारान्तरेण उपासनं
+ udgIthe vai kuzalAH smaH hantodgIthe kathAMvadAma iti .. 1 .. pra prakArAntareNa upAsanaM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 81 ---
+CONTEXT (with surrounding text):
+परस्परं प्रवर्तयामः इत्यूचुः इत्यर्थः ।।तथेति ह समुपविविशुः । स ह प्रवाहणो जैबलिर
+parasparaM pravartayAmaH ityUcuH ityarthaH ..tatheti ha samupavivizuH . sa ha pravAhaNo jaibalira
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 82 ---
+CONTEXT (with surrounding text):
+कथा कुरुताम् । तत्प्रकारं श्रोष्यामीति ।स ह शिलकश्शालावत्यश्चैकितायनं दालभ्यमुवाच
+kathA kurutAm . tatprakAraM zroSyAmIti .sa ha zilakazzAlAvatyazcaikitAyanaM dAlabhyamuvAca
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 83 ---
+CONTEXT (with surrounding text):
+तायनं दालभ्यमुवाच हन्त त्वा पृच्छानीति ।पृच्छेति होवाच ।। ३ ।। प्र स पृच्छानीति।
+tAyanaM dAlabhyamuvAca hanta tvA pRcchAnIti .pRccheti hovAca .. 3 .. pra sa pRcchAnIti.
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 84 ---
+CONTEXT (with surrounding text):
+। तत्र दालभ्यस्य प्रत्युक्तिमाह पृच्छेतिहोवाचइति । स्पष्टम् ।।का साम्नो गतिरिति ।
+. tatra dAlabhyasya pratyuktimAha pRcchetihovAca_iti . spaSTam ..kA sAmno gatiriti .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 85 ---
+CONTEXT (with surrounding text):
+युक्तिमाह पृच्छेतिहोवाचइति । स्पष्टम् ।।का साम्नो गतिरिति । स्वर इति होवाच । स्वर
+yuktimAha pRcchetihovAca_iti . spaSTam ..kA sAmno gatiriti . svara iti hovAca . svara
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 86 ---
+CONTEXT (with surrounding text):
+ाप्यम् इत्यर्थः । सः दाल्भ्यः स्वर इति हउवाच प्रत्युवाच । स्वरात्मकत्वात् साम्नः
+Apyam ityarthaH . saH dAlbhyaH svara iti ha_uvAca pratyuvAca . svarAtmakatvAt sAmnaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 87 ---
+CONTEXT (with surrounding text):
+एवम् उत्तरत्रापि औचित्यम् अनुसन्धेयम् ।।अपां का गतिरिति । असौ लोक इति होवाच । अमु
+evam uttaratrApi aucityam anusandheyam ..apAM kA gatiriti . asau loka iti hovAca . amu
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 88 ---
+CONTEXT (with surrounding text):
+ि । असौ लोक इति होवाच । अमुष्य लोकस्य कागतिरिति । न स्वर्गं लोकमतिनयेदिति होवाच स
+i . asau loka iti hovAca . amuSya lokasya kAgatiriti . na svargaM lokamatinayediti hovAca sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 89 ---
+CONTEXT (with surrounding text):
+गत्वेन साम्नः स्तूयमानत्वात् इत्यर्थः ।।तँ ह शिलकश्शालावत्यश्चैकितायनं दालभ्यमुवा
+gatvena sAmnaH stUyamAnatvAt ityarthaH ..ta~ ha zilakazzAlAvatyazcaikitAyanaM dAlabhyamuvA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 90 ---
+CONTEXT (with surrounding text):
+तायनं दालभ्यमुवाच अप्रतिष्ठितं वै किल तेदालभ्य साम यस्त्वेतर्हि ब्रूयात् मूर्धा त
+tAyanaM dAlabhyamuvAca apratiSThitaM vai kila tedAlabhya sAma yastvetarhi brUyAt mUrdhA ta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 91 ---
+CONTEXT (with surrounding text):
+साम यस्त्वेतर्हि ब्रूयात् मूर्धा ते विपतिष्यतीति मूर्धा ते विपतेदिति ।। ६ ॥ प्र तँ
+sAma yastvetarhi brUyAt mUrdhA te vipatiSyatIti mUrdhA te vipatediti .. 6 .. pra ta~
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ्त (ta)
+
+--- Diff 92 ---
+CONTEXT (with surrounding text):
+े विपतिष्यतीति मूर्धा ते विपतेदिति ।। ६ ॥ प्र तँ ह विपतेदिति। हे दाल्भ्य अप्रतिष्
+e vipatiSyatIti mUrdhA te vipatediti .. 6 .. pra ta~ ha vipatediti. he dAlbhya apratiS
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] ॥ (..)
+
+--- Diff 93 ---
+CONTEXT (with surrounding text):
+ विपतिष्यतीति मूर्धा ते विपतेदिति ।। ६ ॥ प्र तँ ह विपतेदिति। हे दाल्भ्य अप्रतिष्ठि
+ vipatiSyatIti mUrdhA te vipatediti .. 6 .. pra ta~ ha vipatediti. he dAlbhya apratiSThi
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ।। (..)
+
+--- Diff 94 ---
+CONTEXT (with surrounding text):
+ अतो जीवसि इति शिलक उक्तवान् इत्यर्थः ।।हन्ताहमेतद् भगवत्तो वेदानीति । विद्धीति ह
+ ato jIvasi iti zilaka uktavAn ityarthaH ..hantAhametad bhagavatto vedAnIti . viddhIti ha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 95 ---
+CONTEXT (with surrounding text):
+नीति । विद्धीति होवाच । अमुष्य लोकस्य कागतिरिति । अयं लोक इति होवाच । अस्य लोकस्य
+nIti . viddhIti hovAca . amuSya lokasya kAgatiriti . ayaM loka iti hovAca . asya lokasya
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 96 ---
+CONTEXT (with surrounding text):
+ । अस्य लोकस्य का गतिरिति । न प्रतिष्ठांलोकमतिनयेदिति होवाच प्रतिष्ठां वयं लोकं स
+ . asya lokasya kA gatiriti . na pratiSThAMlokamatinayediti hovAca pratiSThAM vayaM lokaM sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 97 ---
+CONTEXT (with surrounding text):
+कं सामाभिसँस्थापयामः । प्रतिष्ठासँस्तावँहि सामेति ।। ७ ॥ प्र हन्त विद्धीति होवाच।
+kaM sAmAbhisa~sthApayAmaH . pratiSThAsa~stAva~hi sAmeti .. 7 .. pra hanta viddhIti hovAca.
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 98 ---
+CONTEXT (with surrounding text):
+पयामः । प्रतिष्ठासँस्तावँहि सामेति ।। ७ ॥ प्र हन्त विद्धीति होवाच। तर्हि अहं सामग
+payAmaH . pratiSThAsa~stAva~hi sAmeti .. 7 .. pra hanta viddhIti hovAca. tarhi ahaM sAmaga
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] ॥ (..)
+
+--- Diff 99 ---
+CONTEXT (with surrounding text):
+यामः । प्रतिष्ठासँस्तावँहि सामेति ।। ७ ॥ प्र हन्त विद्धीति होवाच। तर्हि अहं सामगति
+yAmaH . pratiSThAsa~stAva~hi sAmeti .. 7 .. pra hanta viddhIti hovAca. tarhi ahaM sAmagati
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ।। (..)
+
+--- Diff 100 ---
+CONTEXT (with surrounding text):
+ मूर्धा ते विपतेदिति ।। हन्ताहमेतद्भगवतोवेदानीति । विद्धीति होवाच ।। ।। इति अष्टम
+ mUrdhA te vipatediti .. hantAhametadbhagavatovedAnIti . viddhIti hovAca .. .. iti aSTama
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 101 ---
+CONTEXT (with surrounding text):
+हमेतद्भगवतोवेदानीति । विद्धीति होवाच ।। ।। इति अष्टमः खण्डः ।। प्र तं ह प्रवाहणो जैबलिरुवाच उक्तवान
+hametadbhagavatovedAnIti . viddhIti hovAca .. .. iti aSTamaH khaNDaH .. pra taM ha pravAhaNo jaibaliruvAca uktavAna
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (4 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] अष्टमः (aSTamaH)
+    [4] खण्डः (khaNDaH)
+
+--- Diff 102 ---
+CONTEXT (with surrounding text):
+ । विद्धीति होवाच ।। ।। इति अष्टमः खण्डः ।। प्र तं ह प्रवाहणो जैबलिरुवाच उक्तवान्
+ . viddhIti hovAca .. .. iti aSTamaH khaNDaH .. pra taM ha pravAhaNo jaibaliruvAca uktavAn
+
+WORD-BY-WORD BREAKDOWN:
+  INSERTED in destination (1 words):
+    [1] ८ (8)
+
+--- Diff 103 ---
+CONTEXT (with surrounding text):
+ आह विद्धीतिराजा उवाच इत्यर्थः ।। ।। इति अष्टमखण्डभाष्यम् ।। नवमः खण्डः अस्य लोकस्य का गतिरिति आकाश इति
+ Aha viddhItirAjA uvAca ityarthaH .. .. iti aSTamakhaNDabhASyam .. navamaH khaNDaH asya lokasya kA gatiriti AkAza iti
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] अष्टमः (aSTamaH)
+    [2] खण्डः (khaNDaH)
+    [3] ।। (..)
+    [4] ।। (..)
+    [5] इति (iti)
+
+--- Diff 104 ---
+CONTEXT (with surrounding text):
+य का गतिरिति आकाश इति होवाच सर्वाणि ह वाइमानि भूतान्याकाशादेव समुत्पद्यन्ते आकाशं
+ya kA gatiriti AkAza iti hovAca sarvANi ha vAimAni bhUtAnyAkAzAdeva samutpadyante AkAzaM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 105 ---
+CONTEXT (with surrounding text):
+ आकाशं प्रत्यस्तं यन्ति आकाशो ह्येवैभ्योज्यायान् आकाश परायणम् ।। १ ।। प्र एवम् अन
+ AkAzaM pratyastaM yanti AkAzo hyevaibhyojyAyAn AkAza parAyaNam .. 1 .. pra evam ana
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 106 ---
+CONTEXT (with surrounding text):
+षोऽनन्तः । परोवरीयो हास्य भवति परोवरीयसोह लोकाञ्जयति य एतदेवं विद्वान् परोवरीयाँस
+So'nantaH . parovarIyo hAsya bhavati parovarIyasoha lokAJjayati ya etadevaM vidvAn parovarIyA~sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 107 ---
+CONTEXT (with surrounding text):
+यायोक्त्वोवाच यावन्त एनं प्रजायामुद्गीथंवेदिष्यन्ते परोवरीयो हैभ्यस्तावदस्मिन् लो
+yAyoktvovAca yAvanta enaM prajAyAmudgIthaMvediSyante parovarIyo haibhyastAvadasmin lo
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 108 ---
+CONTEXT (with surrounding text):
+त्कृष्टमिहलोके जीवनं भविष्यतिइत्यर्थः ।।तथाऽमुष्मिन् लोके लोक इति । स य एतमेवं वि
+tkRSTamihaloke jIvanaM bhaviSyatiityarthaH ..tathA'muSmin loke loka iti . sa ya etamevaM vi
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 109 ---
+CONTEXT (with surrounding text):
+। स य एतमेवं विद्वान् उपास्ते परोवरीय एवहास्यास्मिन् लोके जीवनं भवति तथाऽमुष्मिन्
+. sa ya etamevaM vidvAn upAste parovarIya evahAsyAsmin loke jIvanaM bhavati tathA'muSmin
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 110 ---
+CONTEXT (with surrounding text):
+ष्मिन् लोके लोक इति लोके लोक इति ।। ४ ।। ।। इति नवमः खण्डः ।। प्र तथाऽमुष्मिन् लोके लोकइति । तथा अमुष
+Smin loke loka iti loke loka iti .. 4 .. .. iti navamaH khaNDaH .. pra tathA'muSmin loke loka_iti . tathA amuSa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] नवमः (navamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 111 ---
+CONTEXT (with surrounding text):
+्रष्टव्यमिति स्थितम् । प्रकृतमनुसरामः ।।।। इति नवमखण्डभाष्यम् ।। दशमः खण्डः प्रस्तावोद्गीथप्रतिहारभक्त
+raSTavyamiti sthitam . prakRtamanusarAmaH .... iti navamakhaNDabhASyam .. dazamaH khaNDaH prastAvodgIthapratihArabhakta
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] नवमः (navamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 112 ---
+CONTEXT (with surrounding text):
+ा सह जायया उपस्तिर्ह चाक्रायण इभ्यग्रामेप्रद्राणक उवास ।। १ ।। प्र प्रस्तावोद्गीथ
+A saha jAyayA upastirha cAkrAyaNa ibhyagrAmepradrANaka uvAsa .. 1 .. pra prastAvodgItha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 113 ---
+CONTEXT (with surrounding text):
+करोमि इति उषस्तिम् इभ्य उवाच इत्यर्थः ।।एतेषां मे देहीति होवाच तानस्मै प्रददौ हन्
+karomi iti uSastim ibhya uvAca ityarthaH ..eteSAM me dehIti hovAca tAnasmai pradadau han
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 114 ---
+CONTEXT (with surrounding text):
+मै प्रददौ हन्तानुपानमित्युच्छिष्टं वै मेपीतँ स्यादिति होवाच ।। ३ ।। प्र एतेषां हो
+mai pradadau hantAnupAnamityucchiSTaM vai mepIta~ syAditi hovAca .. 3 .. pra eteSAM ho
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 115 ---
+CONTEXT (with surrounding text):
+ोदकपानं मेस्यादितिप्रत्युवाच इत्यर्थः ।।न स्विदेतेऽप्युच्छिष्टा इति । न वा अजीविष
+odakapAnaM mesyAditipratyuvAca ityarthaH ..na svidete'pyucchiSTA iti . na vA ajIviSa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 116 ---
+CONTEXT (with surrounding text):
+ितं निषिद्धं स्यात् इत्युवाच इत्यर्थः ।।स ह खादित्वाऽतिशेषान् जायाया आजहार । साऽग
+itaM niSiddhaM syAt ityuvAca ityarthaH ..sa ha khAditvA'tizeSAn jAyAyA AjahAra . sA'ga
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 117 ---
+CONTEXT (with surrounding text):
+शेषान् जायाया आजहार । साऽग्र एव सुभिक्षाबभूव तान् प्रतिगृह्य निदधौ ।। ५ ।। प्र स
+zeSAn jAyAyA AjahAra . sA'gra eva subhikSAbabhUva tAn pratigRhya nidadhau .. 5 .. pra sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 118 ---
+CONTEXT (with surrounding text):
+त्युः हस्तात् प्रतिगृह्य निक्षिप्तवती ।।स ह प्रातः संजिहान उवाच यद्वतान्नस्य लभेम
+tyuH hastAt pratigRhya nikSiptavatI ..sa ha prAtaH saMjihAna uvAca yadvatAnnasya labhema
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 119 ---
+CONTEXT (with surrounding text):
+ि इति मा प्रार्थयेत इति उवाच इत्यर्थः ।।तं जायोवाच हन्त पते इम एव कुल्माषा इति ।
+i iti mA prArthayeta iti uvAca ityarthaH ..taM jAyovAca hanta pate ima eva kulmASA iti .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 120 ---
+CONTEXT (with surrounding text):
+व कुल्माषा इति । तान् खादित्वाऽमुं यज्ञंविततमेयाय ।। ७ ।। प्र तं कुल्माषा इति । ह
+va kulmASA iti . tAn khAditvA'muM yajJaMvitatameyAya .. 7 .. pra taM kulmASA iti . ha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 121 ---
+CONTEXT (with surrounding text):
+िततं विस्तीर्णं यज्ञं गतवान् इत्यर्थः ।।तत्रोद्गातृनास्तावे स्तोष्यमाणानुपोपविवेश
+itataM vistIrNaM yajJaM gatavAn ityarthaH ..tatrodgAtRnAstAve stoSyamANAnupopaviveza
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 122 ---
+CONTEXT (with surrounding text):
+हर्तृणां समीपे उपविष्टवान् इत्यर्थः ।स हप्रस्तोतारमुवाच।सः उषस्तिः प्रस्तोतारं प्
+hartRNAM samIpe upaviSTavAn ityarthaH .sa haprastotAramuvAca.saH uSastiH prastotAraM p
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 123 ---
+CONTEXT (with surrounding text):
+्रस्तोतारं प्रति इत्थम् उवाच इत्यर्थः ।।प्रस्तोतर्या देवता प्रस्तावमन्वायत्ता ताञ
+rastotAraM prati ittham uvAca ityarthaH ..prastotaryA devatA prastAvamanvAyattA tAJa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 124 ---
+CONTEXT (with surrounding text):
+ा ताञ्चेदविद्वान् प्रस्तोष्यसि मूर्धा तेविपतिष्यतीति ।। ९ ।। प्र उक्तिमेवाह प्रस्
+A tAJcedavidvAn prastoSyasi mUrdhA tevipatiSyatIti .. 9 .. pra uktimevAha pras
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 125 ---
+CONTEXT (with surrounding text):
+िधौ अविदुषः कर्माधिकारो नास्तीति भावः ।।एवमेवोद्गातारमुवाच उद्गातर्या देवतोद्गीथम
+idhau aviduSaH karmAdhikAro nAstIti bhAvaH ..evamevodgAtAramuvAca udgAtaryA devatodgIthama
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 126 ---
+CONTEXT (with surrounding text):
+्गास्यसि मूर्धा ते विपतिष्यतीति ।। १० ।। ।। इति दशमः खण्डः ।। प्र एवमेव उवाचइत्यादि । पूर्ववदर्थः ।।ए
+gAsyasi mUrdhA te vipatiSyatIti .. 10 .. .. iti dazamaH khaNDaH .. pra evameva uvAca_ityAdi . pUrvavadarthaH ..e
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] दशमः (dazamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 127 ---
+CONTEXT (with surrounding text):
+। प्र एवमेव उवाचइत्यादि । पूर्ववदर्थः ।।एवमेव प्रतिहर्तारमुवाच प्रतिहर्तर्या देवत
+. pra evameva uvAca_ityAdi . pUrvavadarthaH ..evameva pratihartAramuvAca pratihartaryA devata
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 128 ---
+CONTEXT (with surrounding text):
+्धपातभयात् तूष्णीमेव स्थिताः इत्यर्थः ।।।। इति दशमखण्डभाष्यम् ।। एकादशः खण्डः प्रस्तावप्रतिहारयोः उपास
+dhapAtabhayAt tUSNImeva sthitAH ityarthaH .... iti dazamakhaNDabhASyam .. ekAdazaH khaNDaH prastAvapratihArayoH upAsa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] दशमः (dazamaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 129 ---
+CONTEXT (with surrounding text):
+गवन्तं वा अहं विविदिषाणीति । उपस्तिरस्मिचाक्रायण इति होवाच ।। १ ।। प्र अथ विविदिष
+gavantaM vA ahaM vividiSANIti . upastirasmicAkrAyaNa iti hovAca .. 1 .. pra atha vividiSa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 130 ---
+CONTEXT (with surrounding text):
+ उवाच। स ऋषिः इति शेषः । स्पष्टोऽर्थः ।।स होवाच भगवन्तं वा अहमेभिः सर्वेरार्त्विज
+ uvAca. sa RSiH iti zeSaH . spaSTo'rthaH ..sa hovAca bhagavantaM vA ahamebhiH sarverArtvija
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 131 ---
+CONTEXT (with surrounding text):
+ः सर्वेरार्त्विज्यैः पर्येषिषम् भगवतो वाअहम विद्या ऽन्यानवृषि ।। २ ।। प्र स अवृषि
+H sarverArtvijyaiH paryeSiSam bhagavato vAahama vidyA 'nyAnavRSi .. 2 .. pra sa avRSi
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 132 ---
+CONTEXT (with surrounding text):
+इति । तथेति । अथ तर्हि एत एव समतिसृष्टाःस्तुवताम्। यावत्त्वेभ्यो धनं दद्या तावन्म
+iti . tatheti . atha tarhi eta eva samatisRSTAHstuvatAm. yAvattvebhyo dhanaM dadyA tAvanma
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 133 ---
+CONTEXT (with surrounding text):
+देवता प्रस्तावमन्वायत्ता ताञ्चेदविद्वान्प्रस्तोष्यसि मूर्धा ते विपतिष्यतीति मा भग
+devatA prastAvamanvAyattA tAJcedavidvAnprastoSyasi mUrdhA te vipatiSyatIti mA bhaga
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 134 ---
+CONTEXT (with surrounding text):
+ि ह वा इमानि भूतानि प्राणमेवाभिसंविशन्तिप्राणमभ्युज्जिहते सैषा देवता प्रस्तावमन्व
+i ha vA imAni bhUtAni prANamevAbhisaMvizantiprANamabhyujjihate saiSA devatA prastAvamanva
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 135 ---
+CONTEXT (with surrounding text):
+ा तां चेदविद्वान् प्रास्तोष्यो मूर्धा तेव्यपतिष्यत्तथोक्तस्य मयेति ।। ५ ।। प्र प्
+A tAM cedavidvAn prAstoSyo mUrdhA tevyapatiSyattathoktasya mayeti .. 5 .. pra p
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 136 ---
+CONTEXT (with surrounding text):
+मसत्ताहानिपर्यन्तः प्रत्यवायो वर्णितः ।।अथ हैनमुद्गातोपससाद उद्गातर्या देवतोद्गीथ
+masattAhAniparyantaH pratyavAyo varNitaH ..atha hainamudgAtopasasAda udgAtaryA devatodgItha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 137 ---
+CONTEXT (with surrounding text):
+द्गीथमन्वायत्ता तां चेदविद्वानुद्दास्यसिमूर्धा ते विपतिष्यतीति मा भगवानवोचत् । कत
+dgIthamanvAyattA tAM cedavidvAnuddAsyasimUrdhA te vipatiSyatIti mA bhagavAnavocat . kata
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 138 ---
+CONTEXT (with surrounding text):
+णि ह वा इमानि भूतान्यादित्यमुच्चैः सन्तंगायन्ति । सैषा देवतोद्गीथमन्वायत्ता । तां
+Ni ha vA imAni bhUtAnyAdityamuccaiH santaMgAyanti . saiSA devatodgIthamanvAyattA . tAM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 139 ---
+CONTEXT (with surrounding text):
+यत्ता । तां चेदविद्वानुदगास्यो मूर्धा तेव्यपतिष्यत्तथोक्तस्य मयेति ।। ७ ।। प्र आद
+yattA . tAM cedavidvAnudagAsyo mUrdhA tevyapatiSyattathoktasya mayeti .. 7 .. pra Ada
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 140 ---
+CONTEXT (with surrounding text):
+देवता प्रतिहारमन्वायत्ता तां चेदविद्वान्प्रतिहरिष्यसि मूर्धा ते विपतिष्यतीति मा भ
+devatA pratihAramanvAyattA tAM cedavidvAnpratihariSyasi mUrdhA te vipatiSyatIti mA bha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 141 ---
+CONTEXT (with surrounding text):
+ि ह वा इमानि भूतान्यन्नमेव प्रतिहरमाणानिजीवन्ति । सैषा देवता प्रतिहारमन्वायत्ता ।
+i ha vA imAni bhUtAnyannameva pratiharamANAnijIvanti . saiSA devatA pratihAramanvAyattA .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 142 ---
+CONTEXT (with surrounding text):
+ तां चेदविद्वान् प्रत्यहरिष्यो मूर्धा तेव्यपतिष्यत् तथोक्तस्य मयेति । तथोक्तस्य म
+ tAM cedavidvAn pratyahariSyo mUrdhA tevyapatiSyat tathoktasya mayeti . tathoktasya ma
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 143 ---
+CONTEXT (with surrounding text):
+ि ह वा इमानि भूतान्यत्रमेव प्रतिहरमाणानिजीवन्ति । सैषा देवता प्रतिहारमन्वायत्ता ।
+i ha vA imAni bhUtAnyatrameva pratiharamANAnijIvanti . saiSA devatA pratihAramanvAyattA .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 144 ---
+CONTEXT (with surrounding text):
+ तां चेदविद्वान् प्रत्यहरिष्यो मूर्धा तेव्यपतिष्यत् तथोक्तस्य मयेति । तथोक्तस्य म
+ tAM cedavidvAn pratyahariSyo mUrdhA tevyapatiSyat tathoktasya mayeti . tathoktasya ma
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 145 ---
+CONTEXT (with surrounding text):
+िद्धमिति द्रष्टव्यम् । प्रकृतमनुसरामः ।।।। इति एकादशखण्डभाष्यम् ।। द्वादशः खण्डः
+iddhamiti draSTavyam . prakRtamanusarAmaH .... iti ekAdazakhaNDabhASyam .. dvAdazaH khaNDaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 146 ---
+CONTEXT (with surrounding text):
+ः । तद्ध बको दाल्भ्यो ग्लावो वा मैत्रेयःस्वाध्यायमुद्वव्राज ।। १ ।। प्र अतीतखण्डे
+H . taddha bako dAlbhyo glAvo vA maitreyaHsvAdhyAyamudvavrAja .. 1 .. pra atItakhaNDe
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 147 ---
+CONTEXT (with surrounding text):
+भूव । तमन्ये श्वान उपसमेत्योचुः अन्नं नोभगवानागायतु अशनायाम वौ इति ।। २ ।। प्र तस
+bhUva . tamanye zvAna upasametyocuH annaM nobhagavAnAgAyatu azanAyAma vau iti .. 2 .. pra tasa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 148 ---
+CONTEXT (with surrounding text):
+्नं भगवान् सम्पादयतु इत्यूचुरित्यर्थः ।।तान् होवाच इहैव मा प्रातरुपसमीयातेति तद्ध
+naM bhagavAn sampAdayatu ityUcurityarthaH ..tAn hovAca ihaiva mA prAtarupasamIyAteti taddha
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 149 ---
+CONTEXT (with surrounding text):
+रुपसमीयातेति तद्ध बको दाल्भ्यो ग्लावो वामैत्रेयः प्रतिपालयाञ्चकार ।। ३ ।। प्र तान
+rupasamIyAteti taddha bako dAlbhyo glAvo vAmaitreyaH pratipAlayAJcakAra .. 3 .. pra tAna
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 150 ---
+CONTEXT (with surrounding text):
+ाद्यागमनं प्रतीक्ष्य स्थितवानित्यर्थः ।।ते ह यथैवेदं बहिष्पवमानेन स्तोष्यमाणाः सं
+AdyAgamanaM pratIkSya sthitavAnityarthaH ..te ha yathaivedaM bahiSpavamAnena stoSyamANAH saM
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 151 ---
+CONTEXT (with surrounding text):
+ोष्यमाणाः संरब्धाः सर्पन्तीत्येवमाससृपुःतेह समुपविश्य हिञ्चक्रुः ।। ४ ।। प्र ते स
+oSyamANAH saMrabdhAH sarpantItyevamAsasRpuHteha samupavizya hiJcakruH .. 4 .. pra te sa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 152 ---
+CONTEXT (with surrounding text):
+हिञ्चक्रुः हिङ्कारं कृतवन्तः इत्यर्थः ।।ओ३मदा३मों ३ पिबा ३ मों ३ देवो वरुणः प्रजा
+hiJcakruH hiGkAraM kRtavantaH ityarthaH ..o3madA3moM 3 pibA 3 moM 3 devo varuNaH prajA
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 153 ---
+CONTEXT (with surrounding text):
+नपते २ ऽन्नमिहाहरा २ हरो ३ मिति ।। ५ ।। ।। इति द्वादशः खण्डः ।।प्र हिङ्कारमेवाह ओमदार्मो आहरत्। ओमिति ग
+napate 2 'nnamihAharA 2 haro 3 miti .. 5 .. .. iti dvAdazaH khaNDaH ..pra hiGkAramevAha omadArmo Aharat. omiti ga
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] द्वादशः (dvAdazaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 154 ---
+CONTEXT (with surrounding text):
+सविशिष्टोद्गीथोपासनमन्त्रफलकमिति भावः ।।।। इति द्वादशखण्डभाष्यम् ।। त्रयोदशः खण्डः अयं वाव लोको हाउकारो व
+saviziSTodgIthopAsanamantraphalakamiti bhAvaH .... iti dvAdazakhaNDabhASyam .. trayodazaH khaNDaH ayaM vAva loko hAukAro va
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (5 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] द्वादशः (dvAdazaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+
+--- Diff 155 ---
+CONTEXT (with surrounding text):
+ारो वायुर्हा इकारश्चन्द्रमा अथकार आत्मेहकारोऽग्निरीकारः ।। १ ।। प्र सामावयवान्तर्
+Aro vAyurhA ikArazcandramA athakAra AtmehakAro'gnirIkAraH .. 1 .. pra sAmAvayavAntar
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 156 ---
+CONTEXT (with surrounding text):
+ारो विश्वेदेवा औहोइकारः प्रजापतिहिङ्कारःप्राणः स्वरोऽन्नं या वाग्विराट् ।। २ ।। प
+Aro vizvedevA auhoikAraH prajApatihiGkAraHprANaH svaro'nnaM yA vAgvirAT .. 2 .. pa
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 157 ---
+CONTEXT (with surrounding text):
+च हाउकारादिषु त्रयोदशसु उक्तपृथिवीलोकादिदृष्टिः कर्तव्या इति स्थितम् ।।दुग्धेऽस्मै
+ca hAukArAdiSu trayodazasu uktapRthivIlokAdidRSTiH kartavyA iti sthitam ..dugdhe'smai
+
+WORD-BY-WORD BREAKDOWN:
+  DELETED from source (1 words):
+    [1] दृ (dR)
+
+--- Diff 158 ---
+CONTEXT (with surrounding text):
+िवीलोकादिदृष्टिः कर्तव्या इति स्थितम् ।।दुग्धेऽस्मै वाग्दोहं यो वाचो दोहः अन्नवान
+ivIlokAdidRSTiH kartavyA iti sthitam ..dugdhe'smai vAgdohaM yo vAco dohaH annavAna
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 159 ---
+CONTEXT (with surrounding text):
+ो वाचो दोहः अन्नवानन्नादो भवति य एतामेवंसानामुपनिषदं वेदोपनिषदं वेद इति ।। ४ ।। ।
+o vAco dohaH annavAnannAdo bhavati ya etAmevaMsAnAmupaniSadaM vedopaniSadaM veda iti .. 4 .. .
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  WHITESPACE-ONLY CHANGE:
+    INSERTED: 1 whitespace character(s)
+    Representation: ' '
+
+--- Diff 160 ---
+CONTEXT (with surrounding text):
+ंसानामुपनिषदं वेदोपनिषदं वेद इति ।। ४ ।। ।। इति त्रयोदशः खण्डः ।। ।। इति प्रथमः प्रपाठकः समाप्तः ।। प्र तस्य फलमाह दुग्धे भवति। उक्तोऽर्थः
+MsAnAmupaniSadaM vedopaniSadaM veda iti .. 4 .. .. iti trayodazaH khaNDaH .. .. iti prathamaH prapAThakaH samAptaH .. pra tasya phalamAha dugdhe bhavati. ukto'rthaH
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+
+  DELETED from source (11 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] त्रयोदशः (trayodazaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+    [6] ।। (..)
+    [7] इति (iti)
+    [8] प्रथमः (prathamaH)
+    [9] प्रपाठकः (prapAThakaH)
+    [10] समाप्तः (samAptaH)
+    [11] ।। (..)
+
+--- Diff 161 ---
+CONTEXT (with surrounding text):
+्यर्थः । द्विरुक्तिरध्यायसमाप्त्यर्था ।।।। इति प्रथमप्रपाठकप्रकाशिका ।।
+yarthaH . dviruktiradhyAyasamAptyarthA .... iti prathamaprapAThakaprakAzikA ..
+
+WORD-BY-WORD BREAKDOWN:
+  ⚠️  CONTAINS WHITESPACE:
+    Leading whitespace: 1 character(s) - ' '
+    Trailing whitespace: 1 character(s) - ' '
+
+  INSERTED in destination (11 words):
+    [1] ।। (..)
+    [2] इति (iti)
+    [3] त्रयोदशः (trayodazaH)
+    [4] खण्डः (khaNDaH)
+    [5] ।। (..)
+    [6] ।। (..)
+    [7] इति (iti)
+    [8] प्रथमः (prathamaH)
+    [9] प्रपाठकः (prapAThakaH)
+    [10] समाप्तः (samAptaH)
+    [11] ।। (..)
