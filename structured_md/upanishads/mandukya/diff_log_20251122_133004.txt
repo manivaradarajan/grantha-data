@@ -1,0 +1,133 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:30:04
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/mandukya/mANDUkyopaniSat-kUranAra.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/mandukya/mandukya-upanishad-kuranarayana-muni-01-01.md
+
+================================================================================
+
+Total differences found: 30
+
+================================================================================
+
+--- Diff 1 ---
+धातु ।। ।। ओं शान्तिः शान्तिः शान्तिः ।।देवा हे देवाः भद्रम् कल्याणम् वेदाख्यं सा
+dhAtu .. .. oM zAntiH zAntiH zAntiH ..devA he devAH bhadram kalyANam vedAkhyaM sA
+
+--- Diff 2 ---
+ अस्माकं स्वस्ति कल्याण दधातु विदधातु ।।प्रथमः खण्डः प्रणवशब्दवाच्यः परमात्मा हरि
+ asmAkaM svasti kalyANa dadhAtu vidadhAtu ..prathamaH khaNDaH praNavazabdavAcyaH paramAtmA hari
+
+--- Diff 3 ---
+्चान्यत् त्रिकालातीतं तदप्योंङ्कार एव ।। १ ।।मुमुक्षोरधिकारिणो निखिलक्लेशनिवृत्तिपू
+cAnyat trikAlAtItaM tadapyoMGkAra eva .. 1 ..mumukSoradhikAriNo nikhilaklezanivRttipU
+
+--- Diff 4 ---
+यत् त्रिकालातीतं तदप्योंङ्कार एव ।। १ ।।मुमुक्षोरधिकारिणो निखिलक्लेशनिवृत्तिपूर्व
+yat trikAlAtItaM tadapyoMGkAra eva .. 1 ..mumukSoradhikAriNo nikhilaklezanivRttipUrva
+
+--- Diff 5 ---
+ुँसि लिङ्गान् इति पुल्लिङ्गता । ओमित्युच्यमानमक्षरमेव सर्वं न त्वन्यदित्यर्थः। भूत
+u~si liGgAn iti pulliGgatA . omityucyamAnamakSarameva sarvaM na tvanyadityarthaH. bhUta
+
+--- Diff 6 ---
+अयमात्मा ब्रह्म। सोऽयमात्मा चतुष्पात् ।। २ ।। ॥ इति प्रथमः खण्डः ।।सर्वमोङ्कार एवेत
+ayamAtmA brahma. so'yamAtmA catuSpAt .. 2 .. .. iti prathamaH khaNDaH ..sarvamoGkAra eveta
+
+--- Diff 7 ---
+ चतुष्पात् ।। २ ।। ॥ इति प्रथमः खण्डः ।।सर्वमोङ्कार एवेत्यत्र ओं पदवाच्यस्य ब्रह्
+ catuSpAt .. 2 .. .. iti prathamaH khaNDaH ..sarvamoGkAra evetyatra oM padavAcyasya brah
+
+--- Diff 8 ---
+तद्देहेषु चतूरूपतया तिष्ठतीत्यर्थः ।। ।।द्वितीयः खण्डः वैश्वानरात्मकः ओंकारस्य प्
+taddeheSu catUrUpatayA tiSThatItyarthaH .. ..dvitIyaH khaNDaH vaizvAnarAtmakaH oMkArasya p
+
+--- Diff 9 ---
+शतिमुख स्थूलभुग्वैश्वानरः प्रथमः पादः ।। १ ।।कानि तेषां स्थानानि कश्च व्यापारः कीदृ
+zatimukha sthUlabhugvaizvAnaraH prathamaH pAdaH .. 1 ..kAni teSAM sthAnAni kazca vyApAraH kIdR
+
+--- Diff 10 ---
+ख स्थूलभुग्वैश्वानरः प्रथमः पादः ।। १ ।।कानि तेषां स्थानानि कश्च व्यापारः कीदृशान
+kha sthUlabhugvaizvAnaraH prathamaH pAdaH .. 1 ..kAni teSAM sthAnAni kazca vyApAraH kIdRzAna
+
+--- Diff 11 ---
+खः प्रविविक्तभुक् तैजसो द्वितीयः पादः ।। २ ।।स्वप्नेति । स्वप्नस्थानः यत्र स्थित्वा
+khaH praviviktabhuk taijaso dvitIyaH pAdaH .. 2 ..svapneti . svapnasthAnaH yatra sthitvA
+
+--- Diff 12 ---
+रविविक्तभुक् तैजसो द्वितीयः पादः ।। २ ।।स्वप्नेति । स्वप्नस्थानः यत्र स्थित्वा जी
+raviviktabhuk taijaso dvitIyaH pAdaH .. 2 ..svapneti . svapnasthAnaH yatra sthitvA jI
+
+--- Diff 13 ---
+न्दभुक् चेतोमुखः प्राज्ञस्तृतीयः पादः ।। ३ ।।तृतीयपादस्य स्थानं वक्तुं स्थानस्वरूपं
+ndabhuk cetomukhaH prAjJastRtIyaH pAdaH .. 3 ..tRtIyapAdasya sthAnaM vaktuM sthAnasvarUpaM
+
+--- Diff 14 ---
+क् चेतोमुखः प्राज्ञस्तृतीयः पादः ।। ३ ।।तृतीयपादस्य स्थानं वक्तुं स्थानस्वरूपं ता
+k cetomukhaH prAjJastRtIyaH pAdaH .. 3 ..tRtIyapAdasya sthAnaM vaktuM sthAnasvarUpaM tA
+
+--- Diff 15 ---
+निस्सर्वस्य । प्रभवाप्ययौ हि भूतानाम् ।। ४ ।।एवं रूपत्रयं निरूप्य चतुर्थपादं नान्तः
+nissarvasya . prabhavApyayau hi bhUtAnAm .. 4 ..evaM rUpatrayaM nirUpya caturthapAdaM nAntaH
+
+--- Diff 16 ---
+र्वस्य । प्रभवाप्ययौ हि भूतानाम् ।। ४ ।।एवं रूपत्रयं निरूप्य चतुर्थपादं नान्तः प्
+rvasya . prabhavApyayau hi bhUtAnAm .. 4 ..evaM rUpatrayaM nirUpya caturthapAdaM nAntaH p
+
+--- Diff 17 ---
+ुर्थं मन्यन्ते । स आत्मा । स विज्ञेयः ।। ५ ।। ।। इति द्वितीयः खण्डः ।।चतुर्थपादमात्
+urthaM manyante . sa AtmA . sa vijJeyaH .. 5 .. .. iti dvitIyaH khaNDaH ..caturthapAdamAt
+
+--- Diff 18 ---
+िज्ञेयः ।। ५ ।। ।। इति द्वितीयः खण्डः ।।चतुर्थपादमात्मन आह नान्तरिति । अन्तःप्रज्
+ijJeyaH .. 5 .. .. iti dvitIyaH khaNDaH ..caturthapAdamAtmana Aha nAntariti . antaHpraj
+
+--- Diff 19 ---
+शेषेण च मुमुक्षुभिर्ज्ञेय इत्यर्थः ।। ।।।। इति द्वितीयखण्डभाष्यं ।। तृतीयः खण्डः
+zeSeNa ca mumukSubhirjJeya ityarthaH .. .... iti dvitIyakhaNDabhASyaM .. tRtIyaH khaNDaH
+
+--- Diff 20 ---
+ात्राश्च पादाः अकार उकारो मकार इति ।। ।।एवं समस्तोङ्कारप्रतिपाद्यस्यात्मनो विश्वादिर
+AtrAzca pAdAH akAra ukAro makAra iti .. ..evaM samastoGkArapratipAdyasyAtmano vizvAdira
+
+--- Diff 21 ---
+ सर्वान् कामानादिश्च भवति । य एवं वेद ।। २ ।।तत्रावर्णप्रतिपाद्यं रूपं स्थानोक्त्या
+ sarvAn kAmAnAdizca bhavati . ya evaM veda .. 2 ..tatrAvarNapratipAdyaM rUpaM sthAnoktyA
+
+--- Diff 22 ---
+ान् कामानादिश्च भवति । य एवं वेद ।। २ ।।तत्रावर्णप्रतिपाद्यं रूपं स्थानोक्त्या नि
+An kAmAnAdizca bhavati . ya evaM veda .. 2 ..tatrAvarNapratipAdyaM rUpaM sthAnoktyA ni
+
+--- Diff 23 ---
+ि नास्याब्रह्मवित्कुले भवति य एवं वेद ।। ३ ।।अथ द्वितीयपादमाह स्वप्नेति । द्वितीया
+i nAsyAbrahmavitkule bhavati ya evaM veda .. 3 ..atha dvitIyapAdamAha svapneti . dvitIyA
+
+--- Diff 24 ---
+्याब्रह्मवित्कुले भवति य एवं वेद ।। ३ ।।अथ द्वितीयपादमाह स्वप्नेति । द्वितीया मात
+yAbrahmavitkule bhavati ya evaM veda .. 3 ..atha dvitIyapAdamAha svapneti . dvitIyA mAta
+
+--- Diff 25 ---
+ वा इदं सर्वं अपीतिश्च भवति य एवं वेद ।। ४ ।।तृतीयपादमाह सुषुप्तेति । तृतीया मात्रा
+ vA idaM sarvaM apItizca bhavati ya evaM veda .. 4 ..tRtIyapAdamAha suSupteti . tRtIyA mAtrA
+
+--- Diff 26 ---
+दं सर्वं अपीतिश्च भवति य एवं वेद ।। ४ ।।तृतीयपादमाह सुषुप्तेति । तृतीया मात्रा आत
+daM sarvaM apItizca bhavati ya evaM veda .. 4 ..tRtIyapAdamAha suSupteti . tRtIyA mAtrA Ata
+
+--- Diff 27 ---
+ृच्च भवति दुःखाद्यनिष्टस्येत्यर्थः ।। ।।।। इति तृतीयखण्डभाष्यम् ।। चतुर्थः खण्डः
+Rcca bhavati duHkhAdyaniSTasyetyarthaH .. .... iti tRtIyakhaNDabhASyam .. caturthaH khaNDaH
+
+--- Diff 28 ---
+्यात्मनात्मानम् । य एवं वेद य एवं वेद ।। १ ।। ।। इति चतुर्थः खण्डः ।।नान्तःप्रज्ञं
+yAtmanAtmAnam . ya evaM veda ya evaM veda .. 1 .. .. iti caturthaH khaNDaH ..nAntaHprajJaM
+
+--- Diff 29 ---
+ एवं वेद ।। १ ।। ।। इति चतुर्थः खण्डः ।।नान्तःप्रज्ञं इत्यादिनोक्ततुरीये गुणानुवा
+ evaM veda .. 1 .. .. iti caturthaH khaNDaH ..nAntaHprajJaM ityAdinoktaturIye guNAnuvA
+
+--- Diff 30 ---
+ुक्तिरुक्तविधोपासनोपदेशावधारणार्था ।। ।।।। श्रीकूरनारायणमुनिविरचितमाण्डूक्योपनिषद
+uktiruktavidhopAsanopadezAvadhAraNArthA .. .... zrIkUranArAyaNamuniviracitamANDUkyopaniSada

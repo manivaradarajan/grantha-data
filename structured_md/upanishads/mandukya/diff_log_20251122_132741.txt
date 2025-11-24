@@ -1,0 +1,97 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:27:41
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/mandukya/mANDUkyopaniSat.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/mandukya/mandukya-upanishad-rangaramanuja-01-01.md
+
+================================================================================
+
+Total differences found: 21
+
+================================================================================
+
+--- Diff 1 ---
+दधातु ।। ।।ओं शान्तिः शान्तिः शान्तिः ।।देवाः हे देवाः भद्रम् कल्याणम् वेदाख्यं स
+dadhAtu .. ..oM zAntiH zAntiH zAntiH ..devAH he devAH bhadram kalyANam vedAkhyaM sa
+
+--- Diff 2 ---
+अस्माकं स्वस्ति कल्याणं दधातु विदधातु ।।माण्डूक्योपनिषत् प्रथमः खण्डः प्रणवशब्दवा
+asmAkaM svasti kalyANaM dadhAtu vidadhAtu ..mANDUkyopaniSat prathamaH khaNDaH praNavazabdavA
+
+--- Diff 3 ---
+मा ब्रह्म। सोऽयमात्मा चतुष्पात् ।। २ ।। ॥ इति प्रथमः खण्डः ।।सर्वं ह्येतद्ब्रह्मे
+mA brahma. so'yamAtmA catuSpAt .. 2 .. .. iti prathamaH khaNDaH ..sarvaM hyetadbrahme
+
+--- Diff 4 ---
+ा ब्रह्म। सोऽयमात्मा चतुष्पात् ।। २ ।। ॥ इति प्रथमः खण्डः ।।सर्वं ह्येतद्ब्रह्मेति
+A brahma. so'yamAtmA catuSpAt .. 2 .. .. iti prathamaH khaNDaH ..sarvaM hyetadbrahmeti
+
+--- Diff 5 ---
+ चतुष्पात् ।। २ ।। ॥ इति प्रथमः खण्डः ।।सर्वं ह्येतद्ब्रह्मेति । कालत्रय परिच्छिन
+ catuSpAt .. 2 .. .. iti prathamaH khaNDaH ..sarvaM hyetadbrahmeti . kAlatraya paricchina
+
+--- Diff 6 ---
+यमात्मा पादचतुष्टययुक्त इत्यर्थः ।। २ ।।द्वितीयः खण्डः वैश्वानरात्मकः ओंकारस्य प्
+yamAtmA pAdacatuSTayayukta ityarthaH .. 2 ..dvitIyaH khaNDaH vaizvAnarAtmakaH oMkArasya p
+
+--- Diff 7 ---
+ख स्थूलभुग्वैश्वानरः प्रथमः पादः ।। १ ।।तदेव पादचतुष्टयं प्रपञ्चयति जागरितस्थानो
+kha sthUlabhugvaizvAnaraH prathamaH pAdaH .. 1 ..tadeva pAdacatuSTayaM prapaJcayati jAgaritasthAno
+
+--- Diff 8 ---
+रविविक्तभुक् तैजसो द्वितीयः पादः ।। २ ।।स्वप्नस्थानोऽन्तःप्रज्ञ इति । स्वाप्निकवस
+raviviktabhuk taijaso dvitIyaH pAdaH .. 2 ..svapnasthAno'ntaHprajJa iti . svApnikavasa
+
+--- Diff 9 ---
+क् चेतोमुखः प्राज्ञस्तृतीयः पादः ।। ३ ।।यत्र सुप्तो न कञ्चन कामं कामयते न कञ्चन स
+k cetomukhaH prAjJastRtIyaH pAdaH .. 3 ..yatra supto na kaJcana kAmaM kAmayate na kaJcana sa
+
+--- Diff 10 ---
+र्वस्य । प्रभवाप्ययौ हि भूतानाम् ।। ४ ।।एष सर्वेश्वर एष सर्वज्ञ एषोऽन्तर्यामी एष
+rvasya . prabhavApyayau hi bhUtAnAm .. 4 ..eSa sarvezvara eSa sarvajJa eSo'ntaryAmI eSa
+
+--- Diff 11 ---
+िज्ञेयः ।। ५ ।। ।। इति द्वितीयः खण्डः ।।चतुर्थं पादं निर्दिशति नान्त प्रज्ञमिति ।
+ijJeyaH .. 5 .. .. iti dvitIyaH khaNDaH ..caturthaM pAdaM nirdizati nAnta prajJamiti .
+
+--- Diff 12 ---
+तेः । तस्यैव विज्ञेयत्वमिति भावः ।। ५ ।।तृतीयः खण्डः पादभूतस्य भगवतः मात्रास्वरूप
+teH . tasyaiva vijJeyatvamiti bhAvaH .. 5 ..tRtIyaH khaNDaH pAdabhUtasya bhagavataH mAtrAsvarUpa
+
+--- Diff 13 ---
+्राश्च पादाः अकार उकारो मकार इति ।। १ ।।सोऽयमात्माध्यक्षरमोंकारोऽधिमात्रम् । अध्य
+rAzca pAdAH akAra ukAro makAra iti .. 1 ..so'yamAtmAdhyakSaramoMkAro'dhimAtram . adhya
+
+--- Diff 14 ---
+ान् कामानादिश्च भवति । य एवं वेद ।। २ ।।तदेव विविच्य दर्शयति जागरितस्थानो वैश्वान
+An kAmAnAdizca bhavati . ya evaM veda .. 2 ..tadeva vivicya darzayati jAgaritasthAno vaizvAna
+
+--- Diff 15 ---
+्याब्रह्मवित्कुले भवति य एवं वेद ।। ३ ।।स्वप्नस्थान इति । स्वप्नस्थानस्तैजस उकारो
+yAbrahmavitkule bhavati ya evaM veda .. 3 ..svapnasthAna iti . svapnasthAnastaijasa ukAro
+
+--- Diff 16 ---
+दं सर्वं अपीतिश्च भवति य एवं वेद ।। ४ ।।सुषुप्तस्थान इति । सुषुप्तस्थानः प्राज्ञो
+daM sarvaM apItizca bhavati ya evaM veda .. 4 ..suSuptasthAna iti . suSuptasthAnaH prAjJo
+
+--- Diff 17 ---
+श्च तस्य भवति । य एवं वेदेत्यर्थ ।। ४ ।।चतुर्थः खण्डः प्रणवस्थनादस्य निरूपणम् अमा
+zca tasya bhavati . ya evaM vedetyartha .. 4 ..caturthaH khaNDaH praNavasthanAdasya nirUpaNam amA
+
+--- Diff 18 ---
+ एवं वेद ।। १ ।। ।। इति चतुर्थः खण्डः ।।अमात्रश्चतुर्थोऽव्यवहार्यः प्रपञ्चोपशमश्श
+ evaM veda .. 1 .. .. iti caturthaH khaNDaH ..amAtrazcaturtho'vyavahAryaH prapaJcopazamazza
+
+--- Diff 19 ---
+ क्रमात्तमेव प्राप्नोति इत्यर्थः ।। १ ।।क्षेमाय य करुणया क्षितिनिर्जराणां भूमावजृ
+ kramAttameva prApnoti ityarthaH .. 1 ..kSemAya ya karuNayA kSitinirjarANAM bhUmAvajR
+
+--- Diff 20 ---
+ रामानुजस्स मुनिराद्रियतां मदुक्तिम् ।। ॥ इति श्रीरङ्गरामानुजमुनिविरचितमाण्डूक्यो
+ rAmAnujassa munirAdriyatAM maduktim .. .. iti zrIraGgarAmAnujamuniviracitamANDUkyo
+
+--- Diff 21 ---
+रामानुजस्स मुनिराद्रियतां मदुक्तिम् ।। ॥ इति श्रीरङ्गरामानुजमुनिविरचितमाण्डूक्योपन
+rAmAnujassa munirAdriyatAM maduktim .. .. iti zrIraGgarAmAnujamuniviracitamANDUkyopana

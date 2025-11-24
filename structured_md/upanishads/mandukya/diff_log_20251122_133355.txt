@@ -1,0 +1,289 @@
+================================================================================
+COMPLETE DEVANAGARI DIFF LOG
+================================================================================
+
+Generated: 2025-11-22 13:33:55
+Source file: /Users/mani/github/grantha-data/sources/upanishads/meghamala/mandukya/mANDUkyopaniSatkArikA.md
+Destination file: /Users/mani/github/grantha-data/structured_md/upanishads/mandukya/gaudapadiya-mandukyopanishatkarikah-bharadvajaramanujacharya-01.md
+
+================================================================================
+
+Total differences found: 69
+
+================================================================================
+
+--- Diff 1 ---
+स्तथा प्राज्ञ एकएव त्रिधा स्मृतः ।। १ ।।प्र दी पूर्वोक्तमन्त्रार्थदाढ्यार्य श्लोक
+stathA prAjJa ekaeva tridhA smRtaH .. 1 ..pra dI pUrvoktamantrArthadADhyArya zloka
+
+--- Diff 2 ---
+ाणामेतेषां एकत्वं स्मृतमित्यर्थः ।। १ ।।दक्षिणाक्षिमुखे विश्वो मनस्यन्तश्च तैजसः
+ANAmeteSAM ekatvaM smRtamityarthaH .. 1 ..dakSiNAkSimukhe vizvo manasyantazca taijasaH
+
+--- Diff 3 ---
+ प्राज्ञस्त्रिधा देहे व्यवस्थितः ।। २ ।।प्र दी प्रणवशब्दवाच्य एक परमात्मा अस्मिन्
+ prAjJastridhA dehe vyavasthitaH .. 2 ..pra dI praNavazabdavAcya eka paramAtmA asmin
+
+--- Diff 4 ---
+्मिन् देहे त्रिधा स्थित इत्यर्थः ।। २ ।।विश्वो हि स्थूलभुङ्नित्यं तैजसः प्रविविक्
+min dehe tridhA sthita ityarthaH .. 2 ..vizvo hi sthUlabhuGnityaM taijasaH pravivik
+
+--- Diff 5 ---
+क्तथा प्राज्ञस्त्रिधा भोग निबोधत ।। ३ ।।प्र दी जीवदेहस्थितविश्वतैजसप्राज्ञानां जी
+ktathA prAjJastridhA bhoga nibodhata .. 3 ..pra dI jIvadehasthitavizvataijasaprAjJAnAM jI
+
+--- Diff 6 ---
+च्यते । एवं विजानथेत्यपि ध्येयम् ।। ३ ।।स्थूलं तर्पयते विश्वं प्रविविक्तं तु तैजस
+cyate . evaM vijAnathetyapi dhyeyam .. 3 ..sthUlaM tarpayate vizvaM praviviktaM tu taijasa
+
+--- Diff 7 ---
+था प्राज्ञं त्रिधा तृप्ति निबोधत ।। ४ ।।प्र दी जीवदेहस्थितविश्वतैजसप्राज्ञानां जी
+thA prAjJaM tridhA tRpti nibodhata .. 4 ..pra dI jIvadehasthitavizvataijasaprAjJAnAM jI
+
+--- Diff 8 ---
+विजानथ विजानीथ । विकरणव्यत्ययात् ।। ४ ।।त्रिषु धामसु यद्भोज्यं भोक्ता यश्च प्रकीर
+vijAnatha vijAnItha . vikaraNavyatyayAt .. 4 ..triSu dhAmasu yadbhojyaM bhoktA yazca prakIra
+
+--- Diff 9 ---
+ यद्भोज्यं भोक्ता यश्च प्रकीर्तितः । वेदैतदुभयं यस्तु स भुञ्जानो न लिप्यते ।। ५ ।
+ yadbhojyaM bhoktA yazca prakIrtitaH . vedaitadubhayaM yastu sa bhuJjAno na lipyate .. 5 .
+
+--- Diff 10 ---
+दुभयं यस्तु स भुञ्जानो न लिप्यते ।। ५ ।।प्र दी भोक्तभोज्यस्वरूपं विजानन् जीवः विष
+dubhayaM yastu sa bhuJjAno na lipyate .. 5 ..pra dI bhoktabhojyasvarUpaM vijAnan jIvaH viSa
+
+--- Diff 11 ---
+त्र्यमिति मत्वा न विकरोतीति भावः ।। ५ ।।प्रभवस्सर्वभावानां सतामिति विनिश्चयः । सर
+tryamiti matvA na vikarotIti bhAvaH .. 5 ..prabhavassarvabhAvAnAM satAmiti vinizcayaH . sara
+
+--- Diff 12 ---
+ति प्राणश्चेतोंऽशून्पुरुषः पृथक् ।। ६ ।।प्र दी विश्वतैजसप्राज्ञतुरीयापरनामधेयकः प
+ti prANazcetoM'zUnpuruSaH pRthak .. 6 ..pra dI vizvataijasaprAjJaturIyAparanAmadheyakaH pa
+
+--- Diff 13 ---
+ पृथक् देवदानवमानवादिभेदेन जनयति ।। ६ ।।विभूतिं प्रसवंत्वन्ये मन्यन्ते सृष्टिचिन्
+ pRthak devadAnavamAnavAdibhedena janayati .. 6 ..vibhUtiM prasavaMtvanye manyante sRSTicin
+
+--- Diff 14 ---
+स्वरूपेति सृष्टिरन्यैर्विकल्पिता ।। ७ ।।प्र दी ब्रह्मविवर्तः प्रपञ्चः इत्यसतामाशय
+svarUpeti sRSTiranyairvikalpitA .. 7 ..pra dI brahmavivartaH prapaJcaH ityasatAmAzaya
+
+--- Diff 15 ---
+िथ्याभूतेत्येवं विकल्पितेत्यर्थः ।। ७ ।।इच्छामात्रं प्रभोस्सृष्टितिरिति सृष्टौ वि
+ithyAbhUtetyevaM vikalpitetyarthaH .. 7 ..icchAmAtraM prabhossRSTitiriti sRSTau vi
+
+--- Diff 16 ---
+ूतिं भूतानां मन्यन्ते कालचिन्तका ।। ८ ।।प्र दी विवर्तपरिणामानङ्गीकारे ब्रह्मणः कथ
+UtiM bhUtAnAM manyante kAlacintakA .. 8 ..pra dI vivartapariNAmAnaGgIkAre brahmaNaH katha
+
+--- Diff 17 ---
+्छामात्रमिति पक्षस्य मध्ये निवेश ।। ८ ।।भोगार्थं सृष्टिरित्यन्ये क्रीडार्थेमिति च
+chAmAtramiti pakSasya madhye niveza .. 8 ..bhogArthaM sRSTirityanye krIDArthemiti ca
+
+--- Diff 18 ---
+ देवस्यैष स्वभावोऽयमाप्तकामस्य का स्पृहा ।। ५ ।। इति ।प्र दी अवाप्तसमस्तकामस्य श्रिय प
+ devasyaiSa svabhAvo'yamAptakAmasya kA spRhA .. 5 .. iti .pra dI avAptasamastakAmasya zriya pa
+
+--- Diff 19 ---
+ स्वभावोऽयमाप्तकामस्य का स्पृहा ।। ५ ।। इति ।प्र दी अवाप्तसमस्तकामस्य श्रिय पते इयं स
+ svabhAvo'yamAptakAmasya kA spRhA .. 5 .. iti .pra dI avAptasamastakAmasya zriya pate iyaM sa
+
+--- Diff 20 ---
+। इति शब्दो रूपत्रयनिरूपणसमाप्तौ ।। ९ ।।निवृत्तेः सर्वदुःखानामीशानः प्रभुरव्ययः ।
+. iti zabdo rUpatrayanirUpaNasamAptau .. 9 ..nivRtteH sarvaduHkhAnAmIzAnaH prabhuravyayaH .
+
+--- Diff 21 ---
+ावानां देवस्तुर्यो विभुस्स्मृतः ।। १० ।।प्र दी उक्तस्वरूपस्य तुरीयापरनामधेयस्य वा
+AvAnAM devasturyo vibhussmRtaH .. 10 ..pra dI uktasvarUpasya turIyAparanAmadheyasya vA
+
+--- Diff 22 ---
+ स्मृतः । मन्त्रदृग्भिरिति शेषः ।। १० ।।कार्यकारणबद्धौ ताविष्येते विश्वतैजसौ । प्
+ smRtaH . mantradRgbhiriti zeSaH .. 10 ..kAryakAraNabaddhau tAviSyete vizvataijasau . p
+
+--- Diff 23 ---
+स्तु द्वौ तौ तुर्रे न सिद्ध्यतः ।। ११ ।।प्र दी तुरीयवासुदेवस्वरूपं विश्वादित्रयवि
+stu dvau tau turre na siddhyataH .. 11 ..pra dI turIyavAsudevasvarUpaM vizvAditrayavi
+
+--- Diff 24 ---
+श्च द्वावपि न सिध्द्यत इत्यर्थः ।। ११ ।।नात्मानं न परांश्चैव न सत्यं नापि चानृतम्
+zca dvAvapi na sidhdyata ityarthaH .. 11 ..nAtmAnaM na parAMzcaiva na satyaM nApi cAnRtam
+
+--- Diff 25 ---
+न संवेत्ति तुर्य तत्सर्वदृक्सदा ।। १२ ।।प्र दी तुरीयस्य प्राज्ञवैलक्षण्यमाह नात्म
+na saMvetti turya tatsarvadRksadA .. 12 ..pra dI turIyasya prAjJavailakSaNyamAha nAtma
+
+--- Diff 26 ---
+ सर्वं सर्वदा प्रदर्शयतीत्यर्थः ।। १२ ।।द्वैतस्याग्रहण तुल्यमुभयोः प्राज्ञतुर्ययो
+ sarvaM sarvadA pradarzayatItyarthaH .. 12 ..dvaitasyAgrahaNa tulyamubhayoH prAjJaturyayo
+
+--- Diff 27 ---
+ प्राज्ञः सा च तुर्ये न विद्यते ।। १३ ।।प्र दी तुरीयस्य प्राज्ञवैलक्षण्यान्तरमाह
+ prAjJaH sA ca turye na vidyate .. 13 ..pra dI turIyasya prAjJavailakSaNyAntaramAha
+
+--- Diff 28 ---
+वं प्राज्ञतुरीययोस्तुल्यम् । बीजेति । देहगेहादौ स्वातन्त्र्यबुद्धिबीजभूता मूलाविद
+vaM prAjJaturIyayostulyam . bIjeti . dehagehAdau svAtantryabuddhibIjabhUtA mUlAvida
+
+--- Diff 29 ---
+ं प्राज्ञतुरीययोस्तुल्यम् । बीजेति । देहगेहादौ स्वातन्त्र्यबुद्धिबीजभूता मूलाविद्
+M prAjJaturIyayostulyam . bIjeti . dehagehAdau svAtantryabuddhibIjabhUtA mUlAvid
+
+--- Diff 30 ---
+मिति यावत् । न विद्यते इत्यर्थः ।। १३ ।।स्वप्ननिद्रायुतावाद्यौ प्राज्ञस्त्वस्वप्न
+miti yAvat . na vidyate ityarthaH .. 13 ..svapnanidrAyutAvAdyau prAjJastvasvapna
+
+--- Diff 31 ---
+वप्नं तुर्ये पश्यन्ति निश्चिताः ।। १४ ।।प्र दी पुनरपि विश्वादिवैलक्षण्यं तुरीयस्य
+vapnaM turye pazyanti nizcitAH .. 14 ..pra dI punarapi vizvAdivailakSaNyaM turIyasya
+
+--- Diff 32 ---
+ीये न पश्यन्ति न जानन्तीत्यर्थः ।। १४ ।।अन्यथा गृह्णतः स्वप्नो निद्रातत्त्वमजानतः
+Iye na pazyanti na jAnantItyarthaH .. 14 ..anyathA gRhNataH svapno nidrAtattvamajAnataH
+
+--- Diff 33 ---
+से तयोः क्षीणे तुरीयं पदमश्नुते ।। १५ ।।प्र दी एवंविधस्य तुरीयस्य वासुदेवस्य दर्श
+se tayoH kSINe turIyaM padamaznute .. 15 ..pra dI evaMvidhasya turIyasya vAsudevasya darza
+
+--- Diff 34 ---
+षात्कारद्वारा प्राप्नोतीत्यर्थः ।। १५ ।।अनादिमायया सुप्तो यदा जीवः प्रबुध्यते । अ
+SAtkAradvArA prApnotItyarthaH .. 15 ..anAdimAyayA supto yadA jIvaH prabudhyate . a
+
+--- Diff 35 ---
+निद्रमस्वप्नमद्वैतं बुध्यते तदा ।। १६ ।।प्र दी भगवत्कृपया श्रीवासुदेवं साक्षात्कर
+nidramasvapnamadvaitaM budhyate tadA .. 16 ..pra dI bhagavatkRpayA zrIvAsudevaM sAkSAtkara
+
+--- Diff 36 ---
+ं भगवन्तं बुध्यते साक्षात्करोति ।। १६ ।।प्रपञ्चो यदि विद्येत निवर्तेत न संशयः । म
+M bhagavantaM budhyate sAkSAtkaroti .. 16 ..prapaJco yadi vidyeta nivarteta na saMzayaH . ma
+
+--- Diff 37 ---
+ात्रमिदं द्वैतमद्वैतं परमार्थतः ।। १७ ।।प्र दी ज्ञानिनोऽपि प्रामादिकभ्रमप्रपञ्चो
+AtramidaM dvaitamadvaitaM paramArthataH .. 17 ..pra dI jJAnino'pi prAmAdikabhramaprapaJco
+
+--- Diff 38 ---
+न्ति ते ।। भ गी ७ १४ इत्यादिकम् ।। १७ ।।विकल्पो विनिवर्तेतँ कल्पितो यदि केनचित् ।
+nti te .. bha gI 7 14 ityAdikam .. 17 ..vikalpo vinivarteta~ kalpito yadi kenacit .
+
+--- Diff 39 ---
+ उपदेशादयं वादो ज्ञाते द्वैतं न विद्यते ।। १८ ।। इति ।।प्र दी सतामुपदेशात् भगवन्मायाम
+ upadezAdayaM vAdo jJAte dvaitaM na vidyate .. 18 .. iti ..pra dI satAmupadezAt bhagavanmAyAma
+
+--- Diff 40 ---
+शादयं वादो ज्ञाते द्वैतं न विद्यते ।। १८ ।। इति ।।प्र दी सतामुपदेशात् भगवन्मायामोहनजन्
+zAdayaM vAdo jJAte dvaitaM na vidyate .. 18 .. iti ..pra dI satAmupadezAt bhagavanmAyAmohanajan
+
+--- Diff 41 ---
+ं वादो ज्ञाते द्वैतं न विद्यते ।। १८ ।। इति ।।प्र दी सतामुपदेशात् भगवन्मायामोहनजन्य
+M vAdo jJAte dvaitaM na vidyate .. 18 .. iti ..pra dI satAmupadezAt bhagavanmAyAmohanajanya
+
+--- Diff 42 ---
+ादो ज्ञाते द्वैतं न विद्यते ।। १८ ।। इति ।।प्र दी सतामुपदेशात् भगवन्मायामोहनजन्यजी
+Ado jJAte dvaitaM na vidyate .. 18 .. iti ..pra dI satAmupadezAt bhagavanmAyAmohanajanyajI
+
+--- Diff 43 ---
+ ज्ञाते द्वैतं न विद्यते ।। १८ ।। इति ।।प्र दी सतामुपदेशात् भगवन्मायामोहनजन्यजीवे
+ jJAte dvaitaM na vidyate .. 18 .. iti ..pra dI satAmupadezAt bhagavanmAyAmohanajanyajIve
+
+--- Diff 44 ---
+त्येते श्लोका भवन्तीत्यनेनान्वयः।। १८ ।।विश्वस्यात्वविवक्षायामादिसामान्यमुत्कटम्
+tyete zlokA bhavantItyanenAnvayaH.. 18 ..vizvasyAtvavivakSAyAmAdisAmAnyamutkaTam
+
+--- Diff 45 ---
+रतिपत्तौ स्यादाप्तिसामान्यमेव च ।। १९ ।।प्र दी एवं विश्वादिरूपत्रयं प्रणवावयवाकार
+ratipattau syAdAptisAmAnyameva ca .. 19 ..pra dI evaM vizvAdirUpatrayaM praNavAvayavAkAra
+
+--- Diff 46 ---
+्यैव विश्वसाम्यमेव भवेदित्यर्थः ।। १९ ।।तैजसस्योत्वविज्ञाने उत्कर्षो दृश्यते स्फु
+yaiva vizvasAmyameva bhavedityarthaH .. 19 ..taijasasyotvavijJAne utkarSo dRzyate sphu
+
+--- Diff 47 ---
+्रतिपत्तौ स्यादुभयत्वं तथाविधम् ।। २० ।।प्र दी उकारवाच्यतैजसापरनामधेयकप्रद्युम्नो
+ratipattau syAdubhayatvaM tathAvidham .. 20 ..pra dI ukAravAcyataijasAparanAmadheyakapradyumno
+
+--- Diff 48 ---
+्वं चेत्युभयवत्वं स्यादित्यर्थः ।। २० ।।मकारभावे प्राज्ञस्य मानसामान्यमुत्कटम् ।
+vaM cetyubhayavatvaM syAdityarthaH .. 20 ..makArabhAve prAjJasya mAnasAmAnyamutkaTam .
+
+--- Diff 49 ---
+ासंप्रतिपत्तौ तु लयसामान्यमेव च ।। २१ ।।प्र दी मकारवाच्यप्राज्ञापरनामधेयकसंकर्षणो
+AsaMpratipattau tu layasAmAnyameva ca .. 21 ..pra dI makAravAcyaprAjJAparanAmadheyakasaMkarSaNo
+
+--- Diff 50 ---
+न प्राज्ञसाम्यमेव स्यादित्यर्थः ।। २१ ।।त्रिषु धामसु यत्तुल्यं सामान्यं वेत्ति नि
+na prAjJasAmyameva syAdityarthaH .. 21 ..triSu dhAmasu yattulyaM sAmAnyaM vetti ni
+
+--- Diff 51 ---
+र्वभूतानां वन्द्यश्चैष महामुनिः ।। २२ ।।प्र दी अनिरुद्धाधुपासकफलवेत्तारः सर्वभूतव
+rvabhUtAnAM vandyazcaiSa mahAmuniH .. 22 ..pra dI aniruddhAdhupAsakaphalavettAraH sarvabhUtava
+
+--- Diff 52 ---
+ां पूज्यो वन्द्यश्च भवतीत्यर्थः ।। २२ ।।अकारो नयते विश्वं उकारश्चापि तैजसम् । मका
+AM pUjyo vandyazca bhavatItyarthaH .. 22 ..akAro nayate vizvaM ukArazcApi taijasam . makA
+
+--- Diff 53 ---
+यतेऽगतिः ।। २३ ।। ।। इति तृतीयः खण्डः ।।प्र दी विश्वादिरूपत्रयोपासनात्सर्वकामाप्त
+yate'gatiH .. 23 .. .. iti tRtIyaH khaNDaH ..pra dI vizvAdirUpatrayopAsanAtsarvakAmApta
+
+--- Diff 54 ---
+्यत एव गतिरित्यर्थः । तुरीयेऽस्ति गतिरिति वक्तव्ये अगतिर्न विद्यत इत्युक्तिः विश्
+yata eva gatirityarthaH . turIye'sti gatiriti vaktavye agatirna vidyata ityuktiH viz
+
+--- Diff 55 ---
+ि नेति शंकावारणार्थमिति ज्ञेयम् ।। २३ ।।ओंकारं पादशो विद्यात्पादामात्रा न संशयः ।
+i neti zaMkAvAraNArthamiti jJeyam .. 23 ..oMkAraM pAdazo vidyAtpAdAmAtrA na saMzayaH .
+
+--- Diff 56 ---
+ ज्ञात्वा न किञ्चिदपि चिन्तयेत् ।। २४ ।।प्र दी प्रणवे प्रणवावयवाकारादिवाच्यप्रद्य
+ jJAtvA na kiJcidapi cintayet .. 24 ..pra dI praNave praNavAvayavAkArAdivAcyapradya
+
+--- Diff 57 ---
+ चैतद्ज्ञानादेव सिद्धेरिति भावः ।। २४ ।।युञ्जीत प्रणवे चेतः प्रणवो ब्रह्म निर्भयम
+ caitadjJAnAdeva siddheriti bhAvaH .. 24 ..yuJjIta praNave cetaH praNavo brahma nirbhayama
+
+--- Diff 58 ---
+ययुक्तस्य न भयं विद्यते क्वचित् ।। २५ ।।प्र दी समस्तप्रणवशब्दवाच्यपरवासुदेवध्यानय
+yayuktasya na bhayaM vidyate kvacit .. 25 ..pra dI samastapraNavazabdavAcyaparavAsudevadhyAnaya
+
+--- Diff 59 ---
+ ब्रह्म निर्भयमिति विशेषणोक्तिः ।। २५ ।।प्रणवो ह्यपरं ब्रह्म प्रणवश्च परः स्मृतः
+ brahma nirbhayamiti vizeSaNoktiH .. 25 ..praNavo hyaparaM brahma praNavazca paraH smRtaH
+
+--- Diff 60 ---
+न्तरो बाह्यो न परः प्रणवोऽव्ययः ।। २६ ।।प्र दी प्रणवं प्रणवशब्दवाचं परवासुदेवं च
+ntaro bAhyo na paraH praNavo'vyayaH .. 26 ..pra dI praNavaM praNavazabdavAcaM paravAsudevaM ca
+
+--- Diff 61 ---
+ान्नपरः । अव्ययः शश्वदेकप्रकारः ।। २६ ।।सर्वस्य प्रणवो ह्यादिमध्यमन्तस्तथैव च । ए
+AnnaparaH . avyayaH zazvadekaprakAraH .. 26 ..sarvasya praNavo hyAdimadhyamantastathaiva ca . e
+
+--- Diff 62 ---
+वं ज्ञात्वा व्यश्नुते तदनन्तरम् ।। २७ ।।प्र दी एवं प्रणव प्रणवार्थज्ञानिनः फलमाह
+vaM jJAtvA vyaznute tadanantaram .. 27 ..pra dI evaM praNava praNavArthajJAninaH phalamAha
+
+--- Diff 63 ---
+नादिविशेषाभिप्रायेण वीत्युक्तिः ।। २७ ।।प्रणवं हीश्वरं विद्यात् सर्वस्य हृदि संस्
+nAdivizeSAbhiprAyeNa vItyuktiH .. 27 ..praNavaM hIzvaraM vidyAt sarvasya hRdi saMs
+
+--- Diff 64 ---
+पिर्नमोंकारं मत्वा धीरो न शोचति ।। २८ ।।प्र दी प्रणवशब्दवाच्यसर्वहृदिस्थित श्रीपर
+pirnamoMkAraM matvA dhIro na zocati .. 28 ..pra dI praNavazabdavAcyasarvahRdisthita zrIpara
+
+--- Diff 65 ---
+त्वादिगुणाष्टको मुच्यत इत्यर्थः ।। २८ ।।अमात्रोऽनन्तमात्रश्च द्वैतस्योपशमश्शिवः ।
+tvAdiguNASTako mucyata ityarthaH .. 28 ..amAtro'nantamAtrazca dvaitasyopazamazzivaH .
+
+--- Diff 66 ---
+ ।। ।। इति गौडपादीयाः माण्डूक्यकारिकाः।।प्र दी ओंकारवाच्यपरवासुदेवोपासकः मुक्तो भ
+ .. .. iti gauDapAdIyAH mANDUkyakArikAH..pra dI oMkAravAcyaparavAsudevopAsakaH mukto bha
+
+--- Diff 67 ---
+देव इति तदुपासको मुक्तो भवतीत्युक्तम् ।।।। भारद्वाजरामानुजाचार्यविरचिता गौडपादीयम
+deva iti tadupAsako mukto bhavatItyuktam .... bhAradvAjarAmAnujAcAryaviracitA gauDapAdIyama
+
+--- Diff 68 ---
+्डूक्यकारिकाप्रतिपदार्थदीपिका समाप्ता ।।कू भा एवमुक्तां समस्तव्यस्तप्रणवाभिधेय भग
+DUkyakArikApratipadArthadIpikA samAptA ..kU bhA evamuktAM samastavyastapraNavAbhidheya bhaga
+
+--- Diff 69 ---
+रणार्था । उपनिषत्समाप्त्यर्था च ।। २९ ।।।। श्रीकूरनारायणमुनिविरचितं गौडपादीयमाण्ड
+raNArthA . upaniSatsamAptyarthA ca .. 29 .... zrIkUranArAyaNamuniviracitaM gauDapAdIyamANDa
