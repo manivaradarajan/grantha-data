@@ -166,6 +166,30 @@ py_library(
     ],
 )
 
+py_library(
+    name = "grantha_markdown_validator",
+    srcs = ["grantha_markdown_validator.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("pyyaml"),
+    ],
+)
+
+py_library(
+    name = "hide_editor_comments",
+    srcs = ["hide_editor_comments.py"],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "html_details_to_grantha_md",
+    srcs = ["html_details_to_grantha_md.py"],
+    visibility = ["//visibility:public"],
+    deps = [
+        requirement("pyyaml"),
+    ],
+)
+
 # CLI binary
 py_binary(
     name = "grantha-converter",
@@ -254,6 +278,90 @@ py_test(
     name = "test_conversion_logic",
     srcs = ["test_conversion_logic.py"],
     data = glob(["test_data/**"]),
+    imports = [".."],
+    deps = [
+        ":md_to_json",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_grantha_markdown_validator",
+    srcs = ["test_grantha_markdown_validator.py"],
+    imports = [".."],
+    deps = [
+        ":grantha_markdown_validator",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_hide_editor_comments",
+    srcs = ["test_hide_editor_comments.py"],
+    imports = [".."],
+    deps = [
+        ":hide_editor_comments",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_html_details_converter",
+    srcs = ["test_html_details_converter.py"],
+    imports = [".."],
+    deps = [
+        ":html_details_to_grantha_md",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_md_to_json_conversion",
+    srcs = ["test_md_to_json_conversion.py"],
+    imports = [".."],
+    deps = [
+        ":md_to_json",
+        requirement("pytest"),
+    ],
+)
+
+# Tests in grantha_converter_test/ subdirectory
+py_test(
+    name = "test_hasher",
+    srcs = ["grantha_converter_test/test_hasher.py"],
+    imports = [".."],
+    deps = [
+        ":devanagari_extractor",
+        ":hasher",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_integration",
+    srcs = ["grantha_converter_test/test_integration.py"],
+    imports = [".."],
+    deps = [
+        ":json_to_md",
+        ":md_to_json",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_json_to_md",
+    srcs = ["grantha_converter_test/test_json_to_md.py"],
+    imports = [".."],
+    deps = [
+        ":json_to_md",
+        requirement("pytest"),
+        requirement("pyyaml"),
+    ],
+)
+
+py_test(
+    name = "test_md_to_json",
+    srcs = ["grantha_converter_test/test_md_to_json.py"],
     imports = [".."],
     deps = [
         ":md_to_json",

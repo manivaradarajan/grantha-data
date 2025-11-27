@@ -1,7 +1,7 @@
 """Tests for HTML details to Grantha Markdown converter."""
 
 
-from .html_details_to_grantha_md import (
+from grantha_converter.html_details_to_grantha_md import (
     DetailsBlock,
     PassageData,
     build_grantha_frontmatter,

@@ -29,3 +29,12 @@ py_test(
         requirement("rapidfuzz"),
     ],
 )
+
+py_test(
+    name = "test_meghamala_chunker",
+    srcs = ["test_meghamala_chunker.py"],
+    imports = ["../.."],
+    deps = [
+        "//tools/lib/grantha_converter:meghamala_chunker",
+    ],
+)
