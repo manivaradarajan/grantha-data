@@ -5,6 +5,8 @@ filegroup(
     name = "all_upanishads_json",
     srcs = [
         "//structured_md/upanishads/aitareya:json_files",
+        "//structured_md/upanishads/brihadaranyaka:json_files",
+        "//structured_md/upanishads/chandogya:json_files",
         "//structured_md/upanishads/isavasya:json_files",
         "//structured_md/upanishads/katha:json_files",
         "//structured_md/upanishads/kaushitaki:json_files",
