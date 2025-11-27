@@ -11,5 +11,9 @@ grantha_md2json_multipart(
         "chhandogya-upanishad-rangaramanuja-02-01-01.md",
         "chhandogya-upanishad-rangaramanuja-03-01-01.md",
         "chhandogya-upanishad-rangaramanuja-04-01-01.md",
+        "chhandogya-upanishad-rangaramanuja-05-01-01.md",
+        "chhandogya-upanishad-rangaramanuja-06-01-01.md",
+        "chhandogya-upanishad-rangaramanuja-07-01-01.md",
+        "chhandogya-upanishad-rangaramanuja-08-01-01.md",
     ],
 )
