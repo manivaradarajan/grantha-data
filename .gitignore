@@ -4,6 +4,7 @@
 .file_upload_*
 logs/
 .analysis_cache/
+temp-files/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
