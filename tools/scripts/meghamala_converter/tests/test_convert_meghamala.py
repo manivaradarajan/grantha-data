@@ -5,38 +5,12 @@ import contextlib
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
+import sys
+sys.path.append(str(Path(__file__).parent.parent.parent))
+
 from meghamala_converter.convert_meghamala import main as convert_meghamala_main
 
 # Mock data for analysis responses
-FAKE_ANALYSIS_JSON = {
-    "metadata": {
-        "canonical_title": "Test Upanishad",
-        "grantha_id": "test-upanishad",
-        "structure_type": "prose",
-    },
-    "structural_analysis": {
-        "suggested_filename": "test-upanishad-rangaramanuja-01-01",
-        "sections": [
-            {"type": "paragraph", "start_line": 1, "end_line": 10},
-        ],
-    },
-    "chunking_strategy": {
-        "execution_plan": [
-            {
-                "type": "full",
-                "start_line": 1,
-                "end_line": None,
-                "description": "Complete file",
-                "start_marker": "Line 1",
-                "end_marker": "Line 10",
-            },
-        ]
-    },
-    "parsing_instructions": {
-        "recommended_unit": "paragraph",
-        "parsing_rules": ["rule1", "rule2"],
-    },
-}
 
 
 class TestMeghamalaConverter(unittest.TestCase):
@@ -51,7 +25,7 @@ class TestMeghamalaConverter(unittest.TestCase):
         prompts_dir = Path(__file__).parent.parent / "prompts"
 
         self.base_args = [
-            "--output-dir",
+            "--output",
             str(self.output_dir),
             "--grantha-id",
             "test-grantha",
@@ -68,15 +42,6 @@ class TestMeghamalaConverter(unittest.TestCase):
         file_path.write_text(content, encoding="utf-8")
         return file_path
 
-    @contextlib.contextmanager
-    def temp_dir_as_cwd(self):
-        """Temporarily changes the current working directory."""
-        old_cwd = Path.cwd()
-        os.chdir(self.temp_dir)
-        try:
-            yield
-        finally:
-            os.chdir(old_cwd)
 
     @patch("tools.scripts.meghamala_converter.convert_meghamala.GeminiClient")
     def test_single_file_conversion_success(self, mock_gemini_client_class):

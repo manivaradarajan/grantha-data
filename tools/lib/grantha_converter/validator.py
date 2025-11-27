@@ -3,7 +3,10 @@ from pathlib import Path
 import sys
 
 # Local imports
-from grantha_converter.devanagari_extractor import extract_devanagari
+from grantha_converter.devanagari_extractor import (
+    extract_devanagari,
+    clean_text_for_devanagari_comparison,
+)
 from grantha_converter.diff_utils import (
     show_devanagari_diff,
     show_transliteration_diff,
@@ -41,8 +44,11 @@ class Validator:
         chunk_log_dir = self.file_log_dir / "chunks" / f"chunk_{chunk_index}"
 
         description = chunk_metadata.get("description")
-        input_devanagari = extract_devanagari(chunk_text)
-        output_devanagari = extract_devanagari(converted_body)
+        # Use clean_text_for_devanagari_comparison to match devanagari-diff behavior
+        cleaned_input = clean_text_for_devanagari_comparison(chunk_text)
+        input_devanagari = extract_devanagari(cleaned_input)
+        cleaned_output = clean_text_for_devanagari_comparison(converted_body)
+        output_devanagari = extract_devanagari(cleaned_output)
 
         validation_status = "PASSED"
         diff_chars = 0

@@ -52,7 +52,6 @@ DEFAULT_SOURCE_DIR = Path("sources/upanishads/meghamala")
 DEFAULT_DEST_DIR = Path("structured_md/upanishads")
 DEFAULT_LOGS_DIR = Path("logs")
 DIFF_THRESHOLD = 300
-CONTENT_SIMILARITY_WEIGHT = 1.0  # Now the only factor
 
 
 
@@ -98,16 +97,6 @@ def setup_logging(log_dir: Path) -> Tuple[logging.Logger, Path]:
 # This ensures consistency across all tools (diff, repair, batch_repair)
 
 
-def _clean_filename(filename: str) -> str:
-    """Normalizes a filename for similarity comparison.
-
-    Args:
-        filename: The filename to clean.
-
-    Returns:
-        A cleaned, lowercase filename without the extension.
-    """
-    return Path(filename).stem.lower()
 
 
 def get_devanagari_diff_count(text1: str, text2: str) -> int:

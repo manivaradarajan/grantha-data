@@ -45,7 +45,7 @@ def clean_text_for_devanagari_comparison(
     - Text repair operations (devanagari_repair.py) when skip_headings=False
 
     Removes:
-        - YAML frontmatter (enclosed in ---)
+        - YAML frontmatter (enclosed in --- or +++)
         - HTML comments (<!-- ... -->)
         - Markdown headings (lines starting with #) - only if skip_headings=True
         - Markdown bold markers (**)
@@ -73,9 +73,14 @@ def clean_text_for_devanagari_comparison(
         >>> clean_text_for_devanagari_comparison(text, skip_headings=False)
         '# मन्त्रः 1 अग्निमीळे पुरोहितं'
     """
-    # 1. Remove YAML frontmatter
-    if text.strip().startswith("---"):
+    # 1. Remove YAML/TOML frontmatter (--- or +++ delimiters)
+    stripped = text.strip()
+    if stripped.startswith("---"):
         parts = text.split("---", 2)
+        if len(parts) == 3:
+            text = parts[2]
+    elif stripped.startswith("+++"):
+        parts = text.split("+++", 2)
         if len(parts) == 3:
             text = parts[2]
 
@@ -196,15 +201,23 @@ def extract_devanagari_words_with_positions(
     # Build list of excluded ranges
     excluded_ranges = []
 
-    # 1. Find frontmatter range
-    if skip_frontmatter and text.strip().startswith("---"):
-        parts = text.split("---", 2)
-        if len(parts) == 3:
-            # Find the end of the second ---
-            first_dash_end = text.find("---") + 3
-            second_dash_start = text.find("---", first_dash_end)
-            second_dash_end = second_dash_start + 3
-            excluded_ranges.append((0, second_dash_end))
+    # 1. Find frontmatter range (--- or +++ delimiters)
+    if skip_frontmatter:
+        stripped = text.strip()
+        delimiter = None
+        if stripped.startswith("---"):
+            delimiter = "---"
+        elif stripped.startswith("+++"):
+            delimiter = "+++"
+
+        if delimiter:
+            parts = text.split(delimiter, 2)
+            if len(parts) == 3:
+                # Find the end of the second delimiter
+                first_delim_end = text.find(delimiter) + len(delimiter)
+                second_delim_start = text.find(delimiter, first_delim_end)
+                second_delim_end = second_delim_start + len(delimiter)
+                excluded_ranges.append((0, second_delim_end))
 
     # 2. Find all HTML comment ranges
     if skip_comments:

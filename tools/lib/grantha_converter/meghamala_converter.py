@@ -1,5 +1,6 @@
 import json
 import re
+
 # Standard library imports
 import tempfile
 from pathlib import Path
@@ -35,7 +36,13 @@ from grantha_converter.visual_diff import print_visual_diff
 class MeghamalaConverter:
     """Orchestrates the conversion of a single Meghamala file."""
 
-    def __init__(self, client: BaseGeminiClient, prompt_manager: PromptManager, args, models: dict):
+    def __init__(
+        self,
+        client: BaseGeminiClient,
+        prompt_manager: PromptManager,
+        args,
+        models: dict,
+    ):
         self.client = client
         self.prompt_manager = prompt_manager
         self.args = args
@@ -76,7 +83,8 @@ class MeghamalaConverter:
             self._display_analysis_summary(analysis, input_path)
 
             input_text = input_path.read_text(encoding="utf-8")
-            input_text = self._preprocess_text(input_text)
+            # TODO: consider removing
+            # input_text = self._preprocess_text(input_text)
 
             # Phase 2: Chunking
             chunks = self._run_chunking_phase(input_text, analysis)
@@ -99,7 +107,11 @@ class MeghamalaConverter:
 
             # Phase 5: Final Validation and Repair
             final_content = self._run_final_validation_and_repair_phase(
-                input_text, merged_content, str(input_path), str(output_path), file_log_dir
+                input_text,
+                merged_content,
+                str(input_path),
+                str(output_path),
+                file_log_dir,
             )
             if final_content is None:
                 cleanup_temp_chunks(temp_files, verbose=True)
@@ -131,15 +143,20 @@ class MeghamalaConverter:
             use_upload_cache=not self.args.no_upload_cache,
             force_reanalysis=self.args.force_analysis,
             analysis_cache_dir=self.args.analysis_cache_dir,
-            custom_analysis_prompt=getattr(self.args, 'analysis_prompt', None),
+            custom_analysis_prompt=getattr(self.args, "analysis_prompt", None),
         )
         print(f"📁 Analysis Cache Dir: {self.args.analysis_cache_dir}")
         try:
             analysis = analyzer.analyze(input_path, self.models["analysis"])
-            self._save_log_file(file_log_dir / "00_analysis_result.json", json.dumps(analysis, indent=2, ensure_ascii=False))
+            self._save_log_file(
+                file_log_dir / "00_analysis_result.json",
+                json.dumps(analysis, indent=2, ensure_ascii=False),
+            )
             return analysis
         except Exception as e:
-            print(f"❌ File analysis failed for {input_path.name}: {e}", file=sys.stderr)
+            print(
+                f"❌ File analysis failed for {input_path.name}: {e}", file=sys.stderr
+            )
             return None
 
     def _determine_output_path(
@@ -153,8 +170,12 @@ class MeghamalaConverter:
         if filename_override:
             final_filename = filename_override
         else:
-            suggestion = analysis.get("structural_analysis", {}).get("suggested_filename")
-            final_filename = f"{suggestion}.md" if suggestion else f"{input_path.stem}_converted.md"
+            suggestion = analysis.get("structural_analysis", {}).get(
+                "suggested_filename"
+            )
+            final_filename = (
+                f"{suggestion}.md" if suggestion else f"{input_path.stem}_converted.md"
+            )
 
         if not final_filename or final_filename == ".":
             final_filename = f"{input_path.stem}_converted.md"
@@ -163,7 +184,9 @@ class MeghamalaConverter:
         print(f"🎯 Target Output: {output_path}")
         return output_path
 
-    def _run_chunking_phase(self, input_text: str, analysis: dict) -> list[tuple[str, dict]] | None:
+    def _run_chunking_phase(
+        self, input_text: str, analysis: dict
+    ) -> list[tuple[str, dict]] | None:
         """Splits the input text into chunks based on the analysis execution plan."""
         print(f"\n{'='*60}")
         print("📋 PHASE 2: CHUNKING FILE")
@@ -173,7 +196,9 @@ class MeghamalaConverter:
             print("❌ No execution plan found in analysis result.", file=sys.stderr)
             return None
 
-        print(f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks)...")
+        print(
+            f"✂️ Splitting file using execution plan ({len(execution_plan)} chunks)..."
+        )
         return split_by_execution_plan(input_text, execution_plan, verbose=False)
 
     def _run_conversion_phase(
@@ -188,7 +213,9 @@ class MeghamalaConverter:
         print(f"{ '='*60}\n")
         return self._convert_and_validate_chunks(chunks, analysis, file_log_dir)
 
-    def _run_stitching_phase(self, temp_files: list[str], file_log_dir: Path) -> str | None:
+    def _run_stitching_phase(
+        self, temp_files: list[str], file_log_dir: Path
+    ) -> str | None:
         """Merges the converted temporary chunk files into a single string."""
         print(f"\n{'='*60}")
         print("📋 PHASE 4: MERGING AND WRITING OUTPUT")
@@ -230,15 +257,13 @@ class MeghamalaConverter:
         dmp.diff_cleanupSemantic(diffs_before)
         diff_count_before = sum(1 for op, _ in diffs_before if op != dmp.DIFF_EQUAL)
 
-        # 3. Show visual diff
-        print("🔎 Displaying Devanagari diff between source and converted text:")
-        print_visual_diff(source_devanagari, converted_devanagari)
-
         if diff_count_before == 0:
             print("✓ No Devanagari discrepancies found. Skipping repair.")
             return merged_content
 
-        print(f"\n⚠️  Found {diff_count_before} Devanagari discrepancies. Attempting repair...")
+        print(
+            f"\n⚠️  Found {diff_count_before} Devanagari discrepancies. Attempting repair..."
+        )
 
         # 4. Attempt repair
         # repair_file works on files, so we write the merged content to a temporary file
@@ -250,22 +275,36 @@ class MeghamalaConverter:
             output_file=str(temp_output_path),
             verbose=False,
             dry_run=False,
-            create_backup=False, # We handle our own temp files
+            create_backup=False,  # We handle our own temp files
         )
 
         if not repair_successful:
             print(f"❌ Repair failed: {repair_message}", file=sys.stderr)
             os.remove(temp_output_path)
-            return merged_content # Return original merged content on failure
+            # Show diff and save log for original conversion
+            print("\n🔎 Displaying Devanagari diff for final output:")
+            print_visual_diff(source_devanagari, converted_devanagari)
+            if diff_count_before > 0:
+                self._save_complete_diff_log(
+                    source_devanagari,
+                    converted_devanagari,
+                    input_file,
+                    output_file,
+                    diffs_before,
+                )
+            return merged_content  # Return original merged content on failure
 
         # 5. Compare diffs and decide
         repaired_content = temp_output_path.read_text(encoding="utf-8")
-        repaired_devanagari = extract_devanagari(repaired_content)
+        repaired_cleaned = clean_text_for_devanagari_comparison(repaired_content)
+        repaired_devanagari = extract_devanagari(repaired_cleaned)
         diffs_after = dmp.diff_main(source_devanagari, repaired_devanagari)
         dmp.diff_cleanupSemantic(diffs_after)
         diff_count_after = sum(1 for op, _ in diffs_after if op != dmp.DIFF_EQUAL)
 
-        print(f"📊 Repair analysis: Diffs before: {diff_count_before}, Diffs after: {diff_count_after}")
+        print(
+            f"📊 Repair analysis: Diffs before: {diff_count_before}, Diffs after: {diff_count_after}"
+        )
 
         if diff_count_after < diff_count_before:
             print("✅ Repair improved the output. Using repaired version.")
@@ -278,7 +317,11 @@ class MeghamalaConverter:
             final_devanagari = converted_devanagari
             final_diffs = diffs_before
 
-        # 6. Save complete diff log for FINAL content (post-repair)
+        # 6. Show visual diff of FINAL output
+        print("\n🔎 Displaying Devanagari diff for final output:")
+        print_visual_diff(source_devanagari, final_devanagari)
+
+        # 7. Save complete diff log for FINAL content (post-repair)
         final_diff_count = sum(1 for op, _ in final_diffs if op != dmp.DIFF_EQUAL)
         if final_diff_count > 0:
             self._save_complete_diff_log(
@@ -286,10 +329,10 @@ class MeghamalaConverter:
                 final_devanagari,
                 input_file,
                 output_file,
-                final_diffs
+                final_diffs,
             )
 
-        # 7. Cleanup
+        # 8. Cleanup
         os.remove(temp_output_path)
         repaired_backup = Path(str(temp_output_path) + ".repaired")
         if repaired_backup.exists():
@@ -303,7 +346,6 @@ class MeghamalaConverter:
         output_path.write_text(content, encoding="utf-8")
         print(f"✓ Output written to {output_path}")
         print(f"\n✅ CONVERSION COMPLETE: {output_path}")
-
 
     def _convert_and_validate_chunks(
         self,
@@ -327,7 +369,7 @@ class MeghamalaConverter:
             prompt_manager=self.prompt_manager,
             file_log_dir=file_log_dir,
             use_upload_cache=not self.args.no_upload_cache,
-            custom_conversion_prompt=getattr(self.args, 'conversion_prompt', None),
+            custom_conversion_prompt=getattr(self.args, "conversion_prompt", None),
         )
         validator = Validator(
             file_log_dir=file_log_dir,
@@ -338,8 +380,14 @@ class MeghamalaConverter:
         for i, (chunk_text, chunk_metadata) in enumerate(chunks):
             try:
                 temp_file, validation_result = self._process_single_chunk(
-                    chunk_text, chunk_metadata, i, len(chunks), analysis_result,
-                    converter, validator, temp_dir
+                    chunk_text,
+                    chunk_metadata,
+                    i,
+                    len(chunks),
+                    analysis_result,
+                    converter,
+                    validator,
+                    temp_dir,
                 )
                 temp_file_paths.append(str(temp_file))
                 chunk_validations.append(validation_result)
@@ -371,7 +419,9 @@ class MeghamalaConverter:
         display_chunk_index = index + 1
         chunk_metadata["chunk_index"] = display_chunk_index
         description = chunk_metadata.get("description", f"Chunk {display_chunk_index}")
-        print(f"🔄 Converting chunk {display_chunk_index}/{total_chunks}: {description[:70]}...")
+        print(
+            f"🔄 Converting chunk {display_chunk_index}/{total_chunks}: {description[:70]}..."
+        )
 
         # Convert the chunk text using the provided converter instance
         full_chunk_content = converter.convert(
@@ -393,7 +443,6 @@ class MeghamalaConverter:
 
         return temp_file, validation_result
 
-
     def _validate_and_repair_final(
         self,
         input_text,
@@ -402,7 +451,9 @@ class MeghamalaConverter:
         output_file,
         file_log_dir,
     ):
-        is_valid, validation_message = validate_merged_output(input_text, merged_content)
+        is_valid, validation_message = validate_merged_output(
+            input_text, merged_content
+        )
         if is_valid:
             print(f"✓ {validation_message}\n")
             return merged_content
@@ -411,7 +462,9 @@ class MeghamalaConverter:
 
         repair_log_dir = file_log_dir / "repair"
         (repair_log_dir).mkdir(parents=True, exist_ok=True)
-        with open(repair_log_dir / "01_pre_repair_output.md", "w", encoding="utf-8") as f:
+        with open(
+            repair_log_dir / "01_pre_repair_output.md", "w", encoding="utf-8"
+        ) as f:
             f.write(merged_content)
 
         print("   Attempting repair...")
@@ -432,7 +485,9 @@ class MeghamalaConverter:
 
         if repair_successful:
             repaired_content = Path(output_file).read_text(encoding="utf-8")
-            with open(repair_log_dir / "02_post_repair_output.md", "w", encoding="utf-8") as f:
+            with open(
+                repair_log_dir / "02_post_repair_output.md", "w", encoding="utf-8"
+            ) as f:
                 f.write(repaired_content)
 
             print("✓ Repair successful.")
@@ -461,7 +516,10 @@ class MeghamalaConverter:
             analysis_metadata["commentator"] = self.args.commentator
 
         from grantha_converter.utils import extract_part_number_from_filename
-        analysis_metadata["part_num"] = extract_part_number_from_filename(input_path.name)
+
+        analysis_metadata["part_num"] = extract_part_number_from_filename(
+            input_path.name
+        )
         analysis["metadata"] = analysis_metadata
 
     def _display_analysis_summary(self, analysis: dict, input_path: Path):
@@ -513,7 +571,8 @@ class MeghamalaConverter:
         for v in valid_validations:
             status = v.get("status", "N/A")
             status_color = (
-                Fore.YELLOW if status == "MISMATCH"
+                Fore.YELLOW
+                if status == "MISMATCH"
                 else Fore.GREEN if status == "PASSED" else ""
             )
             diff = v.get("char_diff", 0)
@@ -552,10 +611,10 @@ class MeghamalaConverter:
         diff_log_path = output_dir / f"diff_log_{timestamp}.txt"
 
         try:
-            with open(diff_log_path, 'w', encoding='utf-8') as f:
-                f.write("="*80 + "\n")
+            with open(diff_log_path, "w", encoding="utf-8") as f:
+                f.write("=" * 80 + "\n")
                 f.write("COMPLETE DEVANAGARI DIFF LOG (FINAL OUTPUT)\n")
-                f.write("="*80 + "\n\n")
+                f.write("=" * 80 + "\n\n")
                 f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
                 f.write(f"Source file: {Path(input_file).resolve()}\n")
                 f.write(f"Destination file: {Path(output_file).resolve()}\n")
@@ -565,7 +624,7 @@ class MeghamalaConverter:
                 dmp = diff_match_patch.diff_match_patch()
                 diff_count = sum(1 for op, _ in diffs if op != dmp.DIFF_EQUAL)
                 f.write(f"Total differences found: {diff_count}\n\n")
-                f.write("="*80 + "\n\n")
+                f.write("=" * 80 + "\n\n")
 
                 # Generate all diffs with context
                 diff_num = 0
@@ -585,7 +644,9 @@ class MeghamalaConverter:
 
                     # Get context from source
                     context_start = max(0, source_pos - context_chars)
-                    context_end = min(len(source_devanagari), source_pos + len(text) + context_chars)
+                    context_end = min(
+                        len(source_devanagari), source_pos + len(text) + context_chars
+                    )
                     context = source_devanagari[context_start:context_end]
 
                     f.write(f"--- Diff {diff_num} ---\n")
@@ -594,7 +655,9 @@ class MeghamalaConverter:
 
                     # Transliterate to Harvard-Kyoto
                     try:
-                        transliterated = transliterate.process('Devanagari', 'HK', context)
+                        transliterated = transliterate.process(
+                            "Devanagari", "HK", context
+                        )
                         f.write(f"{transliterated}\n")
                     except Exception:
                         f.write("(transliteration failed)\n")
@@ -608,10 +671,14 @@ class MeghamalaConverter:
                     if text.strip() == "":
                         f.write("  ⚠️  WHITESPACE-ONLY CHANGE:\n")
                         if op == dmp.DIFF_DELETE:
-                            f.write(f"    DELETED: {len(text)} whitespace character(s)\n")
+                            f.write(
+                                f"    DELETED: {len(text)} whitespace character(s)\n"
+                            )
                             f.write(f"    Representation: {repr(text)}\n")
                         elif op == dmp.DIFF_INSERT:
-                            f.write(f"    INSERTED: {len(text)} whitespace character(s)\n")
+                            f.write(
+                                f"    INSERTED: {len(text)} whitespace character(s)\n"
+                            )
                             f.write(f"    Representation: {repr(text)}\n")
                     else:
                         # Get words from the changed portion
@@ -625,26 +692,36 @@ class MeghamalaConverter:
                         if has_leading_ws or has_trailing_ws:
                             f.write("  ⚠️  CONTAINS WHITESPACE:\n")
                             if has_leading_ws:
-                                leading_ws = text[:len(text) - len(text.lstrip())]
-                                f.write(f"    Leading whitespace: {len(leading_ws)} character(s) - {repr(leading_ws)}\n")
+                                leading_ws = text[: len(text) - len(text.lstrip())]
+                                f.write(
+                                    f"    Leading whitespace: {len(leading_ws)} character(s) - {repr(leading_ws)}\n"
+                                )
                             if has_trailing_ws:
-                                trailing_ws = text[len(text.rstrip()):]
-                                f.write(f"    Trailing whitespace: {len(trailing_ws)} character(s) - {repr(trailing_ws)}\n")
+                                trailing_ws = text[len(text.rstrip()) :]
+                                f.write(
+                                    f"    Trailing whitespace: {len(trailing_ws)} character(s) - {repr(trailing_ws)}\n"
+                                )
                             f.write("\n")
 
                         if op == dmp.DIFF_DELETE:
                             f.write(f"  DELETED from source ({len(words)} words):\n")
                             for i, word in enumerate(words, 1):
                                 try:
-                                    word_translit = transliterate.process('Devanagari', 'HK', word)
+                                    word_translit = transliterate.process(
+                                        "Devanagari", "HK", word
+                                    )
                                     f.write(f"    [{i}] {word} ({word_translit})\n")
                                 except:
                                     f.write(f"    [{i}] {word}\n")
                         elif op == dmp.DIFF_INSERT:
-                            f.write(f"  INSERTED in destination ({len(words)} words):\n")
+                            f.write(
+                                f"  INSERTED in destination ({len(words)} words):\n"
+                            )
                             for i, word in enumerate(words, 1):
                                 try:
-                                    word_translit = transliterate.process('Devanagari', 'HK', word)
+                                    word_translit = transliterate.process(
+                                        "Devanagari", "HK", word
+                                    )
                                     f.write(f"    [{i}] {word} ({word_translit})\n")
                                 except:
                                     f.write(f"    [{i}] {word}\n")
@@ -691,7 +768,9 @@ class MeghamalaConverter:
         processed_text = re.sub(r"([^\*])\s+\*\*", r"\1**", processed_text)
 
         # Fix Broken Separators: Ensure separators are standard.
-        processed_text = re.sub(r"^\*{3,}$", r"******", processed_text, flags=re.MULTILINE)
+        processed_text = re.sub(
+            r"^\*{3,}$", r"******", processed_text, flags=re.MULTILINE
+        )
 
         # Standardize Verse Numbers: Normalize spacing to ।। N ।।
         # Only handle the standard Devanagari danda format (।।)
@@ -704,9 +783,7 @@ class MeghamalaConverter:
         # Match: ।। + optional_space + digits + optional_space + ।।
         # This normalizes spacing but doesn't try to handle different delimiter types
         processed_text = re.sub(
-            r'।।\s*([\u0966-\u096F]+)\s*।।',
-            normalize_verse_number,
-            processed_text
+            r"।।\s*([\u0966-\u096F]+)\s*।।", normalize_verse_number, processed_text
         )
 
         return processed_text
@@ -725,4 +802,4 @@ class MeghamalaConverter:
         Returns:
             Text with all ** markers removed
         """
-        return re.sub(r'\*\*', '', text)
+        return re.sub(r"\*\*", "", text)

@@ -267,11 +267,6 @@ class GranthaMetadata:
             )
         return self.canonical_title[script]
 
-    def has_commentary(self, commentary_id: str) -> bool:
-        """Returns True if commentary metadata exists."""
-        if self.commentaries_metadata is None:
-            return False
-        return commentary_id in self.commentaries_metadata
 
     @property
     def is_multipart(self) -> bool:

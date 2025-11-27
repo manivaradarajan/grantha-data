@@ -10,7 +10,11 @@ from typing import Dict, List, Optional, Tuple
 
 import yaml
 
-from grantha_converter.devanagari_extractor import HASH_VERSION, extract_devanagari
+from grantha_converter.devanagari_extractor import (
+    HASH_VERSION,
+    extract_devanagari,
+    clean_text_for_devanagari_comparison,
+)
 from grantha_converter.hasher import hash_text
 
 
@@ -422,11 +426,15 @@ def validate_merged_output(
             - message: Descriptive message about validation result.
     """
     # Extract Devanagari from original input
-    input_devanagari = extract_devanagari(original_input)
+    # Use clean_text_for_devanagari_comparison to match devanagari-diff behavior
+    cleaned_input = clean_text_for_devanagari_comparison(original_input)
+    input_devanagari = extract_devanagari(cleaned_input)
 
     # Extract Devanagari from output body (skip frontmatter)
     frontmatter, body, _ = extract_frontmatter_and_body(merged_output)
-    output_devanagari = extract_devanagari(body if frontmatter else merged_output)
+    output_text = body if frontmatter else merged_output
+    cleaned_output = clean_text_for_devanagari_comparison(output_text)
+    output_devanagari = extract_devanagari(cleaned_output)
 
     # Compare character counts
     if input_devanagari == output_devanagari:

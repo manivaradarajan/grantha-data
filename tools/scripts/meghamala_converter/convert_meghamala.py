@@ -103,6 +103,9 @@ Examples:
   # Directory mode - converts all files, requires ID and title
   %(prog)s -i sources/upanishads/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्"
 
+  # Directory mode with file exclusion
+  %(prog)s -i sources/upanishads/ -o output/ --grantha-id brihadaranyaka-upanishad --canonical-title "बृहदारण्यकोपनिषत्" --exclude-file-pattern "*-index.md"
+
   # Using custom prompts
   %(prog)s -i input.md -o output.md --analysis-prompt my_analysis.txt --conversion-prompt my_conversion.txt
         """,
@@ -164,6 +167,10 @@ Examples:
         "--no-cache",
         action="store_true",
         help="Disable analysis caching",
+    )
+    parser.add_argument(
+        "--exclude-file-pattern",
+        help="Glob pattern to exclude files (e.g., '*-index.md', 'temp-*.md')",
     )
 
     parser.add_argument(
@@ -242,10 +249,17 @@ def _check_already_converted(output_dir: Path, input_file_stem: str, grantha_id:
 def _handle_directory_mode(args, client, prompt_manager: PromptManager, output_dir: Path, models: dict):
     """Handles the logic for converting all files in a directory."""
     input_dir = Path(args.input)
-    parts = get_directory_parts(input_dir)
+    parts = get_directory_parts(input_dir, exclude_pattern=args.exclude_file_pattern)
     if not parts:
-        print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
+        if args.exclude_file_pattern:
+            print(f"Error: No markdown files found in {input_dir} (after applying exclude pattern: {args.exclude_file_pattern})", file=sys.stderr)
+        else:
+            print(f"Error: No markdown files found in {input_dir}", file=sys.stderr)
         return 1
+
+    if args.exclude_file_pattern:
+        print(f"📋 Exclude pattern: {args.exclude_file_pattern}")
+        print(f"📋 Found {len(parts)} file(s) after exclusion")
 
     # Create run log directory once for the entire directory conversion
     run_log_dir = get_or_create_run_log_dir()

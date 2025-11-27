@@ -335,15 +335,16 @@ def split_by_execution_plan(
         if plan_idx == 0:
             start_idx = 0
         else:
+            # For subsequent chunks, start from where the previous chunk ended
+            # to avoid gaps in content. The start_marker is just for context.
+            start_idx = current_pos
+
+            # Validate that the start_marker exists (but don't use its position)
             found_start = text.find(start_marker, current_pos)
-            if found_start == -1:
-                if verbose:
-                    print(
-                        f"Warning: Start marker '{start_marker}' not found. Using pos {current_pos}."
-                    )
-                start_idx = current_pos
-            else:
-                start_idx = found_start
+            if found_start == -1 and verbose:
+                print(
+                    f"Warning: Start marker '{start_marker}' not found after position {current_pos}."
+                )
 
         # --- END INDEX LOGIC ---
         # Default: Find the first occurrence after start

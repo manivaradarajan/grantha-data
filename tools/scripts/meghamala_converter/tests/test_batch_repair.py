@@ -64,6 +64,13 @@ grantha_id: test-upanishad-too-different-dest
 अत्यంతं भिन्नः गंतव्यः पाठः
 """, encoding="utf-8")
 
+    (dest_upanishad_dir / "orphan_dest.md").write_text("""---
+grantha_id: test-upanishad-orphan-dest
+---
+# Orphan
+अनाथ पाठः
+""", encoding="utf-8")
+
     return base_dir
 
 def run_script(cwd: Path, log_dir: Path) -> None:
@@ -95,9 +102,19 @@ def test_logging_logic(setup_test_environment: Path):
     run_script(base_dir, log_dir)
 
     # --- Find the log files ---
-    unmatched_source_log = next(log_dir.glob("unmatched_source_files_*.log"), None)
-    unmatched_dest_log = next(log_dir.glob("unmatched_dest_files_*.log"), None)
-    unrepairable_log = next(log_dir.glob("unrepairable_files_*.log"), None)
+    # --- Find the log files ---
+    # The script creates a timestamped subdirectory
+    run_log_dir = next(log_dir.glob("*"), None)
+    assert run_log_dir is not None and run_log_dir.is_dir(), "Run log directory was not created."
+
+    unmatched_source_log = run_log_dir / "unmatched_source_files.log"
+    unmatched_dest_log = run_log_dir / "unmatched_dest_files.log"
+    unrepairable_log = run_log_dir / "unrepairable_files.log"
+
+    # Check existence explicitly since we're constructing paths
+    if not unmatched_source_log.exists(): unmatched_source_log = None
+    if not unmatched_dest_log.exists(): unmatched_dest_log = None
+    if not unrepairable_log.exists(): unrepairable_log = None
 
     # --- Assertions ---
     assert unmatched_source_log is not None, "Unmatched source log was not created."
@@ -112,8 +129,7 @@ def test_logging_logic(setup_test_environment: Path):
 
     # --- Verify content of unmatched destination log ---
     dest_log_content = unmatched_dest_log.read_text(encoding="utf-8")
-    assert "unmatched_dest.md" in dest_log_content
-    assert "too_different_dest.md" in dest_log_content # Should be here as well
+    assert "orphan_dest.md" in dest_log_content
     assert "perfect_match_dest.md" not in dest_log_content
 
     # --- Verify content of unrepairable files log ---

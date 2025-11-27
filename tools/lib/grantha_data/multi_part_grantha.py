@@ -148,26 +148,6 @@ class MultiPartGrantha(BaseGrantha):
         format = 'markdown' if pattern.endswith('.md') else 'auto'
         return cls(part_files, format=format)
 
-    @classmethod
-    def from_envelope(cls, envelope_path: Path) -> 'MultiPartGrantha':
-        """Creates MultiPartGrantha from JSON envelope file.
-
-        Args:
-            envelope_path: Path to envelope.json.
-
-        Returns:
-            MultiPartGrantha instance.
-        """
-        import json
-
-        with envelope_path.open('r', encoding='utf-8') as f:
-            envelope = json.load(f)
-
-        part_files = envelope.get('parts', [])
-        envelope_dir = envelope_path.parent
-
-        part_paths = [envelope_dir / f for f in part_files]
-        return cls(part_paths, format='json')
 
     # BaseGrantha interface implementation
 

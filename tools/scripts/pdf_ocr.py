@@ -397,24 +397,6 @@ class PdfChunkManager:
         # Cache miss or force_resplit - create chunks
         return self._split_pdf(start_page=start_page, num_pages=num_pages)
 
-    def clear_cache(self) -> bool:
-        """Remove all cached chunks for this PDF.
-
-        Returns:
-            True if cache was cleared successfully.
-        """
-        if not self.pdf_workdir.exists():
-            return True
-
-        try:
-            import shutil
-
-            shutil.rmtree(self.pdf_workdir)
-            logger.info(f"Cleared cache: {self.pdf_workdir}")
-            return True
-        except Exception as e:
-            logger.error(f"Failed to clear cache: {e}")
-            return False
 
 
 def save_output(content: str, output_path: Path) -> None:

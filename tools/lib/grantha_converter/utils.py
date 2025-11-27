@@ -1,5 +1,7 @@
 # Standard library imports
 import re
+from pathlib import Path
+from fnmatch import fnmatch
 
 def extract_part_number_from_filename(filename: str) -> int:
     """Extract part number from filename."""
@@ -62,12 +64,28 @@ def extract_part_number_from_filename(filename: str) -> int:
     return 1
 
 
-def get_directory_parts(directory: "Path") -> list:
-    """Get all markdown files in directory sorted by part number."""
+def get_directory_parts(directory: "Path", exclude_pattern: str = None) -> list:
+    """Get all markdown files in directory sorted by part number.
+
+    Args:
+        directory: Directory containing markdown files
+        exclude_pattern: Optional glob pattern to exclude files (e.g., "*-index.md")
+                        Pattern is matched against filename relative to directory
+
+    Returns:
+        List of (file_path, part_number) tuples sorted by part number
+    """
     md_files = []
     for file in directory.glob("*.md"):
         if file.name.upper() == "PROVENANCE.yaml":
             continue
+
+        # Check if file matches exclude pattern
+        if exclude_pattern:
+            relative_path = file.relative_to(directory)
+            if fnmatch(str(relative_path), exclude_pattern):
+                continue
+
         part_num = extract_part_number_from_filename(file.name)
         md_files.append((file, part_num))
 
