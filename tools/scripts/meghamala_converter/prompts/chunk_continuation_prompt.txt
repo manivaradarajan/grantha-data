@@ -11,14 +11,22 @@ You must execute this conversion using the following specific parameters extract
 *   **`COMMENTARY_ID`**: Refer to `metadata.commentary_id`.
 
 **The Scribe's Mandate: Unbreakable Laws**
+
 1.  **The Law of Conservation of Text:** You are forbidden from adding, deleting, or modifying any Devanagari character.
+    *   **No Hallucination / No Prefixing:** **Do NOT insert numbers, titles, or metadata that are not physically present in the source line.**
+    *   *Example:* If source says `॥ षोडशः खण्डः`, output `॥ षोडशः खण्डः`. **Do NOT** change it to `॥ १५ षोडशः खण्डः` or `॥ १६ षोडशः खण्डः`.
+    *   *Example:* If source says `नवमखण्डभाष्यम्`, output `नवमखण्डभाष्यम्`. **Do NOT** add `॥ ९` or `॥ १०`.
+    *   **Numeric Fidelity:** **Preserve all numbers exactly.** Do not drop digits from citations.
+    *   **No Simplification:** **Do NOT simplify conjunct consonants.**
+    *   *Example:* If source says `वृत्त्युपपत्तौ`, output `वृत्त्युपपत्तौ`. **Do NOT** change to `वृत्युपपत्तौ`.
 2.  **The Law of Whitespace Preservation (CRITICAL):**
-    *   **Whitespace is Data:** You must preserve spaces between Devanagari words exactly as they appear in the source.
-    *   **No Sandhi:** Do NOT merge words. Do NOT "correct" Sanskrit grammar.
-    *   **Example:** If the source is `प्रथमः प्रश्नः` (with space), you must output `प्रथमः प्रश्नः`. Outputting `प्रथमःप्रश्नः` (no space) is a critical failure.
-    *   **Example:** If the source is `हरिः ओम्`, do not output `हरिःओम्`.
+    *   **Whitespace is Data:** You must preserve spaces between Devanagari words exactly as they appear.
+    *   **No Splitting / No Analysis:** Do NOT split joined words. **Do NOT resolve Sandhi**.
+    *   *Example:* If source is `युक्तस्सन्`, output `युक्तस्सन्`. **Do NOT** change to `युक्तः सन्`.
+    *   *Example:* If source is `तात्पर्यप्रदर्शनार्थम्`, output `तात्पर्यप्रदर्शनार्थम्`. **Do NOT** split it.
 3.  **The Law of Literal Interpretation:** You will only act on the literal text present in the source. If a pattern is missing, do nothing. Do not invent, infer, or "fix" the source text.
 4.  **The Law of No External Knowledge:** Your output must be based *only* on the **attached source document**.
+5.  **The Law of Strict Linearity:** You must process and output lines in the **exact order** they appear in the source. NEVER move a footer, colophon, or `॥ इति ...` line. If it appears in the middle of a commentary block, **it must be output in the middle**. Do not wait until the end of the section to output it.
 
 ---
 
@@ -43,15 +51,16 @@ If a line is a structural marker, wrap it in a semantic `<!-- hide -->` tag. Pre
     *   **Action:** `<!-- hide type:section-marker --> **HEADER_TEXT** <!-- /hide -->`. (Ensure `HEADER_TEXT` retains original spaces).
 *   **Topic Summary (`**[...]**`):** A line enclosed in `**[...]**`.
     *   Example: `**[प्रणवोपासनस्य...]**` becomes `<!-- hide type:editorial-heading --> **[प्रणवोपासनस्य...]** <!-- /hide -->`.
-*   **Footer (`।।...।।`):** A line beginning and ending with `।।` containing `इति` and a structural keyword.
-    *   Example: `।। इति प्रथमः खण्डः ।।` becomes `<!-- hide type:section-marker --> ।। इति प्रथमः खण्डः ।। <!-- /hide -->`.
+*   **Footer/Colophon:** A line starting with `॥ इति` OR containing `इति` and a structural keyword.
+    *   **Action:** `<!-- hide type:section-marker --> **LINE_TEXT** <!-- /hide -->`.
+    *   **CRITICAL:** Output this line **immediately**. Do not add numbers (like `१५` or `१०`). Output only what is in the text.
 *   **Separator (`******`):** A line of asterisks.
     *   Example: `******` becomes `<!-- hide type:separator --> ****** <!-- /hide -->`.
 
 **Rule B: Mantra Text**
 If a sequence of lines is strictly bolded Devanagari text:
 
-1.   using the current counter values joined by dots (**e.g., `# Mantra 5.1` or `# Mantra 2.3.1`**).
+1.  **Heading:** Generate a heading using the current counter values joined by dots (**e.g., `# Mantra 5.1` or `# Mantra 2.3.1`**).
 2.  **Sanskrit Block:** Output the mantra text inside `<!-- sanskrit:devanagari -->...<!-- /sanskrit:devanagari -->`.
     *   **CRITICAL:** Join lines with a single space ` ` only if they are wrapped; otherwise, preserve the exact character sequence.
     *   **CRITICAL:** Do not strip spaces around punctuation like `।` or `।।` if they exist in the source.
@@ -72,6 +81,7 @@ Text that is not a Marker or Mantra is Commentary.
         *   `**[Subheading]**` -> `<!-- hide type:sub-heading --> **[...]** <!-- /hide -->`
         *   `**प्र.**` -> `<!-- hide type:commentary-prefix --> **प्र.** <!-- /hide -->`
     *   **Formatting:** Remove `**` markup generally, but **re-apply** `**...**` to direct Mantra quotes or key terms found within the commentary.
+    *   **Citation Fidelity (CRITICAL):** Treat text inside parentheses `(...)` as sacred. Do not expand, shorten, or normalize abbreviations. If the source is `(छां.उ.)`, keep the anusvara.
 
 **Rule D: Special Sections (Processed First)**
 *   **Top-Level Titles:** Any initial title lines **matching `metadata.canonical_title`** are hidden using `<!-- hide type:document-title -->`.
@@ -80,7 +90,13 @@ Text that is not a Marker or Mantra is Commentary.
     *   Text: Combine all mantra lines into a single paragraph within a `<!-- sanskrit:devanagari -->` block, preserving all punctuation exactly.
 
 **Quality Check Before Output:**
-Verify that `प्रथमः प्रश्नः` (if present) has not become `प्रथमःप्रश्नः`. Verify that `हरिः ओम्` has not become `हरिःओम्`.
+1.  Verify that `प्रथमः प्रश्नः` (if present) has not become `प्रथमःप्रश्नः`.
+2.  Verify that the colophon (e.g., `॥ इति ...`) has not been moved from its original position.
+3.  **Did you insert a number (e.g., `१०`) that wasn't in the source? -> Delete it.**
+4.  Did you drop a number from a citation? -> **Restore it.**
+5.  Did you split `तात्पर्यप्रदर्शनार्थम्`? -> **Revert it.**
+6.  Did you simplify `वृत्त्युपपत्तौ`? -> **Revert it.**
+7.  Did you change `युक्तस्सन्`? -> **Revert it.**
 
 ---
 
