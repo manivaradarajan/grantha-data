@@ -28,8 +28,20 @@ class TestAnalysisCache(unittest.TestCase):
 
     def test_cache_path_generation(self):
         """Should generate correct cache path."""
-        expected_name = ".cache_analysis_test_input.json"
-        self.assertEqual(self.cache.cache_path.name, expected_name)
+        # Cache filename should follow pattern: .cache_analysis_{stem}-{hash}.json
+        # where hash is first 8 chars of SHA256 of absolute path
+        cache_name = self.cache.cache_path.name
+
+        # Check filename pattern
+        self.assertTrue(cache_name.startswith(".cache_analysis_test_input-"))
+        self.assertTrue(cache_name.endswith(".json"))
+
+        # Extract hash portion (between last '-' and '.json')
+        hash_part = cache_name.split("-")[-1].replace(".json", "")
+        self.assertEqual(len(hash_part), 8)  # Should be 8 hex chars
+        self.assertTrue(all(c in "0123456789abcdef" for c in hash_part))
+
+        # Check parent directory
         self.assertEqual(self.cache.cache_path.parent, self.temp_path)
 
     def test_load_missing_cache_returns_none(self):

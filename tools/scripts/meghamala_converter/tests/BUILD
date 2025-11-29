@@ -11,3 +11,14 @@ py_test(
         requirement("rapidfuzz"),
     ],
 )
+
+py_test(
+    name = "test_convert_meghamala",
+    srcs = ["test_convert_meghamala.py"],
+    data = ["//tools/scripts/meghamala_converter/prompts"],
+    imports = ["../.."],
+    deps = [
+        "//tools/scripts/meghamala_converter:convert_meghamala_lib",
+        requirement("pytest"),
+    ],
+)

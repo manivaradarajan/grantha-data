@@ -14,7 +14,7 @@
 """A client for interacting with the Gemini API."""
 
 load("@grantha_pip//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
 
 py_library(
     name = "base_client",
@@ -67,5 +67,63 @@ py_library(
     visibility = ["//visibility:public"],
     deps = [
         "//tools/lib/grantha_converter:hasher",
+    ],
+)
+
+py_library(
+    name = "response_parser",
+    srcs = ["response_parser.py"],
+    visibility = ["//visibility:public"],
+)
+
+# Tests
+py_test(
+    name = "test_cache_manager",
+    srcs = ["test_cache_manager.py"],
+    imports = [".."],
+    deps = [
+        ":cache_manager",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_file_manager",
+    srcs = ["test_file_manager.py"],
+    imports = [".."],
+    deps = [
+        ":file_manager",
+        requirement("google-genai"),
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_prompt_manager",
+    srcs = ["test_prompt_manager.py"],
+    imports = [".."],
+    deps = [
+        ":prompt_manager",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_response_parser",
+    srcs = ["test_response_parser.py"],
+    imports = [".."],
+    deps = [
+        ":response_parser",
+        requirement("pytest"),
+    ],
+)
+
+py_test(
+    name = "test_sampler",
+    srcs = ["test_sampler.py"],
+    imports = [".."],
+    deps = [
+        ":sampler",
+        requirement("pytest"),
     ],
 )
