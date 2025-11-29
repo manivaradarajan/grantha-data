@@ -1,0 +1,206 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_version:
+        description: 'Confirm version from VERSION file (must match)'
+        required: true
+        type: string
+      is_breaking:
+        description: 'Is this a breaking change?'
+        required: true
+        type: boolean
+      release_notes:
+        description: 'Additional release notes (optional)'
+        required: false
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read VERSION file
+        id: version
+        run: |
+          VERSION=$(cat VERSION | tr -d '\n')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version from file: $VERSION"
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "ERROR: VERSION file does not contain valid semver: $VERSION"
+            exit 1
+          fi
+          echo "✓ VERSION is valid semver: $VERSION"
+
+      - name: Verify version confirmation
+        run: |
+          FILE_VERSION="${{ steps.version.outputs.version }}"
+          CONFIRM_VERSION="${{ github.event.inputs.confirm_version }}"
+          if [ "$FILE_VERSION" != "$CONFIRM_VERSION" ]; then
+            echo "ERROR: Version mismatch!"
+            echo "  VERSION file: $FILE_VERSION"
+            echo "  Confirmed:    $CONFIRM_VERSION"
+            exit 1
+          fi
+          echo "✓ Version confirmed: $FILE_VERSION"
+
+      - name: Check if tag already exists
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "ERROR: Tag v$VERSION already exists"
+            exit 1
+          fi
+          echo "✓ Tag v$VERSION does not exist yet"
+
+      - name: Check working directory is clean
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "ERROR: Working directory has uncommitted changes"
+            git status
+            exit 1
+          fi
+          echo "✓ Working directory is clean"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install pytest
+
+      - name: Run pytest tests
+        run: |
+          pytest tools/lib/grantha_converter/ -v
+          pytest tools/lib/gemini_processor/ -v
+
+      - name: Set up Bazel
+        uses: bazel-contrib/setup-bazel@0.8.5
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - name: Run Bazel tests
+        run: |
+          bazel test //tools/lib/grantha_converter/...
+
+      - name: Build release artifact
+        run: |
+          bazel build //:grantha_data_release
+
+      - name: Verify artifact was created
+        id: artifact
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if [ ! -f bazel-bin/grantha-data-release.zip ]; then
+            echo "ERROR: Release artifact not created"
+            exit 1
+          fi
+
+          # Rename to versioned filename
+          cp bazel-bin/grantha-data-release.zip "grantha-data-v$VERSION.zip"
+
+          echo "artifact_name=grantha-data-v$VERSION.zip" >> $GITHUB_OUTPUT
+          echo "✓ Release artifact created: grantha-data-v$VERSION.zip"
+          ls -lh "grantha-data-v$VERSION.zip"
+
+      - name: Extract manifest for release notes
+        id: manifest
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          unzip -q "grantha-data-v$VERSION.zip"
+
+          # Extract statistics from manifest
+          TOTAL_FILES=$(jq -r '.statistics.total_files' "grantha-data-v$VERSION/manifest.json")
+          TOTAL_UPANISHADS=$(jq -r '.statistics.total_upanishads' "grantha-data-v$VERSION/manifest.json")
+          TOTAL_COMMENTARIES=$(jq -r '.statistics.total_commentaries' "grantha-data-v$VERSION/manifest.json")
+
+          echo "total_files=$TOTAL_FILES" >> $GITHUB_OUTPUT
+          echo "total_upanishads=$TOTAL_UPANISHADS" >> $GITHUB_OUTPUT
+          echo "total_commentaries=$TOTAL_COMMENTARIES" >> $GITHUB_OUTPUT
+
+      - name: Create Git tag
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          echo "✓ Created tag v$VERSION"
+
+      - name: Push tag
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          git push origin "v$VERSION"
+          echo "✓ Pushed tag v$VERSION to origin"
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          IS_BREAKING="${{ github.event.inputs.is_breaking }}"
+          TOTAL_FILES="${{ steps.manifest.outputs.total_files }}"
+          TOTAL_UPANISHADS="${{ steps.manifest.outputs.total_upanishads }}"
+          TOTAL_COMMENTARIES="${{ steps.manifest.outputs.total_commentaries }}"
+
+          cat > release_notes.md <<EOF
+          # Grantha Data v$VERSION
+
+          $(if [ "$IS_BREAKING" = "true" ]; then echo "⚠️  **BREAKING CHANGE**: This release contains breaking schema changes. Update your application code accordingly."; fi)
+
+          ## Release Contents
+
+          - **Total Files**: $TOTAL_FILES
+          - **Upanishads**: $TOTAL_UPANISHADS
+          - **Commentaries**: $TOTAL_COMMENTARIES
+          - **Schema Version**: $VERSION
+
+          ## Usage
+
+          Download \`grantha-data-v$VERSION.zip\` and extract to get:
+          - \`manifest.json\` - Release metadata with checksums
+          - \`schemas/\` - JSON Schema files
+          - \`data/upanishads/\` - All Upanishad JSON files
+
+          ## Verification
+
+          Verify artifact integrity using SHA256 checksums from \`manifest.json\`.
+
+          ${{ github.event.inputs.release_notes }}
+          EOF
+
+          cat release_notes.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ARTIFACT="${{ steps.artifact.outputs.artifact_name }}"
+
+          gh release create "v$VERSION" \
+            --title "Grantha Data v$VERSION" \
+            --notes-file release_notes.md \
+            "$ARTIFACT"
+
+          echo "✓ Created GitHub Release v$VERSION"
+          echo "✓ Uploaded artifact: $ARTIFACT"
+
+      - name: Release summary
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          echo "🎉 Release v$VERSION completed successfully!"
+          echo ""
+          echo "Release URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/v$VERSION"

@@ -1,9 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Grantha Part Schema",
-  "description": "Schema for a single content part of a multi-part grantha. Contains content arrays and identifiers.",
+  "description": "Schema for a single content part of a multi-part grantha. Contains content arrays and identifiers. Versioned using semantic versioning.",
   "type": "object",
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this schema in semver format (MAJOR.MINOR.PATCH). Major version changes indicate breaking schema changes."
+    },
     "grantha_id": {
       "description": "The ID of the parent grantha this part belongs to.",
       "type": "string",
@@ -41,6 +46,6 @@
       ]
     }
   },
-  "required": ["grantha_id", "part_num"],
+  "required": ["schema_version", "grantha_id", "part_num"],
   "unevaluatedProperties": false
 }

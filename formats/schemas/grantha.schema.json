@@ -1,9 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Grantha Data Schema (Complete Single File)",
-  "description": "Defines a complete grantha contained within a single file. Also serves as the source of truth for common definitions.",
+  "description": "Defines a complete grantha contained within a single file. Also serves as the source of truth for common definitions. Versioned using semantic versioning.",
   "type": "object",
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this schema in semver format (MAJOR.MINOR.PATCH). Major version changes indicate breaking schema changes."
+    },
     "grantha_id": {
       "type": "string",
       "pattern": "^[a-z0-9-]+$"
@@ -59,6 +64,7 @@
     }
   },
   "required": [
+    "schema_version",
     "grantha_id",
     "canonical_title",
     "text_type",

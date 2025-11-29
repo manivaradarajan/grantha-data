@@ -1,9 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Grantha Envelope Schema",
-  "description": "Schema for the envelope/metadata file of a multi-part grantha. This file contains all top-level metadata but no content.",
+  "description": "Schema for the envelope/metadata file of a multi-part grantha. This file contains all top-level metadata but no content. Versioned using semantic versioning.",
   "type": "object",
   "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Version of this schema in semver format (MAJOR.MINOR.PATCH). Major version changes indicate breaking schema changes."
+    },
     "grantha_id": {
       "type": "string",
       "pattern": "^[a-z0-9-]+$"
@@ -42,6 +47,7 @@
     }
   },
   "required": [
+    "schema_version",
     "grantha_id",
     "canonical_title",
     "text_type",

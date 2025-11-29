@@ -2,6 +2,10 @@
 
 filegroup(
     name = "schemas",
-    srcs = glob(["*.schema.json"]),
+    srcs = [
+        "grantha.schema.json",
+        "grantha-envelope.schema.json",
+        "grantha-part.schema.json",
+    ],
     visibility = ["//visibility:public"],
 )

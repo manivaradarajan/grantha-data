@@ -12,7 +12,8 @@ from typing import Any, Dict, List
 def create_envelope_from_parts(
     grantha_id: str,
     part_files: List[Path],
-    output_dir: Path
+    output_dir: Path,
+    schema_version: str = None
 ) -> Dict[str, Any]:
     """Create an envelope.json from multiple part JSON files.
 
@@ -20,6 +21,7 @@ def create_envelope_from_parts(
         grantha_id: The ID of the grantha
         part_files: List of paths to part JSON files (sorted by part_num)
         output_dir: Directory where envelope.json will be written
+        schema_version: Schema version to inject (optional, read from parts if not provided)
 
     Returns:
         The envelope data dictionary
@@ -57,6 +59,12 @@ def create_envelope_from_parts(
         'parts': [part_file.name for part_file in part_files]
     }
 
+    # Add schema_version (from parameter or first part)
+    if schema_version:
+        envelope['schema_version'] = schema_version
+    elif 'schema_version' in first_part:
+        envelope['schema_version'] = first_part['schema_version']
+
     # Add optional fields if present
     if 'metadata' in first_part:
         envelope['metadata'] = first_part['metadata']
@@ -71,7 +79,8 @@ def create_envelope_from_parts(
 def create_envelope_from_markdown_files(
     grantha_id: str,
     markdown_files: List[Path],
-    output_dir: Path
+    output_dir: Path,
+    schema_version: str = None
 ) -> Dict[str, Any]:
     """Create an envelope.json by reading metadata from markdown files.
 
@@ -82,6 +91,7 @@ def create_envelope_from_markdown_files(
         grantha_id: The ID of the grantha
         markdown_files: List of paths to markdown files (sorted by part_num)
         output_dir: Directory where envelope.json will be written
+        schema_version: Schema version to inject (optional, read from VERSION file if not provided)
 
     Returns:
         The envelope data dictionary
@@ -182,8 +192,17 @@ def create_envelope_from_markdown_files(
     # Generate part filenames
     part_files = [f"part{i+1}.json" for i in range(len(markdown_files))]
 
+    # Read schema version from VERSION file if not provided
+    if schema_version is None:
+        version_file = Path(__file__).parent.parent.parent.parent / "VERSION"
+        if version_file.exists():
+            schema_version = version_file.read_text(encoding="utf-8").strip()
+        else:
+            schema_version = "0.1.0"
+
     # Build envelope structure
     envelope = {
+        'schema_version': schema_version,
         'grantha_id': grantha_id,
         'canonical_title': first_fm.get('canonical_title'),
         'text_type': first_fm.get('text_type'),

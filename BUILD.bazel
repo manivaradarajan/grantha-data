@@ -1,1 +1,11 @@
 # This file makes the root directory a Bazel package.
+
+load("//tools/bazel:release.bzl", "grantha_release_artifact")
+
+# Release artifact containing all JSON data and schemas
+grantha_release_artifact(
+    name = "grantha_data_release",
+    data = "//structured_md/upanishads:all_upanishads_json",
+    schemas = ["//formats/schemas:schemas"],
+    version_file = "VERSION",
+)

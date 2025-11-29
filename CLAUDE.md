@@ -232,6 +232,80 @@ Source files in `sources/upanishads/` follow the Grantha Markdown format. Each s
 - One or more `.md` files (for multi-part texts like Brihadaranyaka, use numbered files like `03-01.md`)
 - A `PROVENANCE.yaml` file documenting source URL, retrieval date, and notes
 
+## Releases and Versioning
+
+The grantha-data repository uses semantic versioning and automated releases via GitHub Actions.
+
+### Version Management
+
+- **VERSION file**: Single source of truth at repository root (e.g., `0.1.0`)
+- **Semantic Versioning**: `MAJOR.MINOR.PATCH` format
+  - **Major**: Breaking schema changes
+  - **Minor**: Compatible schema additions
+  - **Patch**: Data-only changes (text corrections, new content)
+- **Schema version**: All JSON files include `schema_version` field matching VERSION
+
+### Building Release Artifacts
+
+Build a release artifact locally:
+
+```bash
+# Build versioned release package
+bazel build //:grantha_data_release
+
+# Output: bazel-bin/grantha-data-release.zip
+# Contains: manifest.json, schemas/, data/upanishads/
+```
+
+The artifact includes:
+- `manifest.json` - Release metadata with SHA256 checksums
+- `schemas/` - All three JSON schema files
+- `data/upanishads/` - All Upanishad JSON files
+
+### Creating a Release
+
+To create a new release:
+
+1. **Update version**: Edit `VERSION` file with new version number
+2. **Update changelog**: Add entry to `CHANGELOG.md`
+3. **Commit changes**:
+   ```bash
+   git add VERSION CHANGELOG.md
+   git commit -m "Bump version to X.Y.Z"
+   git push origin main
+   ```
+4. **Trigger release**: Go to GitHub Actions → "Release" workflow → "Run workflow"
+5. **Confirm details**: Enter version, indicate if breaking, add notes
+6. **Monitor**: Workflow runs tests, builds artifact, creates release
+
+The workflow automatically:
+- Validates VERSION file format
+- Runs all tests (pytest + Bazel)
+- Builds release artifact
+- Creates Git tag `vX.Y.Z`
+- Creates GitHub Release
+- Uploads `grantha-data-vX.Y.Z.zip`
+
+### Release Documentation
+
+- `docs/VERSIONING.md` - Detailed versioning strategy
+- `docs/RELEASING.md` - Step-by-step release process
+- `CHANGELOG.md` - Version history
+
+### Version Checking
+
+All generated JSON files automatically include the current version:
+
+```json
+{
+  "schema_version": "0.1.0",
+  "grantha_id": "isavasya-upanishad",
+  ...
+}
+```
+
+The converters read VERSION file and inject `schema_version` during generation.
+
 ## Known Issues
 
 - **taittiriya-upanishad**: One integration test fails validation (under investigation)

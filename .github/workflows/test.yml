@@ -1,0 +1,68 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -e .
+          pip install pytest
+
+      - name: Validate VERSION file
+        run: |
+          if [ ! -f VERSION ]; then
+            echo "ERROR: VERSION file not found"
+            exit 1
+          fi
+          VERSION=$(cat VERSION | tr -d '\n')
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "ERROR: VERSION file does not contain valid semver: $VERSION"
+            exit 1
+          fi
+          echo "✓ VERSION is valid: $VERSION"
+
+      - name: Run pytest tests
+        run: |
+          pytest tools/lib/grantha_converter/ -v
+          pytest tools/lib/gemini_processor/ -v
+
+      - name: Set up Bazel
+        uses: bazel-contrib/setup-bazel@0.8.5
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
+      - name: Run Bazel tests
+        run: |
+          bazel test //tools/lib/grantha_converter/...
+
+      - name: Test Bazel build
+        run: |
+          bazel build //:grantha_data_release
+
+      - name: Verify release artifact
+        run: |
+          if [ ! -f bazel-bin/grantha-data-release.zip ]; then
+            echo "ERROR: Release artifact not created"
+            exit 1
+          fi
+          echo "✓ Release artifact created successfully"
+          ls -lh bazel-bin/grantha-data-release.zip

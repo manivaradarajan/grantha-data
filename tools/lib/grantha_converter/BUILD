@@ -190,7 +190,13 @@ py_library(
     ],
 )
 
-# CLI binary
+py_library(
+    name = "manifest_generator",
+    srcs = ["manifest_generator.py"],
+    visibility = ["//visibility:public"],
+)
+
+# CLI binaries
 py_binary(
     name = "grantha-converter",
     srcs = [
@@ -217,6 +223,17 @@ py_binary(
         ":schema_validator",
         requirement("pyyaml"),
         requirement("jsonschema"),
+    ],
+)
+
+py_binary(
+    name = "grantha-manifest",
+    srcs = ["manifest_generator.py"],
+    imports = [".."],
+    main = "manifest_generator.py",
+    visibility = ["//visibility:public"],
+    deps = [
+        ":manifest_generator",
     ],
 )
 

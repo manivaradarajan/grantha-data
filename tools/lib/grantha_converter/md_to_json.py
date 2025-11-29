@@ -223,8 +223,13 @@ def get_all_structure_keys(structure_levels: List[Dict[str, Any]]) -> List[str]:
     return keys
 
 
-def convert_to_json(markdown: str) -> Dict[str, Any]:
-    """Convert Markdown to grantha JSON format using a single-pass strategy."""
+def convert_to_json(markdown: str, schema_version: str = None) -> Dict[str, Any]:
+    """Convert Markdown to grantha JSON format using a single-pass strategy.
+
+    Args:
+        markdown: The markdown text to convert
+        schema_version: The schema version to inject into JSON (optional)
+    """
     frontmatter, content = parse_frontmatter(markdown)
     commentaries_metadata = frontmatter.get("commentaries_metadata", {})
 
@@ -268,6 +273,10 @@ def convert_to_json(markdown: str) -> Dict[str, Any]:
         "concluding_material": [],
         "commentaries": commentaries_dict,
     }
+
+    # Inject schema_version if provided
+    if schema_version:
+        data["schema_version"] = schema_version
 
     # Only include metadata if present in frontmatter
     if "metadata" in frontmatter:
@@ -390,6 +399,7 @@ def markdown_file_to_json_file(
     json_file: str,
     format: str = "single",
     validate_schema: bool = True,
+    schema_version: str = None,
 ) -> None:
     """Convert a Grantha Markdown file to JSON format.
 
@@ -398,6 +408,7 @@ def markdown_file_to_json_file(
         json_file: Path to the output JSON file
         format: Output format - 'single' for complete grantha, 'multipart' for grantha parts
         validate_schema: Whether to validate against JSON schema (default: True)
+        schema_version: Schema version to inject (default: read from VERSION file)
 
     Raises:
         ValueError: If validation fails or file operations fail
@@ -416,8 +427,18 @@ def markdown_file_to_json_file(
     # Validate the file before processing
     _validate_markdown_file(markdown_text)
 
+    # Read schema version from VERSION file if not provided
+    if schema_version is None:
+        # Try to find VERSION file in repository root
+        version_file = Path(__file__).parent.parent.parent.parent / "VERSION"
+        if version_file.exists():
+            schema_version = version_file.read_text(encoding="utf-8").strip()
+        else:
+            # Fallback to default version if VERSION file not found
+            schema_version = "0.1.0"
+
     # Convert to JSON
-    json_data = convert_to_json(markdown_text)
+    json_data = convert_to_json(markdown_text, schema_version=schema_version)
 
     # Validate schema if requested
     if validate_schema:
